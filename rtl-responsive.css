@@ -1,0 +1,100 @@
+/**
+ * rtl-responsive.css
+ *
+ * Contains media queries and fallback styles for RTL version on various device widths.
+ */
+
+/* ---------------------------------------------------------------
+ * CSS fallback for device width 768px or below
+ * ------------------------------------------------------------ */
+
+@media only screen and (max-width: 768px) {
+
+	.secondary-nav,
+	 #callout-bar,
+	 #callout-bar.callout-left,
+	 #search-bar,
+	 .header-widget-area,
+	 .column,
+	 .full,
+	 .three-fourth,
+	 .two-third,
+	 .half,
+	 .one-third,
+	 .three-eighth,
+	 .one-fourth,
+	 .full-width .column,
+	 .full-width .full,
+	 .full-width .three-fourth,
+	 .full-width .two-third,
+	 .full-width .half,
+	 .full-width .one-third,
+	 .full-width .three-eighth,
+	 .full-width .one-fourth,
+	 .entry-list .post-img,
+	 .entry-list .entry-content,
+	 .notes-left,
+	 .notes-right {
+		text-align: right;
+	}
+	.commentlist li li {
+		padding-right: 0
+	}
+		
+	
+	/* WooCommerce responsive styles */	
+		
+	.woocommerce ul.products li.product:nth-child(2n), .woocommerce-page ul.products li.product:nth-child(2n) {
+		float: left !important;
+		clear: none !important;
+	}
+	.woocommerce ul.products li.product:nth-child(2n+1), .woocommerce-page ul.products li.product:nth-child(2n+1) {
+		clear: both;
+	}
+	.woocommerce .woocommerce-product-rating .star-rating,
+	.woocommerce-page .woocommerce-product-rating .star-rating {
+		float: right;
+		margin: 0.5em 0 0 0.375em;
+	}
+	.woocommerce p.stars a,
+	.woocommerce-page p.stars a {
+		margin-right: 0;
+		margin-left: 1em;
+	}
+	.woocommerce #content table.cart td.actions,
+	.woocommerce table.cart td.actions,
+	.woocommerce-page #content table.cart td.actions,
+	.woocommerce-page table.cart td.actions {
+		text-align: right;
+	}
+	.woocommerce #content table.cart td.actions .button.alt,
+	.woocommerce #content table.cart td.actions .input-text+.button,
+	.woocommerce table.cart td.actions .button.alt,
+	.woocommerce table.cart td.actions .input-text+.button,
+	.woocommerce-page #content table.cart td.actions .button.alt,
+	.woocommerce-page #content table.cart td.actions .input-text+.button,
+	.woocommerce-page table.cart td.actions .button.alt,
+	.woocommerce-page table.cart td.actions .input-text+.button {
+		float: left;
+	}
+	.woocommerce .cart-collaterals .cart_totals,
+	.woocommerce .cart-collaterals .cross-sells,
+	.woocommerce .cart-collaterals .shipping_calculator,
+	.woocommerce-page .cart-collaterals .cart_totals,
+	.woocommerce-page .cart-collaterals .cross-sells,
+	.woocommerce-page .cart-collaterals .shipping_calculator {
+		text-align: right;
+	}
+	.woocommerce #payment .terms,
+	.woocommerce-page #payment .terms {
+		text-align: right;
+		padding:0;
+	}
+	.woocommerce .lost_reset_password .form-row-first,
+	.woocommerce .lost_reset_password .form-row-last,
+	.woocommerce-page .lost_reset_password .form-row-first,
+	.woocommerce-page .lost_reset_password .form-row-last {
+		margin-left: 0;
+	}
+
+}

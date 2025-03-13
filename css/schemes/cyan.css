@@ -1,0 +1,133 @@
+/**
+ * cyan.css
+ * Color scheme file
+ *
+ * @package NewsPlus
+ * @since 3.0
+ * @version 3.0
+ *
+ * Main: #00838F
+ * Sub: #00ACC1
+ */
+
+.primary-nav {
+	background-color: #00838F;
+	color: rgba(255,255,255,.87);
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.nav-menu > li > a,
+div.nav-menu > ul > li > a {
+	color: inherit;
+}
+
+.primary-nav li:hover > a,
+div.nav-menu > ul > li:hover > a {
+/* .primary-nav li ul li:hover > a*/
+	color: #fff;
+	background: #00ACC1;
+	border-bottom-color: transparent;
+}
+
+ul.nav-menu > li.current-menu-item > a,
+ul.nav-menu > li.current-menu-ancestor > a,
+ul.nav-menu > li.current_page_item > a,
+ul.nav-menu > li.current_page_ancestor > a,
+div.nav-menu > ul > li.current-menu-item > a,
+div.nav-menu > ul > li.current-menu-ancestor > a,
+div.nav-menu > ul > li.current_page_item > a,
+div.nav-menu > ul > li.current_page_ancestor > a {
+	color: #fff;
+	background: #00ACC1;
+	border-bottom-color: transparent;
+}
+
+.brand a span,
+.site-title span {
+	color: #00ACC1;
+}
+
+/* Secondary and footer */
+
+#secondary {
+	background: #fff;
+}
+
+.is-boxed #secondary .wrap,
+.is-stretched #secondary,
+.is-boxed #footer .wrap,
+.is-stretched #footer {
+	border-top: 1px solid rgba(0,0,0,.12);
+}
+
+.scroll-to-top a:hover {
+	background-color: #00838F;
+}
+
+/* WooCommerce */
+
+.woocommerce #respond input#submit.alt,
+.woocommerce a.button.alt,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt {
+	background-color:#00838F;
+	color:#fff;
+}
+
+.woocommerce #respond input#submit.alt:hover,
+.woocommerce a.button.alt:hover,
+.woocommerce button.button.alt:hover,
+.woocommerce input.button.alt:hover {
+	background:#00ACC1;
+	color:#fff
+}
+
+.woocommerce #respond input#submit.alt:active,
+.woocommerce a.button.alt:active,
+.woocommerce button.button.alt:active,
+.woocommerce button.button.alt:focus,
+.woocommerce input.button.alt:active {
+	background:#00ACC1;
+	color: rgba(255,255,255,.54);
+}
+
+/* Recipe */
+.info-board > li .ib-value {
+	color: #00ACC1;
+}
+
+/* Tabs */
+.ss-tabs li.ui-tabs-active a,
+.woocommerce-MyAccount-navigation > ul > li.is-active a {
+	border-bottom-color: #00ACC1;
+}
+
+.ticker-label,
+.woocommerce .widget_price_filter .price_slider_wrapper .ui-widget-content {
+	background: #00838F;
+}
+
+
+/* Styles for inline slim menu */
+
+.inline-nav .nav-menu > li > a {
+	color: #757575;
+	background: transparent;
+}
+
+.inline-nav .nav-menu > li:hover > a {
+	color: #424242;
+	background: transparent;
+	border-bottom-color: #c2c2c2;
+}
+
+.inline-nav ul.nav-menu > li.current-menu-item > a,
+.inline-nav ul.nav-menu > li.current-menu-ancestor > a,
+.inline-nav ul.nav-menu > li.current_page_item > a,
+.inline-nav ul.nav-menu > li.current_page_ancestor > a {
+	color: #424242;
+	background: transparent;
+	border-bottom-color: #00ACC1;
+}

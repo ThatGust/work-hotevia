@@ -1,0 +1,652 @@
+/*
+Theme Name: NewsPlus
+Description: Used to style the TinyMCE editor.
+*/
+
+
+body,
+button,
+input,
+select,
+textarea {
+	overflow: hidden;
+	color: #424242;
+	font-family: "Open Sans", sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.84615384; /* 24px */
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	clear: both;
+	font-weight: 400;
+	margin: 0 0 24px;
+	color: inherit;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a,
+.site-title,
+.site-title a:hover {
+	color: inherit;
+}
+
+h1 a:hover,
+h2 a:hover,
+h3 a:hover,
+h4 a:hover,
+h5 a:hover,
+h6 a:hover {
+	color: inherit;
+}
+
+h1,
+.h1,
+.single .entry-header .entry-title,
+.page-header .entry-title {
+	font-size: 34px;
+	line-height: 1.1765;
+}
+
+.page-header .entry-title {
+	margin-bottom: 16px;
+	color: rgba(0,0,0,.54);
+}
+
+.single .entry-header .entry-title {
+	margin-bottom: 24px;
+}
+
+h2,
+.h2 {
+	font-size: 24px;
+	line-height: 1.33334;
+}
+
+h3,
+.h3 {
+	font-size: 20px;
+	line-height: 32px;
+	margin-bottom: 24px;
+}
+
+.sb-title,
+.section-title {
+	color: #757575;
+}
+
+.sc-title {
+	color: #fff;
+}
+
+.page-header .page-title,
+.entry-header .entry-title {
+	margin-bottom: 8px;
+	color: rgba(0,0,0,.54);
+}
+
+.single .entry-header .entry-title {
+	color: inherit;
+}
+
+.breadcrumbs + .page-header,
+.breadcrumbs + article > .page-header {
+	margin-top: -12px;
+}
+
+.section-title span a,
+.section-title span a:hover,
+.section-title span a:visited,
+.section-title span a:active {
+	color: inherit;
+}
+
+h4,
+.h4,
+.sb-title,
+.sc-title,
+.section-title  {
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+.sb-title {
+	margin-bottom: 20px;
+}
+
+h5,
+h6,
+.h5,
+.h6 {
+	font-size: 14px;
+	line-height: 1.4285714;
+}
+
+a {
+	color: #1565C0;
+	text-decoration: none;
+	-webkit-transition: .2s;
+	-moz-transition: .2s;
+	-o-transition: .2s;
+	-ms-transition: .2s;
+	transition: .2s;
+}
+
+a:focus {
+	outline: none;
+}
+
+a:hover,
+a:active {
+	outline: 0;
+}
+
+a:active,
+a:hover {
+	color: #0D47A1;
+}
+
+address {
+	margin-bottom: 24px;
+}
+
+abbr[title] {
+	border-bottom: 1px dotted rgba(0,0,0,.12);
+	cursor: help;
+}
+
+b,
+strong {
+	font-weight: bold;
+}
+
+cite,
+dfn,
+em,
+i {
+	font-style: italic;
+}
+
+mark,
+ins {
+	background: #ffff8d;
+	text-decoration: none;
+}
+
+p {
+	margin-bottom: 24px;
+}
+
+code,
+kbd,
+tt,
+var,
+samp,
+pre {
+	font-family: monospace, serif;
+	font-size: 1rem;
+	-webkit-hyphens: none;
+	-moz-hyphens:    none;
+	-ms-hyphens:     none;
+	hyphens:         none;
+}
+
+pre {
+	background: #f5f5f5;
+	margin-bottom: 24px;
+	max-width: 100%;
+	overflow: auto;
+	padding: 8px 16px;
+	white-space: pre;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+blockquote,
+q {
+	-webkit-hyphens: none;
+	-moz-hyphens:    none;
+	-ms-hyphens:     none;
+	hyphens:         none;
+	quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: "";
+	content: none;
+}
+
+blockquote,
+q {
+	position: relative;
+	display: inline-block;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	padding-left: 24px;
+	font-size: 1.384615em;
+	line-height: 1.777;
+	color: #757575;
+	margin-bottom: 24px;
+}
+
+blockquote:before,
+q:before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	content: "";
+	width: 2px;
+	height: 100%;
+	background: rgba(0,0,0,.12);
+}
+
+
+blockquote cite,
+blockquote small {
+	color: inherit;
+	font-size: 1em;
+	font-weight: 400;
+}
+
+blockquote em,
+blockquote i,
+blockquote cite {
+	font-style: normal;
+}
+
+blockquote strong,
+blockquote b {
+	font-weight: 400;
+}
+
+blockquote * {
+	margin-bottom: 0;
+}
+
+small {
+	font-size: smaller;
+}
+
+big {
+	font-size: 125%;
+}
+
+sup,
+sub {
+	font-size: 75%;
+	height: 0;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+
+sup {
+	bottom: 1ex;
+}
+
+sub {
+	top: .5ex;
+}
+
+dl {
+	margin-bottom: 24px;
+}
+
+dt {
+	font-weight: 600;
+}
+
+dd {
+	margin-bottom: 24px;
+}
+
+ul,
+ol {
+	list-style: none;
+	margin: 0 0 24px 24px;
+}
+
+ul {
+	list-style: disc;
+}
+
+ol {
+	list-style: decimal;
+}
+
+li > ul,
+li > ol {
+	margin: 0 0 0 24px;
+}
+
+img {
+	-ms-interpolation-mode: bicubic;
+	border: 0;
+}
+
+figure {
+	margin: 0;
+}
+
+fieldset {
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	margin: 0 0 24px;
+	padding: 16px 16px 0;
+}
+
+legend {
+	white-space: normal;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Typography for Thai Font */
+
+html[lang="th"] h1,
+html[lang="th"] h2,
+html[lang="th"] h3,
+html[lang="th"] h4,
+html[lang="th"] h5,
+html[lang="th"] h6 {
+	letter-spacing: 0;
+	line-height: 1.65;
+}
+
+html[lang="th"] body,
+html[lang="th"] button,
+html[lang="th"] input,
+html[lang="th"] select,
+html[lang="th"] textarea {
+	line-height: 1.8;
+}
+
+
+/**
+ * 4.0 - Alignment
+ */
+
+img {
+	height: auto; /* Make sure images are scaled correctly. */
+	width: inherit;  /* Make images fill their parent's space. Solves IE8. */
+	max-width: 100%; /* Adhere to container width. */
+}
+
+embed,
+iframe,
+object {
+	margin-bottom: 1.5em;
+	max-width: 100%;
+}
+
+/**
+ * 5.0 - Caption
+ */
+
+.wp-caption {
+	color: #666;
+	font-size: 13px;
+	font-size: 0.8125rem;
+	font-style: italic;
+	margin-bottom: 1.5em;
+	max-width: 100%;
+}
+
+.wp-caption img[class*="wp-image-"] {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.wp-caption .wp-caption-text {
+	margin: 0.8075em 0;
+}
+
+/**
+ * 6.0 - Galleries
+ */
+
+.gallery {
+	margin-bottom: 1.5em;
+}
+
+.gallery-item {
+	display: inline-block;
+	text-align: center;
+	vertical-align: top;
+	width: 100%;
+}
+
+.gallery-item a,
+.gallery-item a:hover,
+.gallery-item a:focus {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	background: none;
+	display: inline-block;
+}
+
+.gallery-columns-2 .gallery-item {
+	max-width: 50%;
+}
+
+.gallery-columns-3 .gallery-item {
+	max-width: 33.33%;
+}
+
+.gallery-columns-4 .gallery-item {
+	max-width: 25%;
+}
+
+.gallery-columns-5 .gallery-item {
+	max-width: 20%;
+}
+
+.gallery-columns-6 .gallery-item {
+	max-width: 16.66%;
+}
+
+.gallery-columns-7 .gallery-item {
+	max-width: 14.28%;
+}
+
+.gallery-columns-8 .gallery-item {
+	max-width: 12.5%;
+}
+
+.gallery-columns-9 .gallery-item {
+	max-width: 11.11%;
+}
+
+.gallery-caption {
+	display: block;
+}
+
+/**
+ * 7.0 - Media Elements
+ */
+
+.mejs-container {
+	margin-bottom: 1.5em;
+}
+
+/* Audio Player */
+
+.mejs-controls a.mejs-horizontal-volume-slider,
+.mejs-controls a.mejs-horizontal-volume-slider:focus,
+.mejs-controls a.mejs-horizontal-volume-slider:hover {
+	background: transparent;
+	border: 0;
+}
+
+/* Playlist Color Overrides: Light */
+
+.wp-playlist-light {
+	border-color: #eee;
+	color: #222;
+}
+
+.wp-playlist-light .wp-playlist-current-item .wp-playlist-item-album {
+	color: #333;
+}
+
+.wp-playlist-light .wp-playlist-current-item .wp-playlist-item-artist {
+	color: #767676;
+}
+
+.wp-playlist-light .wp-playlist-item {
+	border-bottom: 1px dotted #eee;
+	-webkit-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.3s ease-in-out;
+	transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.3s ease-in-out;
+}
+
+.wp-playlist-light .wp-playlist-item:hover,
+.wp-playlist-light .wp-playlist-item:focus {
+	border-bottom-color: rgba(0, 0, 0, 0);
+	background-color: #767676;
+	color: #fff;
+}
+
+.wp-playlist-light a.wp-playlist-caption:hover,
+.wp-playlist-light .wp-playlist-item:hover a,
+.wp-playlist-light .wp-playlist-item:focus a {
+	color: #fff;
+}
+
+/* Playlist Color Overrides: Dark */
+
+.wp-playlist-dark {
+	background: #222;
+	border-color: #333;
+}
+
+.wp-playlist-dark .mejs-container .mejs-controls {
+	background-color: #333;
+}
+
+.wp-playlist-dark .wp-playlist-caption {
+	color: #fff;
+}
+
+.wp-playlist-dark .wp-playlist-current-item .wp-playlist-item-album {
+	color: #eee;
+}
+
+.wp-playlist-dark .wp-playlist-current-item .wp-playlist-item-artist {
+	color: #aaa;
+}
+
+.wp-playlist-dark .wp-playlist-playing {
+	background-color: #333;
+}
+
+.wp-playlist-dark .wp-playlist-item {
+	border-bottom: 1px dotted #555;
+	-webkit-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.3s ease-in-out;
+	transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.3s ease-in-out;
+}
+
+.wp-playlist-dark .wp-playlist-item:hover,
+.wp-playlist-dark .wp-playlist-item:focus {
+	border-bottom-color: rgba(0, 0, 0, 0);
+	background-color: #aaa;
+	color: #222;
+}
+
+.wp-playlist-dark a.wp-playlist-caption:hover,
+.wp-playlist-dark .wp-playlist-item:hover a,
+.wp-playlist-dark .wp-playlist-item:focus a {
+	color: #222;
+}
+
+/* Playlist Style Overrides */
+
+.wp-playlist {
+	padding: 0.625em 0.625em 0.3125em;
+}
+
+.wp-playlist-current-item .wp-playlist-item-title {
+	font-weight: 700;
+}
+
+.wp-playlist-current-item .wp-playlist-item-album {
+	font-style: normal;
+}
+
+.wp-playlist-current-item .wp-playlist-item-artist {
+	font-size: 10px;
+	font-size: 0.625rem;
+	font-weight: 800;
+	letter-spacing: 0.1818em;
+	text-transform: uppercase;
+}
+
+.wp-playlist-item {
+	padding: 0 0.3125em;
+	cursor: pointer;
+}
+
+.wp-playlist-item:last-of-type {
+	border-bottom: none;
+}
+
+.wp-playlist-item a {
+	padding: 0.3125em 0;
+	border-bottom: none;
+}
+
+.wp-playlist-item a,
+.wp-playlist-item a:focus,
+.wp-playlist-item a:hover {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	background: transparent;
+}
+
+.wp-playlist-item-length {
+	top: 5px;
+}
+
+/**
+ * 8.0 - RTL
+ */
+
+.rtl th {
+	text-align: right;
+}
+
+.rtl ol {
+	counter-reset: item;
+}
+
+.rtl ol li:before {
+	left: auto;
+	right: -1.5em;
+}
+
+.rtl li > ul,
+.rtl li > ol {
+	margin-left: 0;
+	margin-right: 1.5em;
+}
+
+.rtl .mejs-offscreen {
+	right: -10000px;
+}
