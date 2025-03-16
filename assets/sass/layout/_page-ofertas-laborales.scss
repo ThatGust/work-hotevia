@@ -1,0 +1,98 @@
+.page-ofertas-laborales {
+   padding: 20px;
+
+   .section1 {
+      background-color: #fff;
+   }
+
+   .container {
+      max-width: 1200px;
+      margin: 0 auto;
+   }
+
+   .wrap-info {
+      padding: 20px;
+   }
+
+   .row1 h1 {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+   }
+
+   /* Filtros */
+   .filters {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+
+      label {
+         font-weight: bold;
+         margin-right: 10px;
+      }
+
+      select {
+         padding: 8px;
+         margin-right: 10px;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+         font-size: 14px;
+      }
+
+      .filter-btn {
+         padding: 8px 12px;
+         background-color: #ccc;
+         border: none;
+         border-radius: 5px;
+         cursor: pointer;
+         font-weight: bold;
+      }
+   }
+
+   /* Lista de Ofertas */
+   .job-listings {
+      border-top: 1px solid #e0e0e0;
+   }
+
+   .job-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #e0e0e0;
+   }
+
+   .job-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #d0011b;
+      margin: 0;
+   }
+
+   .job-location {
+      font-size: 14px;
+      color: #757575;
+      margin: 5px 0 0;
+   }
+
+   /* Estilo de búsqueda */
+   #search {
+      margin-bottom: 15px;
+      input[type="text"] {
+         width: 100%;
+         padding: 10px;
+         border-radius: 5px;
+         border: 1px solid #ccc;
+         margin-bottom: 10px;
+      }
+   
+      button {
+         background-color: #d0011b;
+         color: #fff;
+         padding: 10px 15px;
+         border: none;
+         border-radius: 5px;
+         cursor: pointer;
+         &:hover {
+            background-color: #b30018;
+         }
+      }
+   }
+}

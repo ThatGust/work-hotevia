@@ -1,0 +1,97 @@
+.wrapper {
+   width: 100%;
+}
+
+
+
+
+.desktop {
+   display: block;
+}
+
+.mobile {
+   display: none;
+}
+
+@media only screen and (min-width: $desktop-min) {}
+
+@media only screen and (min-width: $resize-min) and (max-width: $resize-max) {
+   .desktop {
+      display: block !important;
+   }
+
+   .mobile {
+      display: none !important;
+   }
+}
+
+@media only screen and (min-width: $tablet-min) and (max-width: $tablet-max) {
+   .desktop {
+      display: none !important;
+   }
+
+   .mobile {
+      display: block !important;
+   }
+}
+
+@media only screen and (max-width: $phone-max) {
+   .desktop {
+      display: none !important;
+   }
+
+   .mobile {
+      display: block !important;
+   }
+}
+
+
+
+img {
+   max-width: 100%;
+}
+
+.tran {
+   -webkit-transition: all 0.2s ease-in-out;
+   -moz-transition: all 0.2s ease-in-out;
+   -o-transition: all 0.2s ease-in-out;
+   transition: all 0.2s ease-in-out;
+}
+
+.hide {
+   display: none !important;
+}
+
+.bg-image {
+   background-repeat: no-repeat;
+   background-color: transparent;
+   background-size: cover;
+   background-position: center;
+}
+
+.parallax {
+   background-attachment: fixed;
+   background-repeat: no-repeat;
+   background-color: transparent;
+   background-position: center;
+   background-size: cover;
+   height: 100%;
+}
+
+@media only screen and (max-device-width: $tablet-max) {
+   .parallax {
+      background-attachment: scroll;
+   }
+}
+
+.wrap-shadow {
+   -webkit-box-shadow: 0px 0px 31px 5px rgba(0, 0, 0, 0.2);
+   -moz-box-shadow: 0px 0px 31px 5px rgba(0, 0, 0, 0.2);
+   box-shadow: 0px 0px 31px 5px rgba(0, 0, 0, 0.2);
+}
+
+.wrap-ishadow {
+   -webkit-box-shadow: inset 0px 0px 31px 5px rgba(0, 0, 0, 0.2);
+   -moz-box-shadow: inset 0px 0px 31px 5px rgba(0, 0, 0, 0.2);
+   box-shadow: inset 0px 0px 31px 5px rgba(0, 0, 0, 0.2);
+}

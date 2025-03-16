@@ -1785,7 +1785,8 @@ endif;
 
 
 // 7devlab
-wp_enqueue_style( 'custom-style', get_template_directory_uri() . '/css/styles.css', array(), '' );
+wp_enqueue_style( 'custom-style', get_template_directory_uri() . '/css/styles.css', 10 );
+wp_enqueue_script( 'custom-scripts', get_template_directory_uri() . '/js/main.min.js', array('jquery'), '1.0.0', true );
 
 if(function_exists('acf_add_options_page')) {
 	acf_add_options_page(array(

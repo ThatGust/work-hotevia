@@ -1,0 +1,20 @@
+$primary: #FB6041;
+$secondary: #f0f0f0;
+$dark: #636363;
+$white: #fff;
+$light: #d9d9d9;
+$medium: #c9c9c9;
+$regular: #a7a7a7;
+$border: #f5f2f1;
+$arrow: #979797;
+$link: #727272;
+$btnRtrn: #ececec;
+$txRtrn: #818181;
+$orange: #FF6D22;
+
+
+@import "base/general.scss";
+@import "base/utils.scss";
+@import "layout/page-ofertas-laborales.scss";
+@import "layout/single-empresa.scss";
+@import "layout/single-oferta-laboral.scss";
