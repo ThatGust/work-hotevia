@@ -1782,3 +1782,22 @@ if ( ! function_exists( 'newsplus_image_resize' ) ) :
 		}
 	}
 endif;
+
+
+// 7devlab
+wp_enqueue_style( 'custom-style', get_template_directory_uri() . '/css/styles.css', array(), '' );
+
+if(function_exists('acf_add_options_page')) {
+	acf_add_options_page(array(
+		'page_title' 	=> 'Banners para listado de ofertas',
+		'menu_title'	=> 'Banners para listado de ofertas',
+		'menu_slug' 	=> 'banners-ofertas',
+		'redirect'		=> false,
+		//'capability'=>'edit_posts',
+		//'icon_url'=> get_template_directory_uri().'/images/logo.png',
+	));
+}
+
+foreach(glob(get_template_directory().'/functions/*.php') as $filename):
+	require_once($filename);
+ endforeach;
