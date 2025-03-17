@@ -1,17 +1,44 @@
-.page-single-oferta-laboral{
+.page-single-oferta-laboral {
+   font-size: 16px;
+
    .inner-container {
+      display: flex;
+      justify-content: space-between;
       text-align: left;
    }
 
-   h1 {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #333;
+   .wrap-info {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+
+      label {
+         color: #666;
+         margin-bottom: 3px;
+         margin-right: 3px;
+      }
+   }
+
+   .ad-place {
+      flex: 1;
+      margin-right: 20px;
+   }
+
+   .offer-details {
+      flex: 2.7;
+   }
+
+   h2 {
+      font-size: 47px;
+      color: #666;
+      padding-bottom: 20px;
+
    }
 
    .section2 {
       background-color: #ffffff;
       padding: 40px 0;
+
       .offer-details {
          max-width: 800px;
          margin: 0 auto;
@@ -21,51 +48,85 @@
 
    .primary-offer-details {
       background-color: #f2f2f2;
-      padding-left: 20px;
-      .label-details {
+      padding-left: 25px;
+      padding-bottom: 10px;
+
+      label {
          font-weight: bold;
+      }
+
+      .label-details {
          color: #555;
          display: flex;
          align-items: center;
          margin-bottom: 3px;
       }
+
+      .label-details label {
+         font-weight: bold;
+      }
+
       .label-details p {
          text-align: left;
          margin: 0;
+         margin-bottom: 3px;
          flex-shrink: 0;
       }
    }
 
-   label {
-      font-size: 1rem;
-      color: #666;
-      margin: 15px 0;
-   }
 
    .breadcrumbs {
       font-size: 0.9rem;
       color: #888;
       margin-bottom: 15px;
+
       a {
          color: #0073aa;
          text-decoration: none;
+
          &:hover {
             text-decoration: underline;
          }
       }
    }
 
-   
-   .requirements h3 {
-      font-size: 1.2rem;
-      color: #333;
-      margin-bottom: 5px;
+   .requirements {
+      line-height: 22px;
+      padding-left: 26px;
+
+      h3 {
+         color: #666;
+         font-size: 16px;
+         margin-bottom: 5px;
+         font-weight: bold;
+      }
+
+      ul {
+         list-style: none;
+         margin-left: 0;
+         padding-left: 0;
+       }
+       
+       li {
+         padding-left: 1em;
+         text-indent: -1em;
+       }
+       
+       li:before {
+         content: "-";
+         padding-right: 5px;
+       }
+
    }
 
-   .apply-form{
+
+
+   .apply-form {
+      padding-left: 26px;
+      font-size: 18px;
       h3 {
-         font-size: 1.5em;
          margin-bottom: 20px;
+         font-size: 18px;
          color: #333;
       }
 
@@ -73,15 +134,14 @@
          display: flex;
          justify-content: flex-start;
          align-items: center;
-         margin-bottom: 15px;
+
          label {
-            font-weight: bold;
             color: #555;
             min-width: 180px;
             margin-right: 10px;
             text-align: left;
          }
-   
+
          input,
          textarea {
             flex: 1;
@@ -89,32 +149,44 @@
             border: 1px solid #ccc;
             width: 100%;
          }
+
          .label-details input[type="file"] {
             flex: 1;
             padding: 8px;
             border: 1px solid #ccc;
             width: 100%;
          }
-      
+
+         p {
+            font-size: 14px;
+            color: #666;
+            display: block; // Asegura que esté debajo
+            margin-top: 5px; // Espaciado para separar del input
+         }
+
          button {
-            padding: 10px 20px;
+            padding: 0 20px;
+            font-size: 24px;
             background-color: #777;
             color: #fff;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
             text-align: center;
             margin-left: auto;
             display: block;
+
             &.upload-btn {
                margin-bottom: 20px;
             }
          }
-         
+
          button[type="submit"] {
-            background-color: #555;
-            text-transform: uppercase;
+            background-color: #777;
+            font-weight: bold;
+            padding: 0 45px;
          }
-      
+
          textarea {
             resize: vertical;
          }

@@ -88,13 +88,6 @@ function clean(done) {
 
 
 
-
-
-
-
-
-
-
 function build_sass() {
        var sources_paths = [
               './assets/sass/styles.scss',

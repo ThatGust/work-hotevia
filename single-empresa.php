@@ -48,13 +48,14 @@ echo "</pre>";*/
                         <h1><?php the_field('nombre_de_la_empresa'); ?></h1>
 
                         <div class="empresa-info">
-                            <?php 
+                            <?php
                             $imagenes = get_field('imagenes');
-                            if( $imagenes ):
-                                foreach( $imagenes as $imagen ): ?>
-                                    <img src="<?php echo esc_url($imagen['url']); ?>" alt="<?php echo esc_attr($imagen['alt']); ?>" />
+                            if ($imagenes):
+                                foreach ($imagenes as $imagen): ?>
+                                    <img src="<?php echo esc_url($imagen['url']); ?>"
+                                        alt="<?php echo esc_attr($imagen['alt']); ?>" />
                                 <?php endforeach;
-                            endif; 
+                            endif;
                             ?>
                         </div>
 
@@ -63,8 +64,9 @@ echo "</pre>";*/
                         <h2>CONVOCATORIAS VIGENTES</h2>
 
                         <div class="job-offers">
-                            <?php if( have_rows('convocatoria') ): ?>
-                                <?php while( have_rows('convocatoria') ): the_row(); ?>
+                            <?php if (have_rows('convocatoria')): ?>
+                                <?php while (have_rows('convocatoria')):
+                                    the_row(); ?>
                                     <div class="job-card">
                                         <h3><?php the_sub_field('titulo'); ?></h3>
                                         <p><?php the_sub_field('fecha'); ?></p>
@@ -83,10 +85,20 @@ echo "</pre>";*/
                                     $sf_ID = $o_row->ID;
                                     $sf_title = $o_row->post_title;
                                     ?>
-                                    <li><?php echo $sf_ID; ?> <?php echo $sf_title; ?></li>
+                                    <li><?php echo $sf_ID; ?>     <?php echo $sf_title; ?></li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
+                    </div>
+                    <div class="ad-place">
+                        <?php if (have_rows('banners_de_columna')): ?>
+                            <?php while (have_rows('banners_de_columna')):
+                                the_row(); ?>
+                                <div class="ad">
+                                    <?php the_sub_field('html'); ?>
+                                </div>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
 
