@@ -80,7 +80,7 @@ global $post; ?>
 
 <div class="scroll-to-top"><a href="#" title="<?php _e( 'Scroll to top', 'newsplus' ); ?>"><span class="sr-only"><?php _e( 'scroll to top', 'newsplus' ); ?></span></a></div><!-- .scroll-to-top -->
 <?php wp_footer(); ?>
-
+<?php if(false): ?>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65422050-1"></script>
 <script>
@@ -90,7 +90,7 @@ global $post; ?>
 
   gtag('config', 'UA-65422050-1');
 </script>
-
+<?php endif; ?>
 
 </body>
 </html>
