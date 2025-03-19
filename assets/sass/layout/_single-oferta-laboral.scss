@@ -45,6 +45,10 @@
       }
       .ad{
          margin: 0 auto 30px auto;
+         max-width: 100%;
+         iframe, img, div{
+            max-width: 100%;
+         }
       }
    }
 
@@ -76,9 +80,8 @@
 
    .primary-offer-details {
       background-color: #f2f2f2;
-      padding-left: 25px;
-      padding-bottom: 10px;
-
+      padding: 15px 25px;
+      margin-bottom: 20px;
       label {
          font-weight: bold;
       }
@@ -87,9 +90,14 @@
          display: block;
          width: 100%;
          color: #555;
-         //display: flex;
-         //align-items: center;
          margin-bottom: 3px;
+         @media (max-width: $resize-min) {
+            margin-bottom: 10px;
+         }
+         label,
+         p{
+            line-height: 1.4em;
+         }
          label {
             font-weight: bold;
             @media (max-width: $resize-min) {
@@ -98,9 +106,9 @@
             }
          }
          p {
+            display: inline-block;
             text-align: left;
             margin: 0;
-            flex-shrink: 0;
             @media (max-width: $resize-min) {
                display: block;
                width: 100%;
@@ -173,17 +181,39 @@
       }
 
       .label-details {
-         display: flex;
-         justify-content: flex-start;
-         align-items: center;
+         display: block;
          @media (max-width: $resize-min) {
             display: block;
             width: 100%;
          }
+         .row{
+            flex-wrap: wrap;
+            align-items: start;
+            justify-content: center;
+         }
+         .custom-col-1{
+            flex: 0 0 auto;
+            width: 160px;
+            @media (max-width: $resize-min) {
+               width: 100%;
+            }
+         }
+         .custom-col-2{
+            flex: 0 0 auto;
+            width: calc(100% - 160px);
+            @media (max-width: $resize-min) {
+               width: 100%;
+            }
+         }
+         .custom-col-3{
+            flex: 0 0 auto;
+            width: 100%;
+            position: relative;
+            top: 3px;
+            //top: -15px;
+         }
          label {
             color: #555;
-            min-width: 180px;
-            margin-right: 10px;
             text-align: left;
             @media (max-width: $resize-min) {
                display: block;
@@ -193,15 +223,16 @@
 
          input,
          textarea {
-            flex: 1;
-            padding: 8px;
+            padding: 0 10px;
             border: 1px solid #ccc;
             width: 100%;
+            box-sizing: border-box;
          }
-
-         .label-details input[type="file"] {
+         input{
+            line-height: 40px;
+         }
+         input[type="file"] {
             flex: 1;
-            padding: 8px;
             border: 1px solid #ccc;
             width: 100%;
          }
@@ -237,7 +268,27 @@
          }
 
          textarea {
-            resize: vertical;
+            resize: none;
+         }
+         .notice{
+            font-size: 13px;
+            color: #707070;
+            display: block;
+            &.desktop{
+               display: block;
+               line-height: 1em;
+               @media (max-width: $resize-min) {
+                  display: none;
+               }
+            }
+            &.mobile{
+               display: none;
+               line-height: 1.3em;
+               @media (max-width: $resize-min) {
+                  display: block;
+               }
+            }
+            
          }
       }
    }

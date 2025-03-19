@@ -15,6 +15,8 @@
    $exp_conocimientos = get_field("exp_conocimientos", $post_id);
    $html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
 
+   //var_dump($html_pie_de_pagina); die();
+
    $banners_de_columna = get_field("banners_de_columna", "option");
 ?>
 
@@ -73,49 +75,102 @@
                               <h3>Postula a esta oferta aquí:</h3>
                               <form action="#" method="post" enctype="multipart/form-data">
                                  <div class="label-details">
-                                       <label for="nombre">Nombres:</label>
-                                       <input type="text" id="nombre" name="nombre" required>
+                                    <div class="row">
+                                       <div class="custom-col-1">
+                                          <label for="nombre">Nombres:</label>
+                                       </div>
+                                       <div class="custom-col-2">
+                                          <input type="text" id="nombre" name="nombre" required>
+                                       </div>
+                                    </div>
                                  </div>
 
                                  <div class="label-details">
-                                       <label for="apellidos">Apellidos:</label>
-                                       <input type="text" id="apellidos" name="apellidos" required>
+                                    <div class="row">
+                                       <div class="custom-col-1">
+                                          <label for="apellidos">Apellidos:</label>
+                                       </div>
+                                       <div class="custom-col-2">
+                                          <input type="text" id="apellidos" name="apellidos" required>
+                                       </div>
+                                    </div>
                                  </div>
 
                                  <div class="label-details">
-                                       <label for="telefono">Teléfono / Celular:</label>
-                                       <input type="tel" id="telefono" name="telefono" required>
+                                    <div class="row">
+                                       <div class="custom-col-1">
+                                          <label for="telefono">Teléfono / Celular:</label>
+                                       </div>
+                                       <div class="custom-col-2">
+                                          <input type="tel" id="telefono" name="telefono" required>
+                                       </div>
+                                    </div>
                                  </div>
 
                                  <div class="label-details">
-                                       <label for="email">Email:</label>
-                                       <input type="email" id="email" name="email" required>
+                                    <div class="row">
+                                       <div class="custom-col-1">
+                                          <label for="email">Email:</label>
+                                       </div>
+                                       <div class="custom-col-2">
+                                          <input type="email" id="email" name="email" required>
+                                       </div>
+                                    </div>
                                  </div>
 
                                  <div class="label-details">
-                                       <label for="linkedin">LinkedIn:</label>
-                                       <input type="url" id="linkedin" name="linkedin">
+                                    <div class="row">
+                                       <div class="custom-col-1">
+                                          <label for="linkedin">LinkedIn:</label>
+                                       </div>
+                                       <div class="custom-col-2">
+                                          <input type="url" id="linkedin" name="linkedin">
+                                       </div>
+                                    </div>
                                  </div>
 
                                  <div class="label-details">
-                                       <label for="cv">Envía tu CV</label>
-
-                                       <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
+                                    <div class="row">
+                                       <div class="custom-col-1">
+                                          <label for="cv">Envía tu CV</label>
+                                          <span class="notice desktop">(Formatos admitidos:</span>
+                                       </div>
+                                       <div class="custom-col-2">
+                                          <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
+                                       </div>
+                                       <div class="custom-col-3">
+                                          <span class="notice desktop">Word - PDF con un peso de hasta 2 MB)</span>
+                                          <span class="notice mobile">(Formatos admitidos: Word - PDF con un peso de hasta 2 MB)</span>
+                                       </div>
+                                    </div>
                                  </div>
 
                                  <div class="label-details">
-                                       <button type="button" class="upload-btn">Subir archivo</button>
+                                    <button type="button" class="upload-btn">Subir archivo</button>
                                  </div>
 
                                  <div class="label-details">
-                                       <label for="mensaje">Mensaje:</label>
-                                       <textarea id="mensaje" name="mensaje" rows="4"></textarea>
+                                    <div class="row">
+                                       <div class="custom-col-1">
+                                          <label for="mensaje">Mensaje:</label>
+                                       </div>
+                                       <div class="custom-col-2">
+                                          <textarea id="mensaje" name="mensaje" rows="4"></textarea>
+                                       </div>
+                                    </div>
                                  </div>
 
                                  <div class="label-details">
-                                       <button type="submit">ENVIAR</button>
+                                    <button type="submit">ENVIAR</button>
                                  </div>
                               </form>
+                           </div>
+
+                           <div class="footer-html">
+                              <?php 
+                                 //echo wp_kses_post($html_pie_de_pagina); 
+                                 echo $html_pie_de_pagina; 
+                              ?>
                            </div>
                         </div>
                         <?php
@@ -139,16 +194,7 @@
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="footer-html">
-        <div class="container">
-            <?php 
-               //echo wp_kses_post($html_pie_de_pagina); 
-               echo $html_pie_de_pagina; 
-            ?>
-        </div>
-    </section>
+      </section>
 </main>
 
 <?php get_footer(); ?>
