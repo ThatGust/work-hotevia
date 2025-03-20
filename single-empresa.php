@@ -36,6 +36,7 @@ $max_num_pages = ceil($total_rows / $posts_per_page);
 
 
 
+
 /*echo "<pre>";
 var_dump(Array("row"=>$rows, "total_rows"=>$total_rows));
 echo "</pre>";*/
