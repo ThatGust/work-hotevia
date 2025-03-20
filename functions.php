@@ -1790,9 +1790,9 @@ wp_enqueue_script( 'custom-scripts', get_template_directory_uri() . '/js/main.mi
 
 if(function_exists('acf_add_options_page')) {
 	acf_add_options_page(array(
-		'page_title' 	=> 'Banners para listado de ofertas',
-		'menu_title'	=> 'Banners para listado de ofertas',
-		'menu_slug' 	=> 'banners-ofertas',
+		'page_title' 	=> 'Opciones de ofertas laborales',
+		'menu_title'	=> 'Opciones de ofertas laborales',
+		'menu_slug' 	=> 'opciones-ofertas',
 		'redirect'		=> false,
 		//'capability'=>'edit_posts',
 		//'icon_url'=> get_template_directory_uri().'/images/logo.png',
