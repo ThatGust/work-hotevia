@@ -1732,6 +1732,8 @@ function newsplus_single_overlay_header() {
 add_action( 'newsplus_before_main', 'newsplus_single_overlay_header', 20 );
 
 
+
+
 // Image resize using BFI Thumb
 if ( ! function_exists( 'newsplus_image_resize' ) ) :
 	function newsplus_image_resize( $src, $imgwidth, $imgheight, $imgcrop, $imgquality, $imgcolor, $imggrayscale ) {
@@ -1782,6 +1784,11 @@ if ( ! function_exists( 'newsplus_image_resize' ) ) :
 		}
 	}
 endif;
+
+function agregar_scripts_personalizados() {
+    wp_enqueue_script('main-script', get_template_directory_uri() . '/js/main.js', array('jquery'), null, true);
+}
+add_action('wp_enqueue_scripts', 'agregar_scripts_personalizados');
 
 
 // 7devlab

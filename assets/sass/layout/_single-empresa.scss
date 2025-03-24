@@ -304,29 +304,46 @@
 
 
    .paginate-links {
-      display: flex;
-      justify-content: center;
-      margin-top: 30px;
-
-      a {
-         text-decoration: none;
-         margin: 0 5px;
+      padding-left: 25px;
+      font-size: 18px;
+      color: #757575;
+      align-items: left;
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+   
+      a, span {
          padding: 8px 12px;
+         text-decoration: none;
          border: 1px solid #ddd;
          border-radius: 5px;
-
+         color: #757575;
+         background-color: #f9f9f9;
+         transition: all 0.3s ease;
+   
          &:hover {
-            background-color: #f0f0f0;
-            color: #333;
+            background-color: #e0e0e0;
          }
       }
-
+   
       .current {
-         background-color: #555;
+         background-color: #ddd;
+         font-weight: bold;
+         color: black;
+         border: 1px solid #aaa;
+      }
+   
+      .prev, .next {
+         background-color: #ff0000;
          color: white;
-         border: 1px solid #555;
+         border: 1px solid #ff0000;
+   
+         &:hover {
+            background-color: #ff0000;
+         }
       }
    }
+   
 
    .html-pie-pagina {
       margin-top: 20px;

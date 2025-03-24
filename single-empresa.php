@@ -25,15 +25,12 @@ $logotipo = get_field("logotipo", $post_id);
 $imagenes = get_field("imagenes", $post_id);
 $descripcion = get_field("descripcion", $post_id);
 
-$convocatoria = get_field("convocatoria", $post_id);
 $html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
 $banners_de_columna = get_field("banners_de_columna", "option");
 //$temp = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
 $paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
 $rows = get_custom_posts($post_type = "oferta-laboral", $search = false, $taxonomies_array = false, $order = "3", $page = $paged, $posts_per_page = 5, $total_rows);
 $max_num_pages = ceil($total_rows / $posts_per_page);
-
-
 
 
 
@@ -133,7 +130,7 @@ echo "</pre>";*/
                             <div class="html-insert">
 
                             </div>
-                            <div>
+                            <div class="paginate-links">
                                 <?php
                                 echo paginate_links(array(
                                     'base' => add_query_arg('pg', '%#%'),

@@ -12,6 +12,15 @@ $f_s1_background = get_field("s1_background", $page_id);
 
 //Sites
 $f_s2_title = get_field("s2_title", $page_id);
+
+$banners_de_columna = get_field("banners_de_columna", "option");
+$banners_de_contenido = get_field("banners_de_contenido", "option");
+
+$paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
+$rows = get_custom_posts($post_type = "oferta-laboral", $search = false, $taxonomies_array = false, $order = "3", $page = $paged, $posts_per_page = 35, $total_rows);
+$max_num_pages = ceil($total_rows / $posts_per_page);
+$html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
+
 ?>
 <?php get_header(); ?>
 
@@ -24,69 +33,135 @@ $f_s2_title = get_field("s2_title", $page_id);
                         <div class="col col-ofertas-laborales">
 
                             <div class="breadcrumbs">
-                                Home > <?php echo esc_html($nombre_de_la_empresa); ?> – Ofertas de empleo – Perú
+                                Home > Temptemp – Ofertas de empleo – Perú
                             </div>
 
                             <h2 class="job-title">
                                 Ofertas de empleo hoteles y restaurantes Peru
                             </h2>
 
+                            <div class="search-bar">
+                                <?php
+                                $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white">
+    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+</svg>';
+                                ?>
+                                <div class="search-bar-inside">
 
-                            <div class="filters">
-                                <label for="filter-by">Filtrar por:</label>
-                                <select id="filter-by-puesto">
-                                    <option value="">Puesto</option>
-                                    <option value="administrador">Administrador</option>
-                                    <option value="asistente-limpieza">Asistente de Limpieza</option>
-                                    <option value="ejecutivo-cuentas">Ejecutivo de Cuentas</option>
-                                    <option value="gerente-general">Gerente General</option>
-                                    <option value="recepcionista">Recepcionista</option>
-                                    <option value="supervisor">Supervisor</option>
-                                </select>
-                                <select id="filter-by-lugar">
-                                    <option value="">Lugar</option>
-                                </select>
-                                <button class="filter-btn">Filtrar >></button>
+                                    <input type="text" class="search-input">
+                                    <button class="search-button">
+                                        <?php echo $search_icon_svg; ?>
+                                    </button>
+                                </div>
                             </div>
+
+                            <?php
+                            $titulos_ofertas = array();
+                            $ubicaciones_ofertas = array();
+
+                            foreach ($rows as $o_row) {
+                                $sf_title = strtoupper($o_row->post_title);
+                                $sf_ubicacion = get_post_meta($o_row->ID, 'ubicacion_geografica', true);
+
+                                if (!in_array($sf_title, $titulos_ofertas)) {
+                                    $titulos_ofertas[] = $sf_title;
+                                }
+
+                                if (!in_array($sf_ubicacion, $ubicaciones_ofertas)) {
+                                    $ubicaciones_ofertas[] = $sf_ubicacion;
+                                }
+                            }
+                            ?>
+
+                            <div class="filter-container">
+                                <div class="filter-tabs">
+                                    <label>Filtrar por:</label>
+                                </div>
+
+                                <div class="filter-tabs">
+                                    <span class="filter-tab active" data-target="filtro-puesto">Puesto</span>
+                                    <span class="filter-tab" data-target="filtro-lugar">Lugar</span>
+                                </div>
+
+                                <div class="filter-whole">
+                                    <div class="filter-dropdowns">
+                                        <div class="filter-dropdown active" id="filtro-puesto">
+                                            <ul>
+                                                <?php foreach ($titulos_ofertas as $titulo): ?>
+                                                    <li data-value="<?php echo esc_attr($titulo); ?>">
+                                                        <?php echo esc_html($titulo); ?>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+
+                                        <div class="filter-dropdown" id="filtro-lugar">
+                                            <ul>
+                                                <?php foreach ($ubicaciones_ofertas as $ubicacion): ?>
+                                                    <li data-value="<?php echo esc_attr($ubicacion); ?>">
+                                                        <?php echo esc_html($ubicacion); ?>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
 
                             <div class="job-listings">
-                                <div class="job-item">
-                                    <h2 class="job-title">RECEPCIONISTA - PARIWANA HOSTEL</h2>
-                                    <p class="job-location">Miraflores - 15 marzo, 2025</p>
-                                </div>
-                                <div class="job-item">
-                                    <h2 class="job-title">SUPERVISOR DE MANTENIMIENTOs - SOUMA HOTEL LIMA A VIGNETTE
-                                        COLLECTION</h2>
-                                    <p class="job-location">Miraflores - 31 marzo, 2025</p>
-                                </div>
-                                <div class="job-item">
-                                    <h2 class="job-title">AUXILIAR DE AREAS PÚBLICAS - BEST WESTERN URBAN LARCO HOTEL
-                                    </h2>
-                                    <p class="job-location">Miraflores - 2 abril, 2025</p>
-                                </div>
-                                <div class="job-item">
-                                    <h2 class="job-title">RECEPCIONISTA - HOTEL BRITANIA MIRAFLORES</h2>
-                                    <p class="job-location">Miraflores - 3 abril, 2025</p>
-                                </div>
-                                <div class="job-item">
-                                    <h2 class="job-title">SENIOR SALES MANAGER - HOTEL BRITANIA MIRAFLORES</h2>
-                                    <p class="job-location">Miraflores - 3 abril, 2025</p>
-                                </div>
-                                <div class="job-item">
-                                    <h2 class="job-title">PERSONAL PARA HK - CUARTELEROS - JW MARRIOTT LIMA HOTEL</h2>
-                                    <p class="job-location">Miraflores - 4 abril, 2025</p>
-                                </div>
-                                <div class="job-item">
-                                    <h2 class="job-title">CAMAREROS DE HOUSEKEEPING - HOTEL BRITANIA MIRAFLORES</h2>
-                                    <p class="job-location">Miraflores - 5 abril, 2025</p>
-                                </div>
-                                <div class="job-item">
-                                    <h2 class="job-title">RECEPCIONISTA - HOTEL BRITANIA MIRAFLORES</h2>
-                                    <p class="job-location">Miraflores - 5 abril, 2025</p>
-                                </div>
+                                <?php
+                                $contador = 0;
+                                $total_banners = count($banners_de_columna);
+                                $indice_banner = 0;
+
+                                foreach ($rows as $o_row):
+                                    $sf_ID = $o_row->ID;
+                                    $sf_title = strtoupper($o_row->post_title);
+                                    $sf_fecha = date("j F, Y", strtotime(get_post_meta($sf_ID, 'fecha_de_expiracion', true)));
+                                    $sf_empresa = get_post_meta($sf_ID, 'nombre_de_la_empresa', true);
+                                    $sf_ubicacion = get_post_meta($sf_ID, 'ubicacion_geografica', true);
+                                    $sf_link = get_permalink($sf_ID);
+
+                                    $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red">
+            <path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/>
+        </svg>';
+                                    ?>
+
+                                    <a href="<?php echo esc_url($sf_link); ?>" class="job-item"
+                                        data-title="<?php echo esc_attr($sf_title); ?>"
+                                        data-location="<?php echo esc_attr($sf_ubicacion); ?>">
+                                        <span class="icon"><?php echo $svg_icon; ?></span>
+                                        <span class="job-title-list"><?php echo $sf_title; ?> - </span>
+                                        <span class="job-location"><?php echo $sf_empresa; ?> /</span>
+                                        <span class="job-info"> <?php echo $sf_ubicacion; ?> -
+                                            <?php echo $sf_fecha; ?></span>
+                                    </a>
+
+                                    <?php
+                                    $contador++;
+
+                                    if ($contador % 10 == 0 && $total_banners > 0):
+                                        $sf_html = $banners_de_columna[$indice_banner]["html"];
+                                        if ($sf_html):
+                                            ?>
+                                            <div class="ad">
+                                                <?php echo $sf_html; ?>
+                                            </div>
+                                            <?php
+                                            $indice_banner = ($indice_banner + 1) % $total_banners;
+                                        endif;
+                                    endif;
+                                endforeach;
+                                ?>
                             </div>
 
-                            <div>
+
+
+                            <div class="paginate-links">
                                 <?php
                                 echo paginate_links(array(
                                     'base' => add_query_arg('pg', '%#%'),
