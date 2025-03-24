@@ -4,8 +4,14 @@
     * @subpackage Default_Theme
     */
 
-   if( isset($_POST["form-oferta-laboral"]) ):
+   $post_id = get_the_ID();
+   $empresa = get_field("empresa", $post_id);
+
+
+   if( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["form-oferta-laboral"]) && $empresa ):
       if( $_POST["form-oferta-laboral"] == "1" ):
+         $code_response = "0";
+
          $sf_nombre = $_POST["nombre"];
          $sf_apellidos = $_POST["apellidos"];
          $sf_telefono = $_POST["telefono"];
@@ -17,51 +23,94 @@
          $sf_title = get_the_title();
          $sf_permalink = get_the_permalink();
 
+         $empresa_id = $empresa;
+         if( is_object($empresa) ):
+            $empresa_id = $empresa->ID;
+         endif;
+         $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
+         $f_form_nombre_remitente = get_field("form_nombre_remitente", $empresa_id);
+         $f_form_email_remitente = get_field("form_email_remitente", $empresa_id);
+         $f_form_asunto = get_field("form_asunto", $empresa_id);
+         $f_form_mensaje = get_field("form_mensaje", $empresa_id);
 
-         $general_form_senders_name = get_field("location_form_senders_name", "option");
-         $general_form_senders_email = get_field("location_form_senders_email", "option");
-         $general_form_subject = get_field("location_form_subject", "option");
-         $general_form_message = get_field("location_form_message", "option". false);
-         $general_form_subject_client = get_field("location_form_subject_client", "option");
-         $general_form_message_client = get_field("location_form_message_client", "option");
+         $sf_nombre = $_POST["nombre"];
+         $sf_apellidos = $_POST["apellidos"];
+         $sf_telefono = $_POST["telefono"];
+         $sf_email = $_POST["email"];
+         $sf_linkedin = $_POST["linkedin"];
+         $sf_mensaje = $_POST["mensaje"];
+
+         if($f_form_nombre_remitente && $f_form_email_remitente && $f_form_asunto && $f_form_mensaje):
+
+            $email_from = $f_form_nombre_remitente." <".$f_form_email_remitente.">";
+            $email_subject = $f_form_asunto;
+         
+            $headers = "MIME-Version: 1.0"."\r\n";
+            $headers .= "Content-type: text/html;charset=utf-8"."\r\n";
+            $headers .= "Return-Path: ". $email_from . "\r\n";
+            $headers .= "Reply-To: ". $email_from. "\r\n";
+            $headers .= "Errors-To: ".$email_from."\r\n";
+            $headers .= "From: ". $email_from . "\r\n";
+
+            $email_message = "<!DOCTYPE html><html><head><title>Oferta Laboral</title></head><body>";
+            $email_message .= $f_form_mensaje;
+            $email_message .= "<strong>Oferta laboral: </strong>".$sf_title."<br />";
+            $email_message .= "<strong>Nombre: </strong>".$sf_nombre."<br />";
+            $email_message .= "<strong>Apellidos: </strong>".$sf_apellidos."<br />";
+            $email_message .= "<strong>Teléfono: </strong>".$sf_telefono."<br />";
+            $email_message .= "<strong>Email: </strong>".$sf_email."<br />";
+            $email_message .= "<strong>LinkedIn: </strong>".$sf_linkedin."<br />";
+            $email_message .= "<strong>Mensaje: </strong>".$sf_mensaje."<br />";
+            $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='".$sf_permalink."'> ".$sf_permalink." <br />";
+            
+            $attachments = Array();
+            $upload_path = false;
+            if( isset($_FILES['cv']) ):
+               $upload_dir = wp_upload_dir();
+               $upload_path = $upload_dir['path'] . '/' . basename($_FILES['cv']['name']);
+               if (move_uploaded_file($_FILES['cv']['tmp_name'], $upload_path)):
+                  $attachments = array($upload_path);
+               else:
+                  //echo 'Error al subir el archivo.';
+              endif;
+            endif;
+
+            if($f_form_emails_destinatarios):
+               $flag_send = false;
+               foreach($f_form_emails_destinatarios as $o_item):
+                  $sf_nombre = $o_item["nombre"];
+                  $sf_email = $o_item["email"];
+                  if($sf_nombre && $sf_email):
+                     $email_to = $sf_nombre." <".$sf_email.">";
+                     $flag_send = wp_mail($email_to, $email_subject, $email_message, $headers, $attachments);
+                  endif;
+               endforeach;
+
+               //falta copia al administrador
+
+               //falta correo al postulante
 
 
-         $email_from = $general_form_senders_name." <".$general_form_senders_email.">";
+               if($flag_send):
+                  $code_response = "1";
+               else:
+                  $code_response = "0";
+               endif;
+            endif;
 
-
-         $headers = "MIME-Version: 1.0"."\r\n";
-         $headers .= "Content-type: text/html;charset=utf-8"."\r\n";
-         $headers .= "Return-Path: ". $email_from . "\r\n";
-         $headers .= "Reply-To: ". $email_from. "\r\n";
-         $headers .= "Errors-To: ".$email_from."\r\n";
-         $headers .= "From: ". $email_from . "\r\n";
-
-         $email_message = "<!DOCTYPE html><html><head><title>Oferta Laboral</title></head><body>";
-         $email_message .= "<strong>Oferta laboral: </strong>".$sf_title."<br />";
-         $email_message .= "<strong>Nombre: </strong>".$sf_nombre."<br />";
-         $email_message .= "<strong>Apellidos: </strong>".$sf_apellidos."<br />";
-         $email_message .= "<strong>Teléfono: </strong>".$sf_telefono."<br />";
-         $email_message .= "<strong>Email: </strong>".$sf_email."<br />";
-         $email_message .= "<strong>LinkedIn: </strong>".$sf_linkedin."<br />";
-         $email_message .= "<strong>Mensaje: </strong>".$sf_mensaje."<br />";
-         $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='".$sf_permalink."'> ".$sf_permalink." <br />";
-
-
-         $additional = Array();
-
-         // Client mail
-         $email_to = $f_email;
-         $email_subject = $general_form_subject_client;
-         $email_message = $general_form_message_client;
-         $flag = wp_mail($email_to, $email_subject, $email_message, $headers, $additional);
-
+            if($upload_path):
+               unlink($upload_path);
+            endif;
+         else:
+            $code_response = "2";
+            
+         endif;
+         $redirect_url = $sf_permalink."?success=".$code_response;
+         wp_redirect($redirect_url);
+         exit;
       endif;
    endif;
 
-
-   $post_id = get_the_ID();
-
-   $empresa = get_field("empresa", $post_id);
    $nombre_de_la_empresa = get_field("nombre_de_la_empresa", $post_id);
    $fecha_de_expiracion = get_field("fecha_de_expiracion", $post_id);
    $ubicacion_geografica = get_field("ubicacion_geografica", $post_id);
@@ -74,6 +123,18 @@
 
    $banners_de_columna = get_field("banners_de_columna", "option");
    $botones_compartir = get_field("botones_compartir", "option");
+
+   $form_msg = false;
+   if( isset($_GET["success"]) ):
+      if( $_GET["success"] == "0" ):
+         $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">Ocurrió un error. Por favor, inténtelo de nuevo más tarde.</div>';
+      elseif( $_GET["success"] == "1" ):
+         $form_msg = '<div style="color:#28a745;line-height:1.4em;">Tu mensaje ha sido enviado con éxito.</div>';
+      elseif( $_GET["success"] == "2" ):
+         $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">La empresa no ha configurado los datos de envío. Por favor, espere o contacte al administrador.</div>';
+      endif;
+   endif;
+
    
 ?>
 
@@ -137,7 +198,7 @@
                                           <label for="nombre">Nombres:</label>
                                        </div>
                                        <div class="custom-col-2">
-                                          <input type="text" id="nombre" name="nombre" required>
+                                          <input type="text" id="nombre" name="nombre" required />
                                        </div>
                                     </div>
                                  </div>
@@ -148,7 +209,7 @@
                                           <label for="apellidos">Apellidos:</label>
                                        </div>
                                        <div class="custom-col-2">
-                                          <input type="text" id="apellidos" name="apellidos" required>
+                                          <input type="text" id="apellidos" name="apellidos" required />
                                        </div>
                                     </div>
                                  </div>
@@ -159,7 +220,7 @@
                                           <label for="telefono">Teléfono / Celular:</label>
                                        </div>
                                        <div class="custom-col-2">
-                                          <input type="tel" id="telefono" name="telefono" required>
+                                          <input type="tel" id="telefono" name="telefono" required />
                                        </div>
                                     </div>
                                  </div>
@@ -170,7 +231,7 @@
                                           <label for="email">Email:</label>
                                        </div>
                                        <div class="custom-col-2">
-                                          <input type="email" id="email" name="email" required>
+                                          <input type="email" id="email" name="email" required />
                                        </div>
                                     </div>
                                  </div>
@@ -181,7 +242,7 @@
                                           <label for="linkedin">LinkedIn:</label>
                                        </div>
                                        <div class="custom-col-2">
-                                          <input type="url" id="linkedin" name="linkedin">
+                                          <input type="url" id="linkedin" name="linkedin" />
                                        </div>
                                     </div>
                                  </div>
@@ -193,11 +254,12 @@
                                           <span class="notice desktop">(Formatos admitidos:</span>
                                        </div>
                                        <div class="custom-col-2">
-                                          <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
+                                          <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" onchange="validateFile(this)" required="required" />
                                        </div>
                                        <div class="custom-col-3">
                                           <span class="notice desktop">Word - PDF con un peso de hasta 2 MB)</span>
                                           <span class="notice mobile">(Formatos admitidos: Word - PDF con un peso de hasta 2 MB)</span>
+                                          <div id="cv-error-msg"></div>
                                        </div>
                                     </div>
                                  </div>
@@ -212,7 +274,7 @@
                                           <label for="mensaje">Mensaje:</label>
                                        </div>
                                        <div class="custom-col-2">
-                                          <textarea id="mensaje" name="mensaje" rows="4"></textarea>
+                                          <textarea id="mensaje" name="mensaje" rows="4" required ></textarea>
                                        </div>
                                     </div>
                                  </div>
@@ -220,6 +282,11 @@
                                  <div class="label-details">
                                     <button type="submit">ENVIAR</button>
                                     <input type="hidden" name="form-oferta-laboral" value="1">
+                                    <?php 
+                                       if($form_msg):
+                                          echo $form_msg;
+                                       endif;
+                                    ?>
                                  </div>
                               </form>
                            </div>
@@ -262,11 +329,12 @@
 
 <script>
    function validateFile() {
-      const fileInput = document.getElementById("fileInput");
-      const errorMsg = document.getElementById("errorMsg");
+      const fileInput = document.getElementById("cv");
+      const errorMsg = document.getElementById("cv-error-msg");
       
       if (fileInput.files.length === 0) {
          errorMsg.textContent = "Por favor, selecciona un archivo.";
+         errorMsg.style.color = "#FF6B6B";
          return false;
       }
       
@@ -278,15 +346,18 @@
 
       if (!allowedExtensions.includes(fileExtension)) {
          errorMsg.textContent = "Solo se permiten archivos .doc, .docx y .pdf.";
+         errorMsg.style.color = "#FF6B6B";
          return false;
       }
 
       if (file.size > maxSize) {
          errorMsg.textContent = "El archivo no debe superar los 2MB.";
+         errorMsg.style.color = "#FF6B6B";
          return false;
       }
 
       errorMsg.textContent = "Archivo válido.";
+      errorMsg.style.color = "#28a745";
       return true;
    }
 </script>
