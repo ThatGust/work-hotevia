@@ -6,7 +6,16 @@
 
    $post_id = get_the_ID();
    $empresa = get_field("empresa", $post_id);
+   $empresa_id = $empresa;
+   if( is_object($empresa) ):
+      $empresa_id = $empresa->ID;
+   endif;
 
+   $base_url = get_bloginfo("url");
+   $title_negocio = get_the_title($empresa_id);
+   $permalink_negocio = get_permalink($empresa_id);
+   $title_oferta = get_the_title($post_id);
+   $permalink_oferta = get_the_permalink();
 
    if( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["form-oferta-laboral"]) && $empresa ):
       if( $_POST["form-oferta-laboral"] == "1" ):
@@ -18,27 +27,15 @@
          $sf_email = $_POST["email"];
          $sf_linkedin = $_POST["linkedin"];
          $sf_mensaje = $_POST["mensaje"];
-         $sf_cv = $_POST["cv"];
+         //$sf_cv = $_FILES["cv"];
 
-         $sf_title = get_the_title();
-         $sf_permalink = get_the_permalink();
+         
 
-         $empresa_id = $empresa;
-         if( is_object($empresa) ):
-            $empresa_id = $empresa->ID;
-         endif;
          $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
          $f_form_nombre_remitente = get_field("form_nombre_remitente", $empresa_id);
          $f_form_email_remitente = get_field("form_email_remitente", $empresa_id);
          $f_form_asunto = get_field("form_asunto", $empresa_id);
          $f_form_mensaje = get_field("form_mensaje", $empresa_id);
-
-         $sf_nombre = $_POST["nombre"];
-         $sf_apellidos = $_POST["apellidos"];
-         $sf_telefono = $_POST["telefono"];
-         $sf_email = $_POST["email"];
-         $sf_linkedin = $_POST["linkedin"];
-         $sf_mensaje = $_POST["mensaje"];
 
          if($f_form_nombre_remitente && $f_form_email_remitente && $f_form_asunto && $f_form_mensaje):
 
@@ -54,14 +51,14 @@
 
             $email_message = "<!DOCTYPE html><html><head><title>Oferta Laboral</title></head><body>";
             $email_message .= $f_form_mensaje;
-            $email_message .= "<strong>Oferta laboral: </strong>".$sf_title."<br />";
+            $email_message .= "<strong>Oferta laboral: </strong>".$title_oferta."<br />";
             $email_message .= "<strong>Nombre: </strong>".$sf_nombre."<br />";
             $email_message .= "<strong>Apellidos: </strong>".$sf_apellidos."<br />";
             $email_message .= "<strong>Teléfono: </strong>".$sf_telefono."<br />";
             $email_message .= "<strong>Email: </strong>".$sf_email."<br />";
             $email_message .= "<strong>LinkedIn: </strong>".$sf_linkedin."<br />";
             $email_message .= "<strong>Mensaje: </strong>".$sf_mensaje."<br />";
-            $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='".$sf_permalink."'> ".$sf_permalink." <br />";
+            $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='".$permalink_oferta."'> ".$permalink_oferta." <br />";
             
             $attachments = Array();
             $upload_path = false;
@@ -75,6 +72,7 @@
               endif;
             endif;
 
+            //correos destinatarios
             if($f_form_emails_destinatarios):
                $flag_send = false;
                foreach($f_form_emails_destinatarios as $o_item):
@@ -87,8 +85,15 @@
                endforeach;
 
                //falta copia al administrador
+               $admin_email = get_option('admin_email');
+               if (is_email($admin_email)):
+                  $flag_send = wp_mail($admin_email, $email_subject, $email_message, $headers, $attachments);
+               endif;
 
                //falta correo al postulante
+               if (is_email($sf_email)):
+                  $flag_send = wp_mail($sf_email, $email_subject, $email_message, $headers, $attachments);
+               endif;
 
 
                if($flag_send):
@@ -134,8 +139,6 @@
          $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">La empresa no ha configurado los datos de envío. Por favor, espere o contacte al administrador.</div>';
       endif;
    endif;
-
-   
 ?>
 
 <?php get_header(); ?>
@@ -147,35 +150,38 @@
                 <div class="wrap-info">
                      <div class="row">
                         <div class="col col-offer-details">
-                           <div class="breadcrumbs">
-                              Home > <?php echo esc_html($nombre_de_la_empresa); ?> – Ofertas de empleo – Perú
-                           </div>
+
+                           <ol class="breadcrumbs">
+                              <li><a href="<?php echo $base_url; ?>">Home</a></li>
+                              <li><a href="<?php echo $permalink_negocio; ?>"><?php echo $title_negocio; ?></a></li>
+                              <li><span><?php echo $title_oferta; ?></span></li>
+                           </ol>
 
                            <h2 class="job-title">
-                              <?php echo esc_html($nombre_de_la_empresa); ?> – Ofertas de empleo – Perú
+                              <?php echo $nombre_de_la_empresa; ?> – Ofertas de empleo – Perú
                            </h2>
 
                            <div class="primary-offer-details">
-                              <label class="label-details"><?php echo esc_html($nombre_de_la_empresa); ?></label>
+                              <label class="label-details"><?php echo $nombre_de_la_empresa; ?></label>
 
                               <div class="label-details">
                                  <label>EMPRESA:</label>
-                                 <p><?php echo esc_html($nombre_de_la_empresa); ?></p>
+                                 <p><?php echo $nombre_de_la_empresa; ?></p>
                               </div>
 
                               <div class="label-details">
                                  <label>FECHA DE EXPIRACIÓN:</label>
-                                 <p><?php echo esc_html($fecha_de_expiracion); ?></p>
+                                 <p><?php echo $fecha_de_expiracion; ?></p>
                               </div>
 
                               <div class="label-details">
                                  <label>UBICACIÓN GEOGRÁFICA:</label>
-                                 <p><?php echo esc_html($ubicacion_geografica); ?></p>
+                                 <p><?php echo $ubicacion_geografica; ?></p>
                               </div>
 
                               <div class="label-details">
                                  <label>EMPRESA EN LA QUE SE VA A TRABAJAR:</label>
-                                 <p><?php echo esc_html($empr_trabaj); ?></p>
+                                 <p><?php echo $empr_trabaj; ?></p>
                               </div>
 
                            </div>
@@ -183,10 +189,10 @@
 
                            <div class="requirements">
                               <h3>REQUISITOS</h3>
-                              <div><?php echo wp_kses_post($requisitos); ?></div>
+                              <div><?php echo $requisitos; ?></div>
 
                               <h3>Experiencia y Conocimientos</h3>
-                              <div><?php echo wp_kses_post($exp_conocimientos); ?></div>
+                              <div><?php echo $exp_conocimientos; ?></div>
                            </div>
 
                            <div class="apply-form">

@@ -15,7 +15,6 @@
       display: block;
       text-align: left;
    }
-
    .job-title{
       font-size: $size_h1_desktop;
       line-height: 1.3em;
@@ -119,14 +118,15 @@
 
 
    .breadcrumbs {
-      font-size: 0.9rem;
-      color: #888;
+      //font-size: 0.9rem;
       margin-bottom: 15px;
-
-      a {
-         color: #0073aa;
+      a, span {
+         font-size: 13px;
+         color: #888;
+         //color: #0073aa;
          text-decoration: none;
-
+      }
+      a{
          &:hover {
             text-decoration: underline;
          }
