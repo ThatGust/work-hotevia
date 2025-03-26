@@ -1,3 +1,5 @@
+$red : #ff0000;
+//$red : #e43500;
 .single-empresa {
    .wrap {
       max-width: 1170px;
@@ -17,14 +19,16 @@
    font-size: $size_text_desktop;
 
    .breadcrumbs {
-      font-size: 0.9rem;
-      color: #888;
+      //font-size: 0.9rem;
+      //color: #888;
       margin-bottom: 15px;
-
-      a {
-         color: #0073aa;
+      a, span {
+         font-size: 13px;
+         color: #888;
+         //color: #0073aa;
          text-decoration: none;
-
+      }
+      a{
          &:hover {
             text-decoration: underline;
          }
@@ -51,8 +55,9 @@
 
       label {
          color: #666;
-         margin-bottom: 3px;
-         margin-right: 3px;
+         margin: 0;
+         //margin-bottom: 3px;
+         //margin-right: 3px;
       }
 
       h2 {
@@ -119,7 +124,15 @@
       display: flex;
       align-items: flex-start;
       gap: 20px;
-
+      @media (max-width: $resize-min) {
+         padding-left: 0;
+      }
+      &.empresa-info-description{
+         padding-top: 50px;
+         @media (max-width: $resize-min) {
+            padding-top: 0px;
+         }
+      }
       .logo {
          width: 200px;
          height: auto;
@@ -130,11 +143,19 @@
          grid-template-columns: repeat(2, 1fr);
          grid-gap: 10px; 
          max-width: 420px; 
+         @media (max-width: $resize-min) {
+            grid-template-columns: 100%;
+            max-width: unset; 
+            grid-gap: 0;
+         }
       }
    
       .gallery-img {
          width: 100%;
          height: auto;
+         @media (max-width: $resize-min) {
+            margin-bottom: 30px;
+         }
       }
    
       .gallery-img:nth-child(3) {
@@ -142,7 +163,7 @@
       }
 
       p {
-         margin-top: 65px;
+         //margin-top: 65px;
          font-size: 18px;
          margin-bottom: 20px;
       }
@@ -180,6 +201,9 @@
       line-height: 22px;
       padding-left: 26px;
       margin-bottom: 60px;
+      @media (max-width: $resize-min) {
+         padding-left: 0;
+      }
 
       div {
 
@@ -202,6 +226,9 @@
          padding-left: 26px;
          margin-bottom: 50px;
          font-weight: bold;
+         @media (max-width: $resize-min) {
+            margin-bottom: 30px;
+         }
       }
    }
 
@@ -214,6 +241,12 @@
       margin-bottom: 15px;
       position: relative;
       gap: 10px;
+      @media (max-width: $resize-min) {
+         padding: 0;
+      }
+      a{
+         width: 100%;
+      }
    }
 
    .job-card-sub {
@@ -235,40 +268,54 @@
       background-color: #f5faff;
       padding: 10px 20px;
       position: relative;
-
-      h3 {
-         color: #ff0000;
-         font-size: 22px;
-         font-weight: bold;
-         margin-bottom: 5px;
-         text-transform: uppercase;
-      }
-
-      label {
-         font-size: 16px;
+      box-sizing: border-box;
+      @media (max-width: $resize-min) {
          display: block;
-         font-size: 18px;
+         justify-content: unset;
       }
-   }
-
-   .button-details {
-      display: flex;
-      justify-content: flex-end;
-      flex-shrink: 0;
-
-      button {
-         background-color: #82817d;
-         color: white;
-         border: none;
-         border-radius: 5px;
-         padding: 5px 30px;
-         margin-right: 30px;
-         cursor: pointer;
-         font-size: 18px;
-         transition: background 0.3s ease;
-
-         &:hover {
-            background-color: #555;
+      .job-card-data{
+         @media (max-width: $resize-min) {
+            display: block;
+            width: 100%;
+            margin-bottom: 30px;
+         }
+         h3 {
+            color: $red;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+         }
+         label {
+            font-size: 16px;
+            display: block;
+            font-size: 18px;
+         }
+      }
+      .button-details {
+         display: flex;
+         justify-content: flex-end;
+         flex-shrink: 0;
+         @media (max-width: $resize-min) {
+            display: block;
+            width: 100%;
+            justify-content: unset;
+            flex-shrink: unset;            
+         }
+         button {
+            background-color: #82817d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 30px;
+            margin-right: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.3s ease;
+   
+            &:hover {
+               background-color: #555;
+            }
          }
       }
    }
@@ -279,6 +326,9 @@
          color: #757575;
          padding-left: 26px;
          margin-bottom: 50px;
+         @media (max-width: $resize-min) {
+            padding-left: 0;
+         }
       }
    }
 
@@ -304,13 +354,14 @@
 
 
    .paginate-links {
-      padding-left: 25px;
+      //padding-left: 25px;
       font-size: 18px;
       color: #757575;
       align-items: left;
       gap: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+      text-align: center;
    
       a, span {
          padding: 8px 12px;
@@ -334,12 +385,13 @@
       }
    
       .prev, .next {
-         background-color: #ff0000;
+         //background-color: #ff0000;
+         background-color: $red;
          color: white;
-         border: 1px solid #ff0000;
+         border: 1px solid $red;
    
          &:hover {
-            background-color: #ff0000;
+            background-color: $red;
          }
       }
    }

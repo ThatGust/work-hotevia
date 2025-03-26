@@ -157,9 +157,7 @@
                               <li><span><?php echo $title_oferta; ?></span></li>
                            </ol>
 
-                           <h2 class="job-title">
-                              <?php echo $nombre_de_la_empresa; ?> – Ofertas de empleo – Perú
-                           </h2>
+                           <h1 class="job-title"> <?php echo $nombre_de_la_empresa; ?> </h1>
 
                            <div class="primary-offer-details">
                               <label class="label-details"><?php echo $nombre_de_la_empresa; ?></label>
