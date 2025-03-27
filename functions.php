@@ -1790,6 +1790,17 @@ function agregar_scripts_personalizados() {
 }
 add_action('wp_enqueue_scripts', 'agregar_scripts_personalizados');
 
+function registrar_ofertas_laborales() {
+    $args = array(
+        'public'       => true,
+        'label'        => 'Ofertas Laborales',
+        'supports'     => array( 'title', 'editor', 'thumbnail' ),
+        // Otros parámetros según tus necesidades
+    );
+    register_post_type('oferta-laboral', $args);
+}
+add_action('init', 'registrar_ofertas_laborales');
+
 
 // 7devlab
 wp_enqueue_style( 'custom-style', get_template_directory_uri() . '/css/styles.css', 10 );

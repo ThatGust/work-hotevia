@@ -1,3 +1,5 @@
+$red : #ff0000;
+
 .page-ofertas-laborales {
    font-size: $size_text_desktop;
 
@@ -61,14 +63,16 @@
    }
 
    .breadcrumbs {
-      font-size: 0.9rem;
-      color: #888;
       margin-bottom: 15px;
 
-      a {
-         color: #0073aa;
+      a,
+      span {
+         font-size: 13px;
+         color: #888;
          text-decoration: none;
+      }
 
+      a {
          &:hover {
             text-decoration: underline;
          }
@@ -76,7 +80,6 @@
    }
 
 
-   /* Filtros */
    .filters {
       display: flex;
       align-items: center;
@@ -105,7 +108,6 @@
       }
    }
 
-   /* Lista de Ofertas */
    .job-listings {
       padding: 26px;
       font-size: 18px;
@@ -130,14 +132,14 @@
             svg {
                width: 16px;
                height: 16px;
-               fill: red;
+               fill: $red;
             }
          }
 
          .job-title-list {
             font-weight: bold;
             font-size: 18px;
-            color: red;
+            color: $red;
             text-transform: uppercase;
             margin-right: 5px;
          }
@@ -158,12 +160,6 @@
       }
    }
 
-
-
-
-
-
-   /* Estilo de búsqueda */
    #search {
       margin-bottom: 15px;
 
@@ -190,13 +186,13 @@
    }
 
    .paginate-links {
-      padding-left: 25px;
       font-size: 18px;
       color: #757575;
       align-items: left;
       gap: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+      text-align: center;
 
       a,
       span {
@@ -222,12 +218,12 @@
 
       .prev,
       .next {
-         background-color: #ff0000;
+         background-color: $red;
          color: white;
-         border: 1px solid #ff0000;
+         border: 1px solid $red;
 
          &:hover {
-            background-color: #ff0000;
+            background-color: $red;
          }
       }
    }
@@ -238,45 +234,60 @@
       padding: 5px;
       width: fit-content;
       margin-bottom: 10px;
-   }
 
-   .search-bar-inside {
-      display: flex;
-      background-color: white;
-      padding: 5px;
-      border-radius: 30px;
-      width: 450px;
-      border: 1px solid #f1fcff;
-   }
+      .search-bar-inside {
+         display: flex;
+         background-color: rgb(255, 255, 255);
+         padding: 5px 5px 0 0;
+         border-radius: 30px;
+         width: 450px;
+         border: 1px solid #f1fcff;
+      }
 
-   .search-input {
-      flex: 1;
-      padding-left: 5px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-      background: transparent;
-   }
+      .search-input {
+         flex: 1;
+         padding-left: 5px;
+         border: none;
+         outline: none;
+         font-size: 16px;
+         background: transparent;
+      }
 
-   .search-button {
-      background-color: red;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-   }
+      .search-button {
+         background-color: $red;
+         border: none;
+         width: 40px;
+         height: 40px;
+         border-radius: 50%;
+         box-sizing: border-box;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         cursor: pointer;
 
-   .search-button svg {
-      width: 20px;
-      height: 20px;
-      fill: white;
-      flex-shrink: 0;
-   }
+         svg {
+            width: 15px;
+            height: 15px;
+            fill: #fff;
+            flex-shrink: 0;
+         }
+      }
 
+      @media screen and (max-width: 768px) {
+         width: 100%;
+         padding: 10px;
+
+         .search-bar-inside {
+            width: 100%;
+            border-radius: 20px;
+            padding: 5px;
+         }
+
+         .search-input {
+            font-size: 14px;
+         }
+      }
+   }
 
 
 
@@ -287,7 +298,7 @@
       color: #757575;
       flex-direction: row;
       align-items: flex-start;
-   
+
       .filter-tabs {
          display: flex;
          flex-direction: column;
@@ -295,61 +306,85 @@
          align-items: flex-start;
          font-weight: bold;
          padding-right: 5px;
-   
+
          .filter-tab {
             cursor: pointer;
             font-weight: normal;
             transition: all 0.3s ease;
-   
+
             &.active {
                font-weight: bold;
             }
          }
       }
-   
+
       .filter-whole {
          background-color: #f1fcff;
          padding: 8px;
          position: relative;
          margin-left: auto;
          width: 400px;
-   
+
          .filter-dropdowns {
             padding: 8px;
-            background-color: white;
+            background-color: #fff;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-   
+
             .filter-dropdown {
                display: none;
                background-color: #f1fcff;
                max-height: 165px;
                overflow-y: auto;
-   
+
                ul {
                   list-style: none;
                   padding: 0;
                   margin: 0;
                }
-   
+
                li {
                   padding: 0px 10px;
                   cursor: pointer;
                   transition: background 0.2s;
-   
+
                   &:hover {
                      background: #e3f2fd;
                   }
                }
-   
+
                &.active {
                   display: block;
                }
             }
          }
       }
+
+      @media screen and (max-width: 768px) {
+         width: 100%;
+         flex-direction: column;
+         padding: 10px;
+
+         .filter-tabs {
+            flex-direction: row;
+            align-items: center;
+            font-size: 16px;
+            padding-right: 0;
+            margin-bottom: 10px;
+
+            .filter-tab {
+               margin-right: 10px;
+            }
+         }
+
+         .filter-whole {
+            width: 100%;
+            margin-left: 0;
+            padding: 8px;
+         }
+      }
    }
-   
+
 
 
 }
