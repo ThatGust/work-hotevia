@@ -35,7 +35,7 @@
          $post_type = "oferta-laboral", 
          $search = false, 
          $taxonomies_array = false, 
-         $custom_field_array = array( array( "meta_key"=>"fecha_de_expiracion", "condition"=>"AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
+         $custom_field_array = array( array( "meta_key"=>"fecha_de_expiracion", "condition"=>"AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()"), array( "meta_key"=>"empresa", "condition"=>"AND %meta_value% = ".$post_id) ),  //%meta_value% 
          $order = array( 0=>'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
          $page = $paged, 
          $posts_per_page, 
