@@ -39,13 +39,13 @@
          $order = array( 0=>'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
          $page = $paged, 
          $posts_per_page, 
-         $total_rows);
+         $total_rows );
    $max_num_pages = ceil($total_rows / $posts_per_page);
 
 
    $base_url = get_bloginfo("url");
-   $title_negocio = get_the_title($empresa_id);
-   $permalink_negocio = get_permalink($empresa_id);
+   $title_negocio = get_the_title($post_id);
+   $permalink_negocio = get_permalink($post_id);
 
    /*echo "<pre>";
    var_dump(Array("row"=>$rows, "total_rows"=>$total_rows));
