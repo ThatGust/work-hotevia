@@ -20,6 +20,7 @@
       line-height: 1.3em;
       @media (max-width: $resize-min) {
          font-size: $size_h1_mobile;
+         text-align: center;
       }
    }
 

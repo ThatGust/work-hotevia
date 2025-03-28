@@ -32,6 +32,9 @@
    $max_num_pages = ceil($total_rows / $posts_per_page);
    $html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
 
+   $base_url = get_bloginfo("url");
+   $title_negocio = get_the_title($page_id);
+
    $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
    $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
 ?>

@@ -41,6 +41,7 @@ $red : #ff0000;
 
       @media (max-width: $resize-min) {
          font-size: $size_h1_mobile;
+         text-align: center;
       }
    }
 
