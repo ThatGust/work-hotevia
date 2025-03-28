@@ -5,38 +5,35 @@
  * Template Name: Ofertas Laborales
  */
 
-$post_id = get_the_ID();
+   $page_id = get_the_ID();
 
-$posts_per_page = 35;
+   $posts_per_page = 35;
 
-//Header
-$f_s1_background = get_field("s1_background", $post_id);
+   //Header
+   $f_s1_background = get_field("s1_background", $page_id);
 
-//Sites
-$f_s2_title = get_field("s2_title", $post_id);
+   //Sites
+   $f_s2_title = get_field("s2_title", $page_id);
 
-$banners_de_columna = get_field("banners_de_columna", "option");
-$banners_de_contenido = get_field("banners_de_contenido", "option");
+   $banners_de_columna = get_field("banners_de_columna", "option");
+   $banners_de_contenido = get_field("banners_de_contenido", "option");
 
-$paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
-$rows = get_custom_posts(
-    $post_type = "oferta-laboral",
-    $search = false,
-    $taxonomies_array = false,
-    $custom_field_array = array( array( "meta_key"=>"fecha_de_expiracion", "condition"=>"AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
-    $order = array(0 => 'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
-    $page = $paged,
-    $posts_per_page,
-    $total_rows
-);
+   $paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
+   $rows = get_custom_posts(
+      $post_type = "oferta-laboral",
+      $search = false,
+      $taxonomies_array = false,
+      $custom_field_array = array(array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
+      $order = array(0 => 'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
+      $page = $paged,
+      $posts_per_page,
+      $total_rows
+   );
+   $max_num_pages = ceil($total_rows / $posts_per_page);
+   $html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
 
-$title_negocio = get_the_title($post_id);
-
-$max_num_pages = ceil($total_rows / $posts_per_page);
-$html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
-$svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red">
-            <path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/>
-        </svg>';
+   $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
+   $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
 ?>
 <?php get_header(); ?>
 
@@ -59,9 +56,7 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
 
                             <div class="search-bar">
                                 <?php
-                                $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white">
-    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
-</svg>';
+                                
                                 ?>
                                 <div class="search-bar-inside">
                                     <input type="text" class="search-input" id="searchInput">
@@ -72,21 +67,21 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
                             </div>
 
                             <?php
-                            $titulos_ofertas = array();
-                            $ubicaciones_ofertas = array();
+                              $titulos_ofertas = array();
+                              $ubicaciones_ofertas = array();
 
-                            foreach ($rows as $o_row) {
-                                $sf_title = $o_row->post_title;
-                                $sf_ubicacion = get_post_meta($o_row->ID, 'ubicacion_geografica', true);
+                              foreach ($rows as $o_row) {
+                                 $sf_title = $o_row->post_title;
+                                 $sf_ubicacion = get_post_meta($o_row->ID, 'ubicacion_geografica', true);
 
-                                if (!in_array($sf_title, $titulos_ofertas)) {
-                                    $titulos_ofertas[] = $sf_title;
-                                }
+                                 if (!in_array($sf_title, $titulos_ofertas)) {
+                                       $titulos_ofertas[] = $sf_title;
+                                 }
 
-                                if (!in_array($sf_ubicacion, $ubicaciones_ofertas)) {
-                                    $ubicaciones_ofertas[] = $sf_ubicacion;
-                                }
-                            }
+                                 if (!in_array($sf_ubicacion, $ubicaciones_ofertas)) {
+                                       $ubicaciones_ofertas[] = $sf_ubicacion;
+                                 }
+                              }
                             ?>
 
                             <div class="filter-container">

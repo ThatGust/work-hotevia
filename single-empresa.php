@@ -39,7 +39,7 @@
          $order = array( 0=>'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
          $page = $paged, 
          $posts_per_page, 
-         $total_rows);
+         $total_rows );
    $max_num_pages = ceil($total_rows / $posts_per_page);
 
    $base_url = get_bloginfo("url");
