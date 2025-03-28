@@ -1820,3 +1820,28 @@ if(function_exists('acf_add_options_page')) {
 foreach(glob(get_template_directory().'/functions/*.php') as $filename):
 	require_once($filename);
  endforeach;
+
+
+function get_user_role() {
+   global $current_user;  
+   $user_roles = $current_user->roles;
+   $user_role = array_shift($user_roles);
+
+   return $user_role;
+}
+
+add_action('pre_get_posts', 'filtrar_posts_por_autor');
+function filtrar_posts_por_autor($query) {
+   if (is_user_logged_in()):
+      $user_role = get_user_role();
+      if( is_admin() && $query->is_main_query() && $user_role == "editor"  ):
+         $screen = get_current_screen();
+         if( in_array($screen->post_type, array("oferta-laboral","empresa")) ):
+            $user = wp_get_current_user();
+            if (in_array('editor', $user->roles) || in_array('author', $user->roles)):
+               $query->set('author', $user->ID);
+            endif;
+         endif;
+      endif;
+   endif;
+}
