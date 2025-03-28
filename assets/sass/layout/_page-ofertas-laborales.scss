@@ -15,6 +15,7 @@ $red : #ff0000;
 
       @media (max-width: $resize-min) {
          font-size: $size_h1_mobile;
+         text-align: center;
       }
    }
 
@@ -54,6 +55,25 @@ $red : #ff0000;
          }
       }
    }
+
+   .ad-long {
+      flex: 0 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+   
+      iframe,
+      img,
+      div {
+         max-width: 100%;
+         height: auto;
+      }
+   
+      @media (max-width: $resize-min) {
+         width: 100%;
+         text-align: center;
+      }
+   }
+   
 
    .col-ofertas-laborales {
       flex: 0 0 auto;
@@ -180,31 +200,6 @@ $red : #ff0000;
       }
    }
 
-   @media (max-width: 520px) {
-      font-size: 14px;
-      padding: 10px;
-      display: flex;
-      justify-content: center; 
-
-      .job-item {
-         max-width: 100%;
-         padding: 8px 0;
-         text-align: left;
-         font-size: 14px;
-
-         .job-title-list {
-            font-size: 14px;
-         }
-
-         .job-location {
-            font-size: 13px;
-         }
-
-         .job-info {
-            font-size: 12px;
-         }
-      }
-   }
 
    #search {
       margin-bottom: 15px;
@@ -277,6 +272,7 @@ $red : #ff0000;
    .search-bar {
       justify-content: center;
       background-color: #f0faff;
+      margin-top: 70px;
       padding: 5px;
       width: fit-content;
       margin-bottom: 10px;
@@ -321,7 +317,7 @@ $red : #ff0000;
          }
       }
 
-      @media screen and (max-width: 768px) {
+      @media (max-width: $resize-min) {
          width: 100%;
          padding: 10px;
 
@@ -408,29 +404,29 @@ $red : #ff0000;
          }
       }
 
-      @media screen and (max-width: 768px) {
+      @media (max-width: $resize-min) {
+         display: block;
          width: 100%;
-         flex-direction: column;
-         padding: 10px;
-
+      
          .filter-tabs {
             flex-direction: row;
             align-items: center;
             font-size: 16px;
             padding-right: 0;
             margin-bottom: 10px;
-
+      
             .filter-tab {
                margin-right: 10px;
             }
          }
-
+      
          .filter-whole {
             width: 100%;
             margin-left: 0;
             padding: 8px;
          }
       }
+      
    }
 
 
