@@ -38,14 +38,21 @@
       width: 355px;
       padding-left: 25px;
       box-sizing: border-box;
+
       @media (max-width: $resize-min) {
          width: 100%;
+         text-align: center;
          padding-left: 0px;
       }
-      .ad{
+
+      .ad {
+         display: inline-block;
          margin: 0 auto 30px auto;
          max-width: 100%;
-         iframe, img, div{
+
+         iframe,
+         img,
+         div {
             max-width: 100%;
          }
       }
@@ -292,6 +299,24 @@
          }
       }
    }
+
+   .boton-personalizado {
+      display: block;
+      width: 100%;
+      background-color: #ff0000;
+      color: rgb(255, 255, 255);
+      padding: 15px 20px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      box-sizing: border-box; 
+  }
+  
+  .boton-personalizado:hover {
+      background-color: #c70000;
+  }
+  
 
    .share-buttons{
       padding: 45px 0;

@@ -5,15 +5,15 @@
  * Template Name: Ofertas Laborales
  */
 
-$page_id = get_the_ID();
+$post_id = get_the_ID();
 
 $posts_per_page = 35;
 
 //Header
-$f_s1_background = get_field("s1_background", $page_id);
+$f_s1_background = get_field("s1_background", $post_id);
 
 //Sites
-$f_s2_title = get_field("s2_title", $page_id);
+$f_s2_title = get_field("s2_title", $post_id);
 
 $banners_de_columna = get_field("banners_de_columna", "option");
 $banners_de_contenido = get_field("banners_de_contenido", "option");
@@ -23,14 +23,17 @@ $rows = get_custom_posts(
     $post_type = "oferta-laboral",
     $search = false,
     $taxonomies_array = false,
-    $custom_field_array = array(array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
+    $custom_field_array = array( array( "meta_key"=>"fecha_de_expiracion", "condition"=>"AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
     $order = array(0 => 'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
     $page = $paged,
     $posts_per_page,
     $total_rows
 );
+
+$title_negocio = get_the_title($post_id);
+
 $max_num_pages = ceil($total_rows / $posts_per_page);
-$html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
+$html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
 $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red">
             <path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/>
         </svg>';

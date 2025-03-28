@@ -38,10 +38,12 @@ $red : #ff0000;
 
       @media (max-width: $resize-min) {
          width: 100%;
+         text-align: center;
          padding-left: 0px;
       }
 
       .ad {
+         display: inline-block;
          margin: 0 auto 30px auto;
          max-width: 100%;
 
@@ -160,6 +162,50 @@ $red : #ff0000;
       }
    }
 
+   @media (max-width: $resize-min) {
+      display: flex;
+      justify-content: center;
+
+      .job-item {
+         max-width: 100%; 
+         text-align: left;
+         padding: 10px 0;
+         font-size: 16px;
+
+         .job-title-list,
+         .job-location,
+         .job-info {
+            font-size: 16px;
+         }
+      }
+   }
+
+   @media (max-width: 520px) {
+      font-size: 14px;
+      padding: 10px;
+      display: flex;
+      justify-content: center; 
+
+      .job-item {
+         max-width: 100%;
+         padding: 8px 0;
+         text-align: left;
+         font-size: 14px;
+
+         .job-title-list {
+            font-size: 14px;
+         }
+
+         .job-location {
+            font-size: 13px;
+         }
+
+         .job-info {
+            font-size: 12px;
+         }
+      }
+   }
+
    #search {
       margin-bottom: 15px;
 
@@ -258,16 +304,18 @@ $red : #ff0000;
          border: none;
          width: 40px;
          height: 40px;
+         padding: 0;
+         min-width: unset;
          border-radius: 50%;
          box-sizing: border-box;
-         display: flex;
-         align-items: center;
-         justify-content: center;
+         display: block;
          cursor: pointer;
 
          svg {
             width: 15px;
             height: 15px;
+            display: block;
+            margin: 0 auto;
             fill: #fff;
             flex-shrink: 0;
          }
