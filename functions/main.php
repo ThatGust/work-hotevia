@@ -60,3 +60,60 @@
    
 
 
+   add_filter('acf/load_field/name=pais', 'populateCountry');
+   function populateCountry( $field ){	
+      $field['choices'] = array();
+      $path_json_countries = get_template_directory()."/functions/php-countries/countries.php";
+      $array_countries = include $path_json_countries;
+      foreach($array_countries as $key=>$city_name):
+         $field['choices'][ $key ] = $city_name;
+      endforeach;
+      return $field;
+   }
+
+   add_filter('acf/load_field/name=ciudad', 'populateCity');
+   function populateCity( $field ){	
+      $field['choices'] = array();
+
+      $path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
+      $array_countries_states = include $path_json_countries_states;
+      foreach($array_countries_states as $key_city=>$array_states):
+         foreach($array_states as $key_state=>$state_name):
+            $field['choices'][ $key_city."@".$key_state ] = $state_name;
+         endforeach;
+      endforeach;
+      return $field;
+   }
+
+
+   add_action('admin_footer', 'agregar_js_personalizado_admin');
+   function agregar_js_personalizado_admin() {
+      $screen = get_current_screen();
+      if( in_array($screen->post_type, array("oferta-laboral")) ):
+         echo '
+         <script>
+            jQuery(document).ready(function ($) {
+               jQuery("div[data-name=\'pais\'] select").change(function(){
+                  let code_country = jQuery(this).val();
+                  code_country = code_country.trim();
+                  jQuery("div[data-name=\'ciudad\'] select option").each(function(){
+                     let code_country_state = $(this).val();
+                     let array_codes = code_country_state.split("@");
+                     let c_country = array_codes[0];
+                     c_country = c_country.trim();
+                     if(c_country == code_country){
+                        //console.log("add");
+                        jQuery(this).removeAttr("style");
+                     }else{
+                        //console.log("remove");
+                        jQuery(this).css("display","none");
+                     }
+                  });   
+                  //jQuery("div[data-name=\'ciudad\'] select").val(null); 
+               });
+               jQuery("div[data-name=\'pais\'] select").change();
+            });
+         </script>';
+      endif;
+  }
+  
