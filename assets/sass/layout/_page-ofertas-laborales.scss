@@ -60,20 +60,20 @@ $red : #ff0000;
       flex: 0 0 auto;
       width: 100%;
       box-sizing: border-box;
-   
+
       iframe,
       img,
       div {
          max-width: 100%;
          height: auto;
       }
-   
+
       @media (max-width: $resize-min) {
          width: 100%;
          text-align: center;
       }
    }
-   
+
 
    .col-ofertas-laborales {
       flex: 0 0 auto;
@@ -187,7 +187,7 @@ $red : #ff0000;
       justify-content: center;
 
       .job-item {
-         max-width: 100%; 
+         max-width: 100%;
          text-align: left;
          padding: 10px 0;
          font-size: 16px;
@@ -308,8 +308,8 @@ $red : #ff0000;
          cursor: pointer;
 
          svg {
-            width: 15px;
-            height: 15px;
+            width: 19px;
+            height: 19px;
             display: block;
             margin: 0 auto;
             fill: #fff;
@@ -364,36 +364,77 @@ $red : #ff0000;
 
       .filter-whole {
          background-color: #f1fcff;
-         padding: 8px;
+         padding: 12px;
          position: relative;
-         margin-left: auto;
-         width: 400px;
+         width: 100%;
+         max-width: 450px;
+         margin: 0 auto;
+         border-radius: 12px;
+
+         .filter-tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+
+            label {
+               font-size: 16px;
+               font-weight: bold;
+               color: #333;
+            }
+
+            .filter-tab {
+               font-size: 14px;
+               padding: 8px 16px;
+               border-radius: 8px;
+               cursor: pointer;
+               color: #666;
+               background-color: #e3f2fd;
+               transition: background-color 0.3s, color 0.3s;
+
+               &.active {
+                  background-color: #0288d1;
+                  color: #fff;
+               }
+
+               &:hover {
+                  background-color: #81d4fa;
+                  color: #fff;
+               }
+            }
+         }
 
          .filter-dropdowns {
-            padding: 8px;
             background-color: #fff;
+            padding: 12px;
             border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
 
             .filter-dropdown {
                display: none;
                background-color: #f1fcff;
-               max-height: 165px;
+               max-height: 180px;
                overflow-y: auto;
+               border-radius: 8px;
 
-               ul {
+               ul {  
                   list-style: none;
                   padding: 0;
                   margin: 0;
                }
 
                li {
-                  padding: 0px 10px;
-                  cursor: pointer;
-                  transition: background 0.2s;
+                  margin-bottom: 8px;
 
-                  &:hover {
-                     background: #e3f2fd;
+                  input[type="radio"] {
+                     position: absolute;
+
+                  }
+
+                  span {
+                     margin-left: 8px;
+                     color: #757575;
+                     transition: color 0.2s;
                   }
                }
 
@@ -402,31 +443,61 @@ $red : #ff0000;
                }
             }
          }
+
+         .filter-button {
+            grid-column: 2; 
+            align-self: start;
+            display: block;
+            width: auto;
+            padding: 5px 10px;
+            margin-left: auto;
+            background-color: #83827e;
+            text-align: center;
+            color: #ffffff;
+            border-radius: 15px;
+            cursor: pointer;
+
+
+            button {
+               font-size: 18px;
+               font-weight: bold;
+               background-color: #83827e;
+            }
+
+            &::after {
+               content: " >>";
+               font-weight: bold;
+               margin-left: 10px;
+            }
+         }
+
       }
+
+
 
       @media (max-width: $resize-min) {
          display: block;
          width: 100%;
-      
+
          .filter-tabs {
             flex-direction: row;
             align-items: center;
             font-size: 16px;
             padding-right: 0;
             margin-bottom: 10px;
-      
+
             .filter-tab {
                margin-right: 10px;
             }
          }
-      
+
          .filter-whole {
             width: 100%;
             margin-left: 0;
             padding: 8px;
          }
       }
-      
+
    }
 
 

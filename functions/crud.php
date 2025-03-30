@@ -23,11 +23,15 @@
       if(is_array($taxonomies_array)):
          $i=1;
          foreach($taxonomies_array as $o_item):
-            $sf_term_id = $o_item["term_id"];
+            $sf_slug = $o_item['terms'];
+            $taxonomy = $o_item['taxonomy'];
+            
             $query .= '
-               INNER JOIN '.$table_prefix.'wp_term_relationships wtr'.$i.' ON wtr'.$i.'.object_id = wp.ID
-               INNER JOIN '.$table_prefix.'wp_term_taxonomy wtt'.$i.' ON wtt'.$i.'.term_id = wtr'.$i.'.term_id AND wtt'.$i.'.term_id = '.$sf_term_id.'
+            INNER JOIN ' . $table_prefix . 'wp_term_relationships wtr' . $i . ' ON wtr' . $i . '.object_id = wp.ID
+            INNER JOIN ' . $table_prefix . 'wp_term_taxonomy wtt' . $i . ' ON wtt' . $i . '.term_taxonomy_id = wtr' . $i . '.term_taxonomy_id
+            INNER JOIN ' . $table_prefix . 'wp_terms wt' . $i . ' ON wt' . $i . '.term_id = wtt' . $i . '.term_id
             ';
+            $query .= ' AND wt' . $i . '.slug = "' . esc_sql($sf_slug) . '"';
             $i++;
          endforeach;
       endif;

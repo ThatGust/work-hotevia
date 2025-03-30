@@ -19,10 +19,22 @@ $banners_de_columna = get_field("banners_de_columna", "option");
 $banners_de_contenido = get_field("banners_de_contenido", "option");
 
 $paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
+$selected_puesto = isset($_GET['puesto']) ? sanitize_text_field($_GET['puesto']) : '';
+
+$taxonomies_array = false;
+if (!empty($selected_puesto)) {
+    $taxonomies_array = array(
+        array(
+            'taxonomy' => 'puesto',
+            'terms' => $selected_puesto,
+        ),
+    );
+}
+
 $rows = get_custom_posts(
     $post_type = "oferta-laboral",
     $search = false,
-    $taxonomies_array = false,
+    $taxonomies_array,
     $custom_field_array = array(array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
     $order = array(0 => 'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
     $page = $paged,
@@ -35,9 +47,18 @@ $html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
 $base_url = get_bloginfo("url");
 $title_negocio = get_the_title($page_id);
 
+$puestos = get_terms(array(
+    'taxonomy' => 'puesto',
+    'hide_empty' => false,
+));
+
+
 $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
 $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
 ?>
+
+
+
 <?php get_header(); ?>
 
 <main id="main-content" class="page wrapper page-ofertas-laborales" role="main">
@@ -79,25 +100,6 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
                                 </div>
                             </div>
 
-
-                            <?php
-                            $titulos_ofertas = array();
-                            $ubicaciones_ofertas = array();
-
-                            foreach ($rows as $o_row) {
-                                $sf_title = $o_row->post_title;
-                                $sf_ubicacion = get_post_meta($o_row->ID, 'ubicacion_geografica', true);
-
-                                if (!in_array($sf_title, $titulos_ofertas)) {
-                                    $titulos_ofertas[] = $sf_title;
-                                }
-
-                                if (!in_array($sf_ubicacion, $ubicaciones_ofertas)) {
-                                    $ubicaciones_ofertas[] = $sf_ubicacion;
-                                }
-                            }
-                            ?>
-
                             <div class="filter-container">
                                 <div class="filter-tabs">
                                     <label>Filtrar por:</label>
@@ -110,36 +112,44 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
 
                                 <div class="filter-whole">
                                     <div class="filter-dropdowns">
-                                        <div class="filter-dropdown active" id="filtro-puesto">
-                                            <ul>
-                                                <?php if (!empty($titulos_ofertas)): ?>
-                                                    <?php foreach ($titulos_ofertas as $titulo): ?>
-                                                        <li data-value="<?php echo $titulo; ?>">
-                                                            <?php echo $titulo; ?>
-                                                        </li>
-                                                    <?php endforeach; ?>
-                                                <?php else: ?>
-                                                    <li>No hay puestos disponibles</li>
-                                                <?php endif; ?>
-                                            </ul>
-                                        </div>
+                                        <form method="GET" action="">
+                                            <div class="filter-dropdown active" id="filtro-puesto">
+                                                <ul>
+                                                    <?php if (!empty($puestos)): ?>
+                                                        <?php foreach ($puestos as $puesto): ?>
+                                                            <li>
+                                                                <input type="radio" name="puesto" value="<?php echo $puesto->slug; ?>" 
+                                                                    id="puesto-<?php echo $puesto->term_id; ?>"
+                                                                    <?php echo ($selected_puesto == $puesto->slug) ? 'checked' : ''; ?> />
+                                                                <label for="puesto-<?php echo $puesto->term_id; ?>"><?php echo $puesto->name; ?></label>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    <?php else: ?>
+                                                        <li>No hay puestos disponibles</li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>
 
-                                        <div class="filter-dropdown" id="filtro-lugar">
-                                            <ul>
-                                                <?php if (!empty($ubicaciones_ofertas)): ?>
-                                                    <?php foreach ($ubicaciones_ofertas as $ubicacion): ?>
-                                                        <li data-value="<?php echo $ubicacion; ?>">
-                                                            <?php echo $ubicacion; ?>
-                                                        </li>
-                                                    <?php endforeach; ?>
-                                                <?php else: ?>
-                                                    <li>No hay lugares disponibles</li>
-                                                <?php endif; ?>
-                                            </ul>
-                                        </div>
+                                            <div class="filter-dropdown" id="filtro-lugar">
+                                                <ul id="lugar-list">
+                                                    <?php if (!empty($ubicaciones_ofertas)): ?>
+                                                        <?php foreach ($ubicaciones_ofertas as $ubicacion): ?>
+                                                            <li data-value="<?php echo $ubicacion; ?>"><?php echo $ubicacion; ?></li>
+                                                        <?php endforeach; ?>
+                                                    <?php else: ?>
+                                                        <li>No hay lugares disponibles</li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>
+
+                                            <div class="filter-button">
+                                                <button type="submit">Filtro</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
+
 
 
                             <div class="job-listings">
