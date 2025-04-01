@@ -52,12 +52,27 @@ $puestos = get_terms(array(
     'hide_empty' => false,
 ));
 
+$path_json_countries = get_template_directory() . "/functions/php-countries/countries.php";
+$array_countries = include $path_json_countries;
+$paises = array();
+foreach ($array_countries as $key => $country_name) {
+    $paises[$key] = $country_name;
+}
+
+$path_json_countries_states = get_template_directory() . "/functions/php-countries/states.php";
+$array_countries_states = include $path_json_countries_states;
+$ciudades = array();
+foreach ($array_countries_states as $key_country => $array_states) {
+    foreach ($array_states as $key_state => $state_name) {
+        $ciudades[$key_country . "@" . $key_state] = $state_name;
+    }
+}
+
+$ubicaciones_ofertas = $ciudades;
 
 $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
 $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
 ?>
-
-
 
 <?php get_header(); ?>
 
@@ -113,8 +128,18 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
                                 <div class="filter-whole">
                                     <div class="filter-dropdowns">
                                         <form method="GET" action="">
-                                            <div class="filter-dropdown active" id="filtro-puesto">
-                                                <ul>
+
+                                            <div class="custom-dropdown" id="filtro-puesto">
+                                                <div class="dropdown-toggle" id="puesto-toggle">
+                                                    <span>
+                                                        <?php if (!empty($puestos)): ?>
+                                                            <?php echo isset($selected_puesto) ? $puestos[array_search($selected_puesto, array_column($puestos, 'slug'))]->name : 'Selecciona un puesto'; ?>
+                                                        <?php else: ?>
+                                                            No hay puestos disponibles
+                                                        <?php endif; ?>
+                                                    </span>
+                                                </div>
+                                                <ul class="dropdown-menu" id="puesto-menu">
                                                     <?php if (!empty($puestos)): ?>
                                                         <?php foreach ($puestos as $puesto): ?>
                                                             <li>
@@ -130,25 +155,53 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
                                                 </ul>
                                             </div>
 
-                                            <div class="filter-dropdown" id="filtro-lugar">
-                                                <ul id="lugar-list">
-                                                    <?php if (!empty($ubicaciones_ofertas)): ?>
-                                                        <?php foreach ($ubicaciones_ofertas as $ubicacion): ?>
-                                                            <li data-value="<?php echo $ubicacion; ?>"><?php echo $ubicacion; ?></li>
-                                                        <?php endforeach; ?>
-                                                    <?php else: ?>
-                                                        <li>No hay lugares disponibles</li>
-                                                    <?php endif; ?>
-                                                </ul>
+                                            <div class="custom-dropdown" id="filtro-lugar" style="display: none;">
+                                                <div class="dropdown-group">
+                                                    <div data-name="pais">
+                                                        <label for="pais-select">País:</label>
+                                                        <select id="pais-select">
+                                                            <option value="">Selecciona un país</option>
+                                                            <?php foreach ($paises as $codigo => $nombre): ?>
+                                                                <option value="<?php echo $codigo; ?>"><?php echo $nombre; ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+
+
+                                                    <div data-name="ciudad">
+                                                        <label for="ciudad-select">Ciudad:</label>
+                                                        <select id="ciudad-select">
+                                                            <option value="">Seleccione una ciudad</option>
+                                                            <?php foreach ($ciudades as $codigo => $nombre): ?>
+                                                                <option value="<?php echo $codigo; ?>"><?php echo $nombre; ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+
+
+                                                    <div data-name="distrito">
+                                                        <label for="distrito-input">Distrito:</label>
+                                                        <input type="text" id="distrito-input" name="distrito" placeholder="Ingresa el distrito">
+                                                    </div>
+
+                                                    <div data-name="direccion">
+                                                        <label for="direccion-input">Dirección:</label>
+                                                        <input type="text" id="direccion-input" name="direccion" placeholder="Ingresa la dirección">
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="filter-button">
-                                                <button type="submit">Filtro</button>
+                                                <button>Filtro</button>
                                             </div>
+
                                         </form>
                                     </div>
                                 </div>
                             </div>
+
+
+
 
 
 

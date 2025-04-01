@@ -369,7 +369,6 @@ $red : #ff0000;
          width: 100%;
          max-width: 450px;
          margin: 0 auto;
-         border-radius: 12px;
 
          .filter-tabs {
             display: flex;
@@ -385,19 +384,18 @@ $red : #ff0000;
             .filter-tab {
                font-size: 14px;
                padding: 8px 16px;
-               border-radius: 8px;
                cursor: pointer;
                color: #666;
                background-color: #e3f2fd;
                transition: background-color 0.3s, color 0.3s;
 
                &.active {
-                  background-color: #0288d1;
+                  background-color: #f1fcff;
                   color: #fff;
                }
 
                &:hover {
-                  background-color: #81d4fa;
+                  background-color: #f1fcff;
                   color: #fff;
                }
             }
@@ -406,57 +404,90 @@ $red : #ff0000;
          .filter-dropdowns {
             background-color: #fff;
             padding: 12px;
-            border-radius: 10px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-
-            .filter-dropdown {
-               display: none;
-               background-color: #f1fcff;
-               max-height: 180px;
-               overflow-y: auto;
-               border-radius: 8px;
-
-               ul {  
-                  list-style: none;
-                  padding: 0;
-                  margin: 0;
-               }
-
-               li {
-                  margin-bottom: 8px;
-
-                  input[type="radio"] {
-                     position: absolute;
-
-                  }
-
-                  span {
-                     margin-left: 8px;
-                     color: #757575;
-                     transition: color 0.2s;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: center;
+            
+            form {
+               margin: 0;
+            }
+         
+            .custom-dropdown {
+               display: flex;
+               align-items: center;
+               justify-content: space-between;
+               position: relative;
+         
+               .dropdown-toggle {
+                  flex: 1;
+                  padding: 8px;
+                  background-color: #f1fcff;
+                  border-radius: 8px;
+                  cursor: pointer;
+         
+                  &:hover {
+                     background-color: #e0f7ff;
                   }
                }
-
-               &.active {
-                  display: block;
+         
+               .dropdown-menu {
+                  display: none;
+                  position: absolute; 
+                  top: 100%; 
+                  background-color: #f1fcff;
+                  border-radius: 8px;
+                  max-height: 180px;
+                  overflow-y: auto;
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                  width: 100%;
+                  z-index: 10;
+         
+                  li {
+                     margin-bottom: 8px;
+                     padding: 8px;
+         
+                     input[type="radio"] {
+                        margin-right: 8px;
+                     }
+                  }
+         
+                  &.open {
+                     display: block;
+                  }
+               }
+         
+               .filter-button {
+                  margin-left: 16px;
+         
+                  button {
+                     padding: 8px 12px;
+                     background-color: #83827e;
+                     color: #fff;
+                     border: none;
+                     border-radius: 5px;
+                     cursor: pointer;
+         
+                     &:hover {
+                        background-color: #83827e;
+                     }
+                  }
                }
             }
          }
+         
+         
+         
+         
 
          .filter-button {
-            grid-column: 2; 
-            align-self: start;
-            display: block;
-            width: auto;
-            padding: 5px 10px;
-            margin-left: auto;
+            justify-self: end;
+            padding: 0px 40px;
             background-color: #83827e;
             text-align: center;
             color: #ffffff;
-            border-radius: 15px;
+            border-radius: 10px;
             cursor: pointer;
-
 
             button {
                font-size: 18px;
@@ -468,6 +499,34 @@ $red : #ff0000;
                content: " >>";
                font-weight: bold;
                margin-left: 10px;
+            }
+         }
+
+         .dropdown-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; // Espacio entre los elementos
+      
+            .input-place {
+               display: flex;
+               flex-direction: column;
+               width: 100%;
+      
+               label {
+                  font-size: 14px;
+                  margin-bottom: 0.5rem; // Espacio entre el label y el select/input
+               }
+      
+               select,
+               input[type="text"] {
+                  width: 100%; // Ocupa todo el ancho disponible
+                  max-width: 100%; // Asegura que no se expanda más de lo permitido
+                  padding: 0.5rem; // Espacio interno del input/select
+                  border: 1px solid #ccc;
+                  border-radius: 4px;
+                  font-size: 14px;
+                  box-sizing: border-box; // Asegura que el padding no expanda el input
+               }
             }
          }
 

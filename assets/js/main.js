@@ -1,34 +1,36 @@
-jQuery(document).ready(function ($) {
-   console.log("Filtro listo!");
+document.addEventListener('DOMContentLoaded', function() {
+    // SWITCH ENTRE FILTROS
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
 
-   $(".filter-tab").on("click", function () {
-       $(".filter-tab").removeClass("active");
-       $(this).addClass("active");
+            document.getElementById('filtro-puesto').style.display = this.dataset.target === 'filtro-puesto' ? 'block' : 'none';
+            document.getElementById('filtro-lugar').style.display = this.dataset.target === 'filtro-lugar' ? 'block' : 'none';
+        });
+    });
 
-       let target = $(this).data("target");
-       $(".filter-dropdown").removeClass("active");
-       $("#" + target).addClass("active");
-   });
 
-   $(".filter-dropdown li").on("click", function () {
-       let valorSeleccionado = $(this).data("value");
-       let tipoFiltro = $(this).parent().parent().attr("id");
+    // TOGGLE DEL MENÚ DE PUESTO
+    var toggleButton = document.getElementById('puesto-toggle');
+    var dropdownMenu = document.getElementById('puesto-menu');
+    var radios = dropdownMenu.querySelectorAll('input[type="radio"]');
+    var selectedText = toggleButton.querySelector('span');
 
-       $(".job-item").each(function () {
-           let titulo = $(this).data("title");
-           let ubicacion = $(this).data("location");
+    toggleButton.addEventListener('click', function() {
+        dropdownMenu.style.display = (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') ? 'block' : 'none';
+    });
 
-           let mostrar = true;
+    radios.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            selectedText.textContent = this.nextElementSibling.textContent;
+            dropdownMenu.style.display = 'none';
+        });
+    });
 
-           if (tipoFiltro === "filtro-puesto" && titulo !== valorSeleccionado) {
-               mostrar = false;
-           }
-
-           if (tipoFiltro === "filtro-lugar" && ubicacion !== valorSeleccionado) {
-               mostrar = false;
-           }
-
-           $(this).toggle(mostrar);
-       });
-   });
+    document.addEventListener('click', function(event) {
+        if (!toggleButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
 });
