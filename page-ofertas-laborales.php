@@ -5,73 +5,100 @@
  * Template Name: Ofertas Laborales
  */
 
-$page_id = get_the_ID();
+   $v_search_text = false;
+   $v_puesto_id = false;
+   $v_pais_slug = false;
+   $v_ciudad_slug = false;
+   if( isset($_GET["se"]) ):
+      if( !empty($_GET["se"]) ):
+         $v_search_text = $_GET["se"];
+      endif;
+   endif;
+   if( isset($_GET["pu"]) ):
+      if( is_numeric($_GET["pu"]) ):
+         $v_puesto_id = $_GET["pu"];
+      endif;
+   endif;
+   if( isset($_GET["pa"]) ):
+      if( !empty($_GET["pa"]) ):
+         $v_pais_slug = $_GET["pa"];
+      endif;
+   endif;
+   if( isset($_GET["ci"]) ):
+      if( !empty($_GET["ci"]) ):
+         $v_ciudad_slug = $_GET["ci"];
+      endif;
+   endif;
 
-$posts_per_page = 35;
 
-//Header
-$f_s1_background = get_field("s1_background", $page_id);
 
-//Sites
-$f_s2_title = get_field("s2_title", $page_id);
+   $page_id = get_the_ID();
 
-$banners_de_columna = get_field("banners_de_columna", "option");
-$banners_de_contenido = get_field("banners_de_contenido", "option");
+   $posts_per_page = 35;
 
-$paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
-$selected_puesto = isset($_GET['puesto']) ? sanitize_text_field($_GET['puesto']) : '';
+   //Header
+   $f_s1_background = get_field("s1_background", $page_id);
 
-$taxonomies_array = false;
-if (!empty($selected_puesto)) {
-    $taxonomies_array = array(
-        array(
-            'taxonomy' => 'puesto',
-            'terms' => $selected_puesto,
-        ),
-    );
-}
+   //Sites
+   $f_s2_title = get_field("s2_title", $page_id);
 
-$rows = get_custom_posts(
-    $post_type = "oferta-laboral",
-    $search = false,
-    $taxonomies_array,
-    $custom_field_array = array(array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
-    $order = array(0 => 'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
-    $page = $paged,
-    $posts_per_page,
-    $total_rows
-);
-$max_num_pages = ceil($total_rows / $posts_per_page);
-$html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
+   $banners_de_columna = get_field("banners_de_columna", "option");
+   $banners_de_contenido = get_field("banners_de_contenido", "option");
 
-$base_url = get_bloginfo("url");
-$title_negocio = get_the_title($page_id);
+   $paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
+   $selected_puesto = isset($_GET['puesto']) ? sanitize_text_field($_GET['puesto']) : '';
 
-$puestos = get_terms(array(
-    'taxonomy' => 'puesto',
-    'hide_empty' => false,
-));
+   $taxonomies_array = false;
+   if (!empty($selected_puesto)) {
+      $taxonomies_array = array(
+         array(
+               'taxonomy' => 'puesto',
+               'terms' => $selected_puesto,
+         ),
+      );
+   }
 
-$path_json_countries = get_template_directory() . "/functions/php-countries/countries.php";
-$array_countries = include $path_json_countries;
-$paises = array();
-foreach ($array_countries as $key => $country_name) {
-    $paises[$key] = $country_name;
-}
+   $rows = get_custom_posts(
+      $post_type = "oferta-laboral",
+      $search = false,
+      $taxonomies_array,
+      $custom_field_array = array(array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
+      $order = array(0 => 'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
+      $page = $paged,
+      $posts_per_page,
+      $total_rows
+   );
+   $max_num_pages = ceil($total_rows / $posts_per_page);
+   $html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
 
-$path_json_countries_states = get_template_directory() . "/functions/php-countries/states.php";
-$array_countries_states = include $path_json_countries_states;
-$ciudades = array();
-foreach ($array_countries_states as $key_country => $array_states) {
-    foreach ($array_states as $key_state => $state_name) {
-        $ciudades[$key_country . "@" . $key_state] = $state_name;
-    }
-}
+   $base_url = get_bloginfo("url");
+   $title_negocio = get_the_title($page_id);
 
-$ubicaciones_ofertas = $ciudades;
+   $puestos = get_terms(array(
+      'taxonomy' => 'puesto',
+      'hide_empty' => false,
+   ));
 
-$search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
-$svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
+   $path_json_countries = get_template_directory() . "/functions/php-countries/countries.php";
+   $array_countries = include $path_json_countries;
+   $paises = array();
+   foreach ($array_countries as $key => $country_name) {
+      $paises[$key] = $country_name;
+   }
+
+   $path_json_countries_states = get_template_directory() . "/functions/php-countries/states.php";
+   $array_countries_states = include $path_json_countries_states;
+   $ciudades = array();
+   foreach ($array_countries_states as $key_country => $array_states) {
+      foreach ($array_states as $key_state => $state_name) {
+         $ciudades[$key_country . "@" . $key_state] = $state_name;
+      }
+   }
+
+   $ubicaciones_ofertas = $ciudades;
+
+   $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
+   $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
 ?>
 
 <?php get_header(); ?>
@@ -104,15 +131,17 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
 
 
                             <div class="search-bar">
-                                <?php
-
-                                ?>
-                                <div class="search-bar-inside">
-                                    <input type="text" class="search-input" id="searchInput">
+                              <form id="form-ofertas-laborales" method="GET" action="">
+                                 <div class="search-bar-inside">
+                                    <input name="se" type="text" class="search-input" id="searchInput" value="<?php echo $v_search_text; ?>">
+                                    <input name="pu" type="hidden" class="puesto" value="<?php echo $v_puesto_id; ?>" >
+                                    <input name="pa" type="hidden" class="pais" value="<?php echo $v_pais_slug; ?>" >
+                                    <input name="ci" type="hidden" class="ciudad" value="<?php echo $v_ciudad_slug; ?>" >
                                     <button class="search-button" id="searchButton">
                                         <?php echo $search_icon_svg; ?>
                                     </button>
-                                </div>
+                                 </div>
+                              </form>
                             </div>
 
                             <div class="filter-container">
@@ -127,26 +156,19 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
 
                                 <div class="filter-whole">
                                     <div class="filter-dropdowns">
-                                        <form method="GET" action="">
+                                        <div>
 
                                             <div class="custom-dropdown" id="filtro-puesto">
                                                 <div class="dropdown-toggle" id="puesto-toggle">
-                                                    <span>
-                                                        <?php if (!empty($puestos)): ?>
-                                                            <?php echo isset($selected_puesto) ? $puestos[array_search($selected_puesto, array_column($puestos, 'slug'))]->name : 'Selecciona un puesto'; ?>
-                                                        <?php else: ?>
-                                                            No hay puestos disponibles
-                                                        <?php endif; ?>
-                                                    </span>
+                                                    <span>Seleccione un puesto</span>
                                                 </div>
                                                 <ul class="dropdown-menu" id="puesto-menu">
                                                     <?php if (!empty($puestos)): ?>
                                                         <?php foreach ($puestos as $puesto): ?>
                                                             <li>
-                                                                <input type="radio" name="puesto" value="<?php echo $puesto->slug; ?>" 
-                                                                    id="puesto-<?php echo $puesto->term_id; ?>"
-                                                                    <?php echo ($selected_puesto == $puesto->slug) ? 'checked' : ''; ?> />
-                                                                <label for="puesto-<?php echo $puesto->term_id; ?>"><?php echo $puesto->name; ?></label>
+                                                               <a data-id="<?php echo $puesto->term_id; ?>" data-slug="<?php echo $puesto->slug; ?>" class="option-puesto option-puesto-<?php echo $puesto->term_id; ?>" href="javascript:void(0);">   
+                                                                  <label><?php echo $puesto->name; ?></label>
+                                                               </a>
                                                             </li>
                                                         <?php endforeach; ?>
                                                     <?php else: ?>
@@ -178,7 +200,7 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
                                                         </select>
                                                     </div>
 
-
+                                                   <?php if(false): ?>
                                                     <div data-name="distrito">
                                                         <label for="distrito-input">Distrito:</label>
                                                         <input type="text" id="distrito-input" name="distrito" placeholder="Ingresa el distrito">
@@ -188,21 +210,18 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
                                                         <label for="direccion-input">Dirección:</label>
                                                         <input type="text" id="direccion-input" name="direccion" placeholder="Ingresa la dirección">
                                                     </div>
+                                                   <?php endif; ?>
                                                 </div>
                                             </div>
 
-                                            <div class="filter-button">
-                                                <button>Filtro</button>
-                                            </div>
+                                            <a id="form-run" href="javascript:void(0)" class="filter-button">
+                                                <span>Filtro</span>
+                                            </a>
 
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-
-
-
 
 
                             <div class="job-listings">
@@ -214,12 +233,12 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
 
                                 <?php foreach ($rows as $o_row): ?>
                                     <?php
-                                    $sf_ID = $o_row->ID;
-                                    $sf_title = $o_row->post_title;
-                                    $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
-                                    $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
-                                    $sf_ubicacion = get_field('ubicacion_geografica', $sf_ID);
-                                    $sf_permalink = get_permalink($sf_ID);
+                                       $sf_ID = $o_row->ID;
+                                       $sf_title = $o_row->post_title;
+                                       $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
+                                       $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
+                                       $sf_ubicacion = get_field('ubicacion_geografica', $sf_ID);
+                                       $sf_permalink = get_permalink($sf_ID);
                                     ?>
 
                                     <a href="<?php echo $sf_permalink; ?>" class="job-item">
@@ -300,6 +319,22 @@ $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width
                         </div>
     </section>
 </main>
-
-
+<?php if($v_pais_slug || $v_ciudad_slug || $v_puesto_id): ?>
+<?php endif; ?>
 <?php get_footer(); ?>
+
+<script>
+   jQuery( document ).ready(function() {
+      <?php if($v_puesto_id): ?>
+         jQuery("a.option-puesto-<?php echo $v_puesto_id; ?>").click();
+      <?php endif; ?>
+
+      <?php if($v_pais_slug): ?>
+         jQuery("select#pais-select").val("<?php echo $v_pais_slug; ?>");
+      <?php endif; ?>
+
+      <?php if($v_ciudad_slug): ?>
+         jQuery("select#ciudad-select").val("<?php echo $v_pais_slug."@".$v_ciudad_slug; ?>");
+      <?php endif; ?>
+   });
+</script>

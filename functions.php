@@ -1783,11 +1783,6 @@ if ( ! function_exists( 'newsplus_image_resize' ) ) :
 	}
 endif;
 
-function enqueue_custom_dropdown_script() {
-    wp_enqueue_script('custom-dropdown', get_template_directory_uri() . '/js/dropdown.js', array(), null, true);
-}
-add_action('wp_enqueue_scripts', 'enqueue_custom_dropdown_script');
-
 
 //7DevLab
 foreach(glob(get_template_directory().'/functions/*.php') as $filename):

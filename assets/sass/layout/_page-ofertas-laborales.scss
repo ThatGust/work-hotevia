@@ -459,18 +459,17 @@ $red : #ff0000;
          
                .filter-button {
                   margin-left: 16px;
-         
-                  button {
-                     padding: 8px 12px;
+                  background-color: #83827e;
+                  &:hover {
                      background-color: #83827e;
+                  }
+                  span {
+                     padding: 8px 12px;
                      color: #fff;
                      border: none;
                      border-radius: 5px;
                      cursor: pointer;
-         
-                     &:hover {
-                        background-color: #83827e;
-                     }
+                     display: block;
                   }
                }
             }
@@ -487,9 +486,10 @@ $red : #ff0000;
             text-align: center;
             color: #ffffff;
             border-radius: 10px;
+            display: block;
             cursor: pointer;
 
-            button {
+            span {
                font-size: 18px;
                font-weight: bold;
                background-color: #83827e;
