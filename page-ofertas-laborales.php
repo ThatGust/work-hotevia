@@ -190,26 +190,31 @@
                                             </div>
 
                                             <div class="custom-dropdown" id="filtro-lugar" style="display: none;">
+                                                
                                                 <div class="dropdown-group">
+
                                                     <div data-name="pais">
-                                                        <label for="pais-select">País:</label>
-                                                        <select id="pais-select">
+                                                      <div class="form-floating">
+                                                        <select id="pais-select" class="form-control">
                                                             <option value="">Selecciona un país</option>
                                                             <?php foreach ($paises as $codigo => $nombre): ?>
                                                                 <option value="<?php echo $codigo; ?>"><?php echo $nombre; ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
+                                                        <label for="pais-select">País:</label>
+                                                      </div>
                                                     </div>
 
-
                                                     <div data-name="ciudad">
-                                                        <label for="ciudad-select">Ciudad:</label>
-                                                        <select id="ciudad-select">
+                                                      <div class="form-floating">
+                                                         <select id="ciudad-select" class="form-control">
                                                             <option value="">Seleccione una ciudad</option>
                                                             <?php foreach ($ciudades as $codigo => $nombre): ?>
                                                                 <option value="<?php echo $codigo; ?>"><?php echo $nombre; ?></option>
                                                             <?php endforeach; ?>
-                                                        </select>
+                                                         </select>
+                                                         <label for="ciudad-select">Ciudad:</label>
+                                                      </div>
                                                     </div>
 
                                                    <?php if(false): ?>
