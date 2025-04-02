@@ -46,10 +46,11 @@ jQuery( document ).ready(function() {
 
       
       jQuery("select#pais-select").change(function(){
+         updateSelectCiudades();
          let code_country = jQuery(this).val();
          code_country = code_country.trim();
          jQuery(".search-bar-inside input.pais").val(code_country);
-         jQuery("select#ciudad-select option").each(function(){
+         /*jQuery("select#ciudad-select option").each(function(){
             let code_country_state = jQuery(this).val();
             let array_codes = code_country_state.split("@");
             let c_country = array_codes[0];
@@ -61,7 +62,7 @@ jQuery( document ).ready(function() {
                //console.log("remove");
                jQuery(this).css("display","none");
             }
-         });   
+         }); */  
          //jQuery("div[data-name=\'ciudad\'] select").val(null); 
       });
       jQuery("select#pais-select").change();

@@ -101,11 +101,11 @@
    $path_json_countries_states = get_template_directory() . "/functions/php-countries/states.php";
    $array_countries_states = include $path_json_countries_states;
    $ciudades = array();
-   foreach ($array_countries_states as $key_country => $array_states) {
-      foreach ($array_states as $key_state => $state_name) {
+   foreach ($array_countries_states as $key_country => $array_states):
+      foreach ($array_states as $key_state => $state_name):
          $ciudades[$key_country . "@" . $key_state] = $state_name;
-      }
-   }
+      endforeach;
+   endforeach;
 
    $ubicaciones_ofertas = $ciudades;
    $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
@@ -341,6 +341,23 @@
 <?php get_footer(); ?>
 
 <script>
+   var array_ciudades = <?php echo json_encode($ciudades); ?>;
+   function updateSelectCiudades(){
+      let code_country = jQuery("select#pais-select").val();
+      code_country = code_country.trim();
+      jQuery("select#ciudad-select").html("");
+      jQuery.each(array_ciudades, function(indice, valor) {
+         let code_country_state = indice;
+         let array_codes = code_country_state.split("@");
+         let c_country = array_codes[0];
+         c_country = c_country.trim();
+         if(c_country == code_country){
+            let html_option = '<option value="'+indice+'">'+valor+'</option>';
+            jQuery("select#ciudad-select").append(html_option);
+         }
+      });
+   }
+
    jQuery( document ).ready(function() {
       <?php if($v_puesto_id): ?>
          jQuery("a.option-puesto-<?php echo $v_puesto_id; ?>").click();

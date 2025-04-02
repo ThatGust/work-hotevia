@@ -74,44 +74,60 @@
    add_filter('acf/load_field/name=ciudad', 'populateCity');
    function populateCity( $field ){	
       $field['choices'] = array();
-
-      $path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
+      /*$path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
       $array_countries_states = include $path_json_countries_states;
       foreach($array_countries_states as $key_city=>$array_states):
          foreach($array_states as $key_state=>$state_name):
             $field['choices'][ $key_city."@".$key_state ] = $state_name;
          endforeach;
-      endforeach;
+      endforeach;*/
       return $field;
    }
 
 
    add_action('admin_footer', 'agregar_js_personalizado_admin');
    function agregar_js_personalizado_admin() {
+      $path_json_countries_states = get_template_directory() . "/functions/php-countries/states.php";
+      $array_countries_states = include $path_json_countries_states;
+      $ciudades = array();
+      foreach ($array_countries_states as $key_country => $array_states):
+         foreach ($array_states as $key_state => $state_name):
+            $ciudades[$key_country . "@" . $key_state] = $state_name;
+         endforeach;
+      endforeach;
+      $post_id = $_GET["post"];
+      $ciudad = get_field("ciudad", $post_id);
+      $js_ciudad = "";
+      if($ciudad):
+         $js_ciudad = 'jQuery("div[data-name=\'ciudad\'] select").val("'.$ciudad.'");';
+      endif;
+
       $screen = get_current_screen();
       if( in_array($screen->post_type, array("oferta-laboral")) ):
          echo '
          <script>
-            jQuery(document).ready(function ($) {
+            var array_ciudades = '.json_encode($ciudades).';
+            function updateSelectCiudades(){
+               let code_country = jQuery("div[data-name=\'pais\'] select").val();
+               code_country = code_country.trim();
+               jQuery("div[data-name=\'ciudad\'] select").html("");
+               jQuery.each(array_ciudades, function(indice, valor) {
+                  let code_country_state = indice;
+                  let array_codes = code_country_state.split("@");
+                  let c_country = array_codes[0];
+                  c_country = c_country.trim();
+                  if(c_country == code_country){
+                     let html_option = \'<option value="\'+indice+\'">\'+valor+\'</option>\';
+                     jQuery("div[data-name=\'ciudad\'] select").append(html_option);
+                  }
+               });
+            }
+            jQuery(document).ready(function () {
                jQuery("div[data-name=\'pais\'] select").change(function(){
-                  let code_country = jQuery(this).val();
-                  code_country = code_country.trim();
-                  jQuery("div[data-name=\'ciudad\'] select option").each(function(){
-                     let code_country_state = $(this).val();
-                     let array_codes = code_country_state.split("@");
-                     let c_country = array_codes[0];
-                     c_country = c_country.trim();
-                     if(c_country == code_country){
-                        //console.log("add");
-                        jQuery(this).removeAttr("style");
-                     }else{
-                        //console.log("remove");
-                        jQuery(this).css("display","none");
-                     }
-                  });   
-                  //jQuery("div[data-name=\'ciudad\'] select").val(null); 
+                  updateSelectCiudades();                 
                });
                jQuery("div[data-name=\'pais\'] select").change();
+               '.$js_ciudad.'
             });
          </script>';
       endif;
