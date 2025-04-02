@@ -4,7 +4,7 @@
       %meta_value%
       %meta_key%
    */
-   function get_custom_posts( $post_type="product", $search=false, $taxonomies_array=false, $custom_fields_array=false, $order = "1", $page=1, $cant=10, &$total_rows, $table_prefix="WordPress34127_"  ){
+   function get_custom_posts( $post_type="product", $search_text=false, $taxonomies_array=false, $custom_fields_array=false, $order = "1", $page=1, $cant=10, &$total_rows, $table_prefix="WordPress34127_"  ){
 
       $rows = ($page - 1)*$cant;      
 
@@ -23,15 +23,15 @@
       if(is_array($taxonomies_array)):
          $i=1;
          foreach($taxonomies_array as $o_item):
-            $sf_slug = $o_item['terms'];
+            $term_id = $o_item['term_id'];
             $taxonomy = $o_item['taxonomy'];
             
             $query .= '
-            INNER JOIN ' . $table_prefix . 'wp_term_relationships wtr' . $i . ' ON wtr' . $i . '.object_id = wp.ID
-            INNER JOIN ' . $table_prefix . 'wp_term_taxonomy wtt' . $i . ' ON wtt' . $i . '.term_taxonomy_id = wtr' . $i . '.term_taxonomy_id
-            INNER JOIN ' . $table_prefix . 'wp_terms wt' . $i . ' ON wt' . $i . '.term_id = wtt' . $i . '.term_id
+               INNER JOIN ' . $table_prefix . 'wp_term_relationships wtr' . $i . ' ON wtr' . $i . '.object_id = wp.ID
+               INNER JOIN ' . $table_prefix . 'wp_term_taxonomy wtt' . $i . ' ON wtt' . $i . '.term_taxonomy_id = wtr' . $i . '.term_taxonomy_id
+               INNER JOIN ' . $table_prefix . 'wp_terms wt' . $i . ' ON wt' . $i . '.term_id = wtt' . $i . '.term_id
             ';
-            $query .= ' AND wt' . $i . '.slug = "' . esc_sql($sf_slug) . '"';
+            $query .= ' AND wt' . $i . '.term_id = "' . esc_sql($term_id) . '"';
             $i++;
          endforeach;
       endif;
@@ -53,6 +53,10 @@
       endif;
 
       $query .= ' WHERE wp.post_type = "'.$post_type.'" AND wp.post_status="publish" ';
+
+      if( $search_text && !empty($search_text) ):
+         $query .= ' AND LOWER(wp.post_title) like LOWER("%'.$search_text.'%")';
+      endif;
       
     
       //$query .= 'OFFSET '.$rows.' ROWS FETCH NEXT '.$cant.' ROWS ONLY;';

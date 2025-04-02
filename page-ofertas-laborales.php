@@ -5,10 +5,14 @@
  * Template Name: Ofertas Laborales
  */
 
+   //$paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
+   //$selected_puesto = isset($_GET['puesto']) ? sanitize_text_field($_GET['puesto']) : '';
+
    $v_search_text = false;
    $v_puesto_id = false;
    $v_pais_slug = false;
    $v_ciudad_slug = false;
+   $v_paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;;
    if( isset($_GET["se"]) ):
       if( !empty($_GET["se"]) ):
          $v_search_text = $_GET["se"];
@@ -30,10 +34,7 @@
       endif;
    endif;
 
-
-
    $page_id = get_the_ID();
-
    $posts_per_page = 35;
 
    //Header
@@ -44,27 +45,38 @@
 
    $banners_de_columna = get_field("banners_de_columna", "option");
    $banners_de_contenido = get_field("banners_de_contenido", "option");
-
-   $paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
-   $selected_puesto = isset($_GET['puesto']) ? sanitize_text_field($_GET['puesto']) : '';
-
+   
    $taxonomies_array = false;
-   if (!empty($selected_puesto)) {
+   if( $v_puesto_id ):
       $taxonomies_array = array(
          array(
-               'taxonomy' => 'puesto',
-               'terms' => $selected_puesto,
+            'taxonomy' => 'puesto',
+            'term_id' => $v_puesto_id,
          ),
       );
-   }
+   endif;
+
+   
+   $custom_field_array = array(
+      array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")
+   );
+
+   if( $v_pais_slug ):
+      $custom_field_array[] = array("meta_key" => "pais", "condition" => "AND %meta_value% = '".$v_pais_slug."' ");
+   endif;
+
+   if( $v_ciudad_slug ):
+      $custom_field_array[] = array("meta_key" => "ciudad", "condition" => "AND %meta_value% = '".$v_pais_slug."@".$v_ciudad_slug."' ");
+   endif;
+   
 
    $rows = get_custom_posts(
       $post_type = "oferta-laboral",
-      $search = false,
+      $search = $v_search_text,
       $taxonomies_array,
-      $custom_field_array = array(array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")),  //%meta_value% 
+      $custom_field_array,  //%meta_value% 
       $order = array(0 => 'ORDER BY STR_TO_DATE(%meta_value%, "%Y%m%d" ) DESC'),
-      $page = $paged,
+      $page = $v_paged,
       $posts_per_page,
       $total_rows
    );
@@ -96,7 +108,6 @@
    }
 
    $ubicaciones_ofertas = $ciudades;
-
    $search_icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="white"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>';
    $svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="13px" height="13px" fill="red"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
 ?>
@@ -137,6 +148,7 @@
                                     <input name="pu" type="hidden" class="puesto" value="<?php echo $v_puesto_id; ?>" >
                                     <input name="pa" type="hidden" class="pais" value="<?php echo $v_pais_slug; ?>" >
                                     <input name="ci" type="hidden" class="ciudad" value="<?php echo $v_ciudad_slug; ?>" >
+                                    <input name="pg" type="hidden" class="page" value="<?php echo $v_paged; ?>" >
                                     <button class="search-button" id="searchButton">
                                         <?php echo $search_icon_svg; ?>
                                     </button>
@@ -286,7 +298,7 @@
                                 echo paginate_links(array(
                                     'base' => add_query_arg('pg', '%#%'),
                                     'format' => '?pg=%#%',
-                                    'current' => $paged,
+                                    'current' => $v_paged,
                                     'total' => $max_num_pages,
                                     'prev_text' => ('« Anterior'),
                                     'next_text' => ('Siguiente »'),
@@ -331,6 +343,7 @@
 
       <?php if($v_pais_slug): ?>
          jQuery("select#pais-select").val("<?php echo $v_pais_slug; ?>");
+         jQuery("select#pais-select").change();
       <?php endif; ?>
 
       <?php if($v_ciudad_slug): ?>
