@@ -254,7 +254,7 @@
                                        $sf_title = $o_row->post_title;
                                        $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
                                        $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
-                                       $sf_ubicacion = get_field('ubicacion_geografica', $sf_ID);
+                                       $sf_ubicacion = get_field('distrito', $sf_ID);
                                        $sf_permalink = get_permalink($sf_ID);
                                     ?>
 
