@@ -230,6 +230,8 @@
                                                 </div>
                                             </div>
 
+                                            <a  href="javascript:void(0)" class="remove-filters">Eliminar Filtros</a>
+
                                             <a id="form-run" href="javascript:void(0)" class="filter-button">
                                                 <span>Filtro</span>
                                             </a>

@@ -75,6 +75,16 @@ jQuery( document ).ready(function() {
       });
 
 
+      jQuery(".filter-container .remove-filters").click(function(){
+         jQuery(".search-bar input.search-input").val("");
+         jQuery(".search-bar input.puesto").val("");
+         jQuery(".search-bar input.pais").val("");
+         jQuery(".search-bar input.ciudad").val("");
+         jQuery(".search-bar input.page").val("1");
+         jQuery("form#form-ofertas-laborales").submit();
+      });
+
+
       jQuery("a#form-run").click(function(){
          jQuery("form#form-ofertas-laborales").submit();
       });

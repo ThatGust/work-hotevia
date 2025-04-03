@@ -136,7 +136,10 @@ $red : #ff0000;
    .job-listings {
       padding: 26px;
       font-size: 18px;
-
+      .ad{
+         margin-top: 20px;
+         margin-bottom: 20px;
+      }
       .job-item {
          display: flex;
          align-items: center;
@@ -417,6 +420,7 @@ $red : #ff0000;
             grid-template-columns: 1fr auto;
             //gap: 16px;
             align-items: center;
+            position: relative;
             
             form {
                margin: 0;
@@ -485,7 +489,7 @@ $red : #ff0000;
                      display: block;
                   }
                }
-         
+               
                .filter-button {
                   margin-left: 16px;
                   background-color: #83827e;
@@ -515,7 +519,13 @@ $red : #ff0000;
          
          
          
-         
+         .remove-filters{
+            font-size: 14px;
+            text-decoration: underline;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+         }
 
          .filter-button {
             justify-self: end;
