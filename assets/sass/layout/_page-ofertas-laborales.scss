@@ -3,6 +3,9 @@ $red : #ff0000;
 .page-ofertas-laborales {
    font-size: $size_text_desktop;
 
+   select {
+      font-size: 16px;
+   }
    .inner-container {
       display: block;
       text-align: left;
@@ -117,7 +120,7 @@ $red : #ff0000;
          margin-right: 10px;
          border: 1px solid #ccc;
          border-radius: 5px;
-         font-size: 14px;
+         font-size: 16px;
       }
 
       .filter-btn {
@@ -270,29 +273,50 @@ $red : #ff0000;
    }
 
    .search-bar {
-      justify-content: center;
-      background-color: #f0faff;
+      display: block;
       margin-top: 70px;
       padding: 5px;
-      width: fit-content;
       margin-bottom: 10px;
+      border: 1px solid #f1fcff;
+      background-color: #f0faff;
+      box-shadow: 0px 4px 6px rgba(241, 252, 255, 0.5);
+      //border-radius: 30px;
+      //width: 450px;
+      max-width: 450px;
+      width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      @media (max-width: $resize-min) {
+         max-width: unset;
+         //padding: 10px;
+         .search-bar-inside {
+            width: 100%;
+            border-radius: 20px;
+            padding: 5px;
+         }
 
+         .search-input {
+            font-size: 14px;
+         }
+      }
+      form{
+         padding: 0;
+         margin: 0;
+         display: block;
+      }
       .search-bar-inside {
          display: flex;
-         background-color: rgb(255, 255, 255);
-         padding: 5px 5px 0 0;
-         border-radius: 30px;
-         width: 450px;
-         border: 1px solid #f1fcff;
+         background-color: #fff;
+         //padding: 5px 5px 0 0;
       }
-
       .search-input {
          flex: 1;
-         padding-left: 5px;
+         padding: 0 10px;
          border: none;
          outline: none;
          font-size: 16px;
          background: transparent;
+         border: none;
       }
 
       .search-button {
@@ -314,21 +338,6 @@ $red : #ff0000;
             margin: 0 auto;
             fill: #fff;
             flex-shrink: 0;
-         }
-      }
-
-      @media (max-width: $resize-min) {
-         width: 100%;
-         padding: 10px;
-
-         .search-bar-inside {
-            width: 100%;
-            border-radius: 20px;
-            padding: 5px;
-         }
-
-         .search-input {
-            font-size: 14px;
          }
       }
    }
@@ -406,7 +415,7 @@ $red : #ff0000;
             padding: 12px;
             display: grid;
             grid-template-columns: 1fr auto;
-            gap: 16px;
+            //gap: 16px;
             align-items: center;
             
             form {
@@ -424,17 +433,27 @@ $red : #ff0000;
                   padding: 8px;
                   background-color: #f1fcff;
                   border-radius: 8px;
-                  cursor: pointer;
-         
-                  &:hover {
-                     background-color: #e0f7ff;
+                  position: relative;
+                  &::after{
+                     content: "";
+                     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"/></svg>');
+                     width: 20px;
+                     height: 20px;
+                     background-position: center;
+                     background-repeat: no-repeat;
+                     background-size: 20px 20px;
+                     position: absolute;
+                     top: 12px;
+                     right: 10px;
                   }
                }
          
                .dropdown-menu {
                   display: none;
                   position: absolute; 
-                  top: 100%; 
+                  //top: 100%; 
+                  top: 0;
+                  right: 0;
                   background-color: #f1fcff;
                   border-radius: 8px;
                   max-height: 180px;
@@ -442,13 +461,23 @@ $red : #ff0000;
                   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                   width: 100%;
                   z-index: 10;
-         
+                  padding: 8px 0;
+                  box-sizing: border-box;
+                  list-style: none;
                   li {
-                     margin-bottom: 8px;
-                     padding: 8px;
-         
+                     //margin-bottom: 8px;
+                     width: 100%;
+                     box-sizing: border-box;
+                     padding: 0 15px;
+                     cursor: pointer;
+                     a{
+                        
+                     }
                      input[type="radio"] {
                         margin-right: 8px;
+                     }
+                     &:hover{
+                        background-color: #e7edf1;
                      }
                   }
          
@@ -459,32 +488,33 @@ $red : #ff0000;
          
                .filter-button {
                   margin-left: 16px;
-         
-                  button {
-                     padding: 8px 12px;
+                  background-color: #83827e;
+                  &:hover {
                      background-color: #83827e;
+                  }
+                  span {
+                     padding: 8px 12px;
                      color: #fff;
                      border: none;
                      border-radius: 5px;
                      cursor: pointer;
-         
-                     &:hover {
-                        background-color: #83827e;
-                     }
+                     display: block;
+                  }
+               }
+
+               .form-floating{
+                  width: 100%;
+                  select{
+                     width: 100%;
+                     //padding: 0 8px;
+                     padding: 0 .5rem;
                   }
                }
             }
          }
          
-         .underline-link {
-            a {
-               text-decoration: underline;
-               color: #83827e;
-               display: block;
-               justify-self: end;  
-            }
-           
-         }
+         
+         
          
 
          .filter-button {
@@ -494,42 +524,32 @@ $red : #ff0000;
             text-align: center;
             color: #ffffff;
             border-radius: 10px;
+            display: block;
             cursor: pointer;
-
-            button {
+            margin-top: 20px;
+            span {
                font-size: 18px;
                font-weight: bold;
                background-color: #83827e;
             }
 
-            .filter-button-delete {
-               background-color: $red;
-
-               button {
-                  font-size: 18px;
-                  font-weight: bold;
-                  background-color: $red;
-               }
-
-               &::after {
-                  content: " >>";
-                  font-weight: bold;
-                  margin-left: 10px;
-               }
-            }
-
             &::after {
-               content: " >>";
+               content: ">>";
                font-weight: bold;
                margin-left: 10px;
+               position: relative;
+               top: -1px;
             }
          }
 
          .dropdown-group {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-      
+            gap: 1rem; // Espacio entre los elementos
+            
+            flex: 0 0 auto;
+            width: 100%;
+
             .input-place {
                display: flex;
                flex-direction: column;
@@ -537,18 +557,18 @@ $red : #ff0000;
       
                label {
                   font-size: 14px;
-                  margin-bottom: 0.5rem;
+                  margin-bottom: 0.5rem; // Espacio entre el label y el select/input
                }
       
                select,
                input[type="text"] {
-                  width: 100%;
-                  max-width: 100%; 
-                  padding: 0.5rem; 
+                  width: 100%; // Ocupa todo el ancho disponible
+                  max-width: 100%; // Asegura que no se expanda más de lo permitido
+                  padding: 0.5rem; // Espacio interno del input/select
                   border: 1px solid #ccc;
                   border-radius: 4px;
                   font-size: 14px;
-                  box-sizing: border-box;
+                  box-sizing: border-box; // Asegura que el padding no expanda el input
                }
             }
          }
@@ -583,5 +603,72 @@ $red : #ff0000;
    }
 
 
+
+
+
+
+
+
+   .form-floating{
+      position: relative;
+   }
+
+
+
+   .form-floating > .form-control,
+   .form-floating > .form-select {
+     height: calc(3.5rem + 2px);
+     line-height: 1.25;
+   }
+   
+   .form-floating > label {
+     /*position: absolute;
+     top: 0;
+     left: 0;
+     height: 100%;
+     padding: 1rem 0.75rem;
+     pointer-events: none;
+     border: 1px solid transparent;
+     transform-origin: 0 0;
+     transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;*/
+     position: absolute;
+     top: 0px;
+     left: 10px;
+     height: auto;
+     padding: 0 0;
+     pointer-events: none;
+     border: 1px solid transparent;
+     transform-origin: 0 0;
+     transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+     background-color: #fff;
+     opacity: 1 !important;
+   }
+   
+   .form-floating > .form-control::placeholder {
+     color: transparent;
+   }
+   
+   .form-floating > .form-control:focus,
+   .form-floating > .form-control:not(:placeholder-shown) {
+     padding-top: 1.625rem;
+     padding-bottom: 0.625rem;
+   }
+   
+   .form-floating > .form-control:focus ~ label,
+   .form-floating > .form-control:not(:placeholder-shown) ~ label {
+     opacity: 0.65;
+     transform: scale(0.85) translateY(-1rem) translateX(0.15rem);
+   }
+   
+   .form-floating > .form-select {
+     padding-top: 1.625rem;
+     padding-bottom: 0.625rem;
+   }
+   
+   .form-floating > .form-control:-webkit-autofill ~ label {
+     opacity: 0.65;
+     transform: scale(0.85) translateY(-1rem) translateX(0.15rem);
+   }
+   
 
 }
