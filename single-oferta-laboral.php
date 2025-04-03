@@ -29,8 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["form-oferta-laboral"])
       $sf_mensaje = $_POST["mensaje"];
       //$sf_cv = $_FILES["cv"];
 
-
-
       $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
       $f_form_nombre_remitente = get_field("form_nombre_remitente", $empresa_id);
       $f_form_email_remitente = get_field("form_email_remitente", $empresa_id);
@@ -118,7 +116,7 @@ endif;
 
 $nombre_de_la_empresa = get_field("nombre_de_la_empresa", $post_id);
 $fecha_de_expiracion = get_field("fecha_de_expiracion", $post_id);
-$ubicacion_geografica = get_field("ubicacion_geografica", $post_id);
+$ubicacion_geografica = get_field("distrito", $post_id);
 $empr_trabaj = get_field("empr_trabaj", $post_id);
 $requisitos = get_field("requisitos", $post_id);
 $exp_conocimientos = get_field("exp_conocimientos", $post_id);
