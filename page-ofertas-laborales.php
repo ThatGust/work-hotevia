@@ -234,6 +234,10 @@
                                                 <span>Filtro</span>
                                             </a>
 
+                                            <a id="form-run" href="javascript:void(0)" class="underline-link">
+                                                <span>Borrar Filtro</span>
+                                            </a>
+
                                         </div>
                                     </div>
                                 </div>
