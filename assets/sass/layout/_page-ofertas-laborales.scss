@@ -141,8 +141,7 @@ $red : #ff0000;
          margin-bottom: 20px;
       }
       .job-item {
-         display: flex;
-         align-items: center;
+         display: inline-block;
          margin-bottom: 10px;
          text-decoration: none;
          color: #333;
@@ -154,8 +153,6 @@ $red : #ff0000;
 
          .icon {
             margin-right: 8px;
-            display: flex;
-            align-items: center;
 
             svg {
                width: 16px;
