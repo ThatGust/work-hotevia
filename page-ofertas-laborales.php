@@ -4,7 +4,6 @@
  * @subpackage Default_Theme
  * Template Name: Ofertas Laborales
  */
-
    //$paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
    //$selected_puesto = isset($_GET['puesto']) ? sanitize_text_field($_GET['puesto']) : '';
 
@@ -35,16 +34,17 @@
    endif;
 
    $page_id = get_the_ID();
-   $posts_per_page = 35;
 
-   //Header
-   $f_s1_background = get_field("s1_background", $page_id);
-
-   //Sites
-   $f_s2_title = get_field("s2_title", $page_id);
-
+   $html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
+   $ofertas_num = get_field("ofertas_num", $page_id);
    $banners_de_columna = get_field("banners_de_columna", "option");
    $banners_de_contenido = get_field("banners_de_contenido", "option");
+
+   $posts_per_page = 35;
+   if( is_numeric($ofertas_num) ):
+      $posts_per_page = $ofertas_num;
+   endif;
+
    
    $taxonomies_array = false;
    if( $v_puesto_id ):
@@ -81,7 +81,6 @@
       $total_rows
    );
    $max_num_pages = ceil($total_rows / $posts_per_page);
-   $html_pie_de_pagina = get_field("html_pie_de_pagina", $page_id);
 
    $base_url = get_bloginfo("url");
    $title_negocio = get_the_title($page_id);
@@ -312,9 +311,9 @@
                             </div>
 
                             <div class="footer-html">
-                                <?php
+                              <?php
                                 echo $html_pie_de_pagina;
-                                ?>
+                              ?>
                             </div>
 
                         </div>
