@@ -178,7 +178,7 @@
                                                         <?php foreach ($puestos as $puesto): ?>
                                                             <li>
                                                                <a data-id="<?php echo $puesto->term_id; ?>" data-slug="<?php echo $puesto->slug; ?>" class="option-puesto option-puesto-<?php echo $puesto->term_id; ?>" href="javascript:void(0);">   
-                                                                  <label><?php echo $puesto->name; ?></label>
+                                                                  <?php echo $puesto->name; ?>
                                                                </a>
                                                             </li>
                                                         <?php endforeach; ?>
