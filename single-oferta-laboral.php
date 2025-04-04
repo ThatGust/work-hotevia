@@ -197,7 +197,7 @@ endif;
 
                      <?php if ($mostrar_boton && in_array('1', $mostrar_boton)): ?>
                         <div class="button-apply">
-                           <a href="<?php echo esc_url($url_boton); ?>" class="boton-personalizado">
+                           <a href="<?php echo esc_url($url_boton); ?>" target="_blank" class="boton-personalizado">
                               <?php echo esc_html($texto_boton); ?>
                            </a>
                         </div>
