@@ -24,6 +24,18 @@
       }
    }
 
+   .ad {
+      display: inline-block;
+      margin: 0 auto 30px auto;
+      max-width: 100%;
+      *,
+      iframe,
+      img,
+      div {
+         max-width: 100%;
+      }
+   }
+
    .wrap-info {
       display: block;
       width: 100%;
@@ -46,17 +58,6 @@
          padding-left: 0px;
       }
 
-      .ad {
-         display: inline-block;
-         margin: 0 auto 30px auto;
-         max-width: 100%;
-
-         iframe,
-         img,
-         div {
-            max-width: 100%;
-         }
-      }
    }
 
    .col-offer-details {

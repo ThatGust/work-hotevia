@@ -86,18 +86,6 @@ $red : #ff0000;
          text-align: center;
          padding-left: 0px;
       }
-
-      .ad {
-         display: inline-block;
-         margin: 0 auto 30px auto;
-         max-width: 100%;
-
-         iframe,
-         img,
-         div {
-            max-width: 100%;
-         }
-      }
    }
 
    .col-empr-details {
@@ -106,6 +94,18 @@ $red : #ff0000;
 
       @media (max-width: $resize-min) {
          width: 100%;
+      }
+   }
+
+   .ad {
+      display: inline-block;
+      margin: 0 auto 30px auto;
+      max-width: 100%;
+      *,
+      iframe,
+      img,
+      div {
+         max-width: 100%;
       }
    }
 

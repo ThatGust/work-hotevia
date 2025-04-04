@@ -33,6 +33,18 @@ $red : #ff0000;
       }
    }
 
+   .ad {
+      display: inline-block;
+      margin: 0 auto 30px auto;
+      max-width: 100%;
+      *,
+      iframe,
+      img,
+      div {
+         max-width: 100%;
+      }
+   }
+
 
    .col-ad-place {
       flex: 0 0 auto;
@@ -44,18 +56,6 @@ $red : #ff0000;
          width: 100%;
          text-align: center;
          padding-left: 0px;
-      }
-
-      .ad {
-         display: inline-block;
-         margin: 0 auto 30px auto;
-         max-width: 100%;
-
-         iframe,
-         img,
-         div {
-            max-width: 100%;
-         }
       }
    }
 
