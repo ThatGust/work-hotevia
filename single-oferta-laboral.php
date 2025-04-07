@@ -127,11 +127,8 @@
    $html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
 
    $ubicacion_geografica = "";
-   if( $pais ):
-      $path_json_countries = get_template_directory()."/functions/php-countries/countries.php";
-      $array_countries = include $path_json_countries;
-      $label = $array_countries[$pais];
-      $ubicacion_geografica .= $label.", ";
+   if( $distrito ):
+      $ubicacion_geografica .= $distrito." / ";
    endif;
    if( $pais && $ciudad ):      
       $path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
@@ -140,13 +137,17 @@
       $key_city = $array_keys[0];
       $key_province = $array_keys[1];
       $label = $array_states[$key_city][$key_province];
-      $ubicacion_geografica .= $label.", ";
+      $ubicacion_geografica .= $label." / ";
    endif;
-   if( $distrito ):
-      $ubicacion_geografica .= $distrito.", ";
+   if( $pais ):
+      $path_json_countries = get_template_directory()."/functions/php-countries/countries.php";
+      $array_countries = include $path_json_countries;
+      $label = $array_countries[$pais];
+      $ubicacion_geografica .= $label." / ";
    endif;
+   
    $ubicacion_geografica = trim($ubicacion_geografica);
-   $ubicacion_geografica = trim($ubicacion_geografica, ",");
+   $ubicacion_geografica = trim($ubicacion_geografica, "/");
 
 
 
