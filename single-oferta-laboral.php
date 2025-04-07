@@ -4,143 +4,171 @@
  * @subpackage Default_Theme
  */
 
-$post_id = get_the_ID();
-$empresa = get_field("empresa", $post_id);
-$empresa_id = $empresa;
-if (is_object($empresa)):
-   $empresa_id = $empresa->ID;
-endif;
+   $post_id = get_the_ID();
+   $empresa = get_field("empresa", $post_id);
+   $empresa_id = $empresa;
+   if (is_object($empresa)):
+      $empresa_id = $empresa->ID;
+   endif;
 
-$base_url = get_bloginfo("url");
-$title_negocio = get_the_title($empresa_id);
-$permalink_negocio = get_permalink($empresa_id);
-$title_oferta = get_the_title($post_id);
-$permalink_oferta = get_the_permalink();
+   $base_url = get_bloginfo("url");
+   $title_negocio = get_the_title($empresa_id);
+   $permalink_negocio = get_permalink($empresa_id);
+   $title_oferta = get_the_title($post_id);
+   $permalink_oferta = get_the_permalink();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["form-oferta-laboral"]) && $empresa):
-   if ($_POST["form-oferta-laboral"] == "1"):
-      $code_response = "0";
+   if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["form-oferta-laboral"]) && $empresa):
+      if ($_POST["form-oferta-laboral"] == "1"):
+         $code_response = "0";
 
-      $sf_nombre = $_POST["nombre"];
-      $sf_apellidos = $_POST["apellidos"];
-      $sf_telefono = $_POST["telefono"];
-      $sf_email = $_POST["email"];
-      $sf_linkedin = $_POST["linkedin"];
-      $sf_mensaje = $_POST["mensaje"];
-      //$sf_cv = $_FILES["cv"];
+         $sf_nombre = $_POST["nombre"];
+         $sf_apellidos = $_POST["apellidos"];
+         $sf_telefono = $_POST["telefono"];
+         $sf_email = $_POST["email"];
+         $sf_linkedin = $_POST["linkedin"];
+         $sf_mensaje = $_POST["mensaje"];
+         //$sf_cv = $_FILES["cv"];
 
-      $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
-      $f_form_nombre_remitente = get_field("form_nombre_remitente", $empresa_id);
-      $f_form_email_remitente = get_field("form_email_remitente", $empresa_id);
-      $f_form_asunto = get_field("form_asunto", $empresa_id);
-      $f_form_mensaje = get_field("form_mensaje", $empresa_id);
+         $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
+         $f_form_nombre_remitente = get_field("form_nombre_remitente", $empresa_id);
+         $f_form_email_remitente = get_field("form_email_remitente", $empresa_id);
+         $f_form_asunto = get_field("form_asunto", $empresa_id);
+         $f_form_mensaje = get_field("form_mensaje", $empresa_id);
 
-      if ($f_form_nombre_remitente && $f_form_email_remitente && $f_form_asunto && $f_form_mensaje):
+         if ($f_form_nombre_remitente && $f_form_email_remitente && $f_form_asunto && $f_form_mensaje):
 
-         $email_from = $f_form_nombre_remitente . " <" . $f_form_email_remitente . ">";
-         $email_subject = $f_form_asunto;
+            $email_from = $f_form_nombre_remitente . " <" . $f_form_email_remitente . ">";
+            $email_subject = $f_form_asunto;
 
-         $headers = "MIME-Version: 1.0" . "\r\n";
-         $headers .= "Content-type: text/html;charset=utf-8" . "\r\n";
-         $headers .= "Return-Path: " . $email_from . "\r\n";
-         $headers .= "Reply-To: " . $email_from . "\r\n";
-         $headers .= "Errors-To: " . $email_from . "\r\n";
-         $headers .= "From: " . $email_from . "\r\n";
+            $headers = "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type: text/html;charset=utf-8" . "\r\n";
+            $headers .= "Return-Path: " . $email_from . "\r\n";
+            $headers .= "Reply-To: " . $email_from . "\r\n";
+            $headers .= "Errors-To: " . $email_from . "\r\n";
+            $headers .= "From: " . $email_from . "\r\n";
 
-         $email_message = "<!DOCTYPE html><html><head><title>Oferta Laboral</title></head><body>";
-         $email_message .= $f_form_mensaje;
-         $email_message .= "<strong>Oferta laboral: </strong>" . $title_oferta . "<br />";
-         $email_message .= "<strong>Nombre: </strong>" . $sf_nombre . "<br />";
-         $email_message .= "<strong>Apellidos: </strong>" . $sf_apellidos . "<br />";
-         $email_message .= "<strong>Teléfono: </strong>" . $sf_telefono . "<br />";
-         $email_message .= "<strong>Email: </strong>" . $sf_email . "<br />";
-         $email_message .= "<strong>LinkedIn: </strong>" . $sf_linkedin . "<br />";
-         $email_message .= "<strong>Mensaje: </strong>" . $sf_mensaje . "<br />";
-         $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='" . $permalink_oferta . "'> " . $permalink_oferta . " <br />";
+            $email_message = "<!DOCTYPE html><html><head><title>Oferta Laboral</title></head><body>";
+            $email_message .= $f_form_mensaje;
+            $email_message .= "<strong>Oferta laboral: </strong>" . $title_oferta . "<br />";
+            $email_message .= "<strong>Nombre: </strong>" . $sf_nombre . "<br />";
+            $email_message .= "<strong>Apellidos: </strong>" . $sf_apellidos . "<br />";
+            $email_message .= "<strong>Teléfono: </strong>" . $sf_telefono . "<br />";
+            $email_message .= "<strong>Email: </strong>" . $sf_email . "<br />";
+            $email_message .= "<strong>LinkedIn: </strong>" . $sf_linkedin . "<br />";
+            $email_message .= "<strong>Mensaje: </strong>" . $sf_mensaje . "<br />";
+            $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='" . $permalink_oferta . "'> " . $permalink_oferta . " <br />";
 
-         $attachments = array();
-         $upload_path = false;
-         if (isset($_FILES['cv'])):
-            $upload_dir = wp_upload_dir();
-            $upload_path = $upload_dir['path'] . '/' . basename($_FILES['cv']['name']);
-            if (move_uploaded_file($_FILES['cv']['tmp_name'], $upload_path)):
-               $attachments = array($upload_path);
-            else:
-               //echo 'Error al subir el archivo.';
-            endif;
-         endif;
-
-         //correos destinatarios
-         if ($f_form_emails_destinatarios):
-            $flag_send = false;
-            foreach ($f_form_emails_destinatarios as $o_item):
-               $sf_nombre = $o_item["nombre"];
-               $sf_email = $o_item["email"];
-               if ($sf_nombre && $sf_email):
-                  $email_to = $sf_nombre . " <" . $sf_email . ">";
-                  $flag_send = wp_mail($email_to, $email_subject, $email_message, $headers, $attachments);
+            $attachments = array();
+            $upload_path = false;
+            if (isset($_FILES['cv'])):
+               $upload_dir = wp_upload_dir();
+               $upload_path = $upload_dir['path'] . '/' . basename($_FILES['cv']['name']);
+               if (move_uploaded_file($_FILES['cv']['tmp_name'], $upload_path)):
+                  $attachments = array($upload_path);
+               else:
+                  //echo 'Error al subir el archivo.';
                endif;
-            endforeach;
-
-            //falta copia al administrador
-            $admin_email = get_option('admin_email');
-            if (is_email($admin_email)):
-               $flag_send = wp_mail($admin_email, $email_subject, $email_message, $headers, $attachments);
             endif;
 
-            //falta correo al postulante
-            if (is_email($sf_email)):
-               $flag_send = wp_mail($sf_email, $email_subject, $email_message, $headers, $attachments);
-            endif;
+            //correos destinatarios
+            if ($f_form_emails_destinatarios):
+               $flag_send = false;
+               foreach ($f_form_emails_destinatarios as $o_item):
+                  $sf_nombre = $o_item["nombre"];
+                  $sf_email = $o_item["email"];
+                  if ($sf_nombre && $sf_email):
+                     $email_to = $sf_nombre . " <" . $sf_email . ">";
+                     $flag_send = wp_mail($email_to, $email_subject, $email_message, $headers, $attachments);
+                  endif;
+               endforeach;
+
+               //falta copia al administrador
+               $admin_email = get_option('admin_email');
+               if (is_email($admin_email)):
+                  $flag_send = wp_mail($admin_email, $email_subject, $email_message, $headers, $attachments);
+               endif;
+
+               //falta correo al postulante
+               if (is_email($sf_email)):
+                  $flag_send = wp_mail($sf_email, $email_subject, $email_message, $headers, $attachments);
+               endif;
 
 
-            if ($flag_send):
-               $code_response = "1";
-            else:
-               $code_response = "0";
+               if ($flag_send):
+                  $code_response = "1";
+               else:
+                  $code_response = "0";
+               endif;
             endif;
+
+            if ($upload_path):
+               unlink($upload_path);
+            endif;
+         else:
+            $code_response = "2";
+
          endif;
-
-         if ($upload_path):
-            unlink($upload_path);
-         endif;
-      else:
-         $code_response = "2";
-
+         $redirect_url = $sf_permalink . "?success=" . $code_response;
+         wp_redirect($redirect_url);
+         exit;
       endif;
-      $redirect_url = $sf_permalink . "?success=" . $code_response;
-      wp_redirect($redirect_url);
-      exit;
    endif;
-endif;
 
-$nombre_de_la_empresa = get_field("nombre_de_la_empresa", $post_id);
-$fecha_de_expiracion = get_field("fecha_de_expiracion", $post_id);
-$ubicacion_geografica = get_field("distrito", $post_id);
-$empr_trabaj = get_field("empr_trabaj", $post_id);
-$requisitos = get_field("requisitos", $post_id);
-$exp_conocimientos = get_field("exp_conocimientos", $post_id);
-$html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
+   $nombre_de_la_empresa = get_field("nombre_de_la_empresa", $post_id);
+   $fecha_de_expiracion = get_field("fecha_de_expiracion", $post_id);
+   $pais = get_field("pais", $post_id);
+   $ciudad = get_field("ciudad", $post_id);
+   $distrito = get_field("distrito", $post_id);
+   $direccion = get_field("direccion", $post_id);
 
-//var_dump($html_pie_de_pagina); die();
+   $empr_trabaj = get_field("empr_trabaj", $post_id);
+   $requisitos = get_field("requisitos", $post_id);
+   $exp_conocimientos = get_field("exp_conocimientos", $post_id);
+   $html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
 
-$banners_de_columna = get_field("banners_de_columna", "option");
-$botones_compartir = get_field("botones_compartir", "option");
-
-$mostrar_boton = get_field("mostrar_boton", $post_id);
-$texto_boton = get_field("texto_boton", $post_id);
-$url_boton = get_field("url_boton", $post_id);
-
-$form_msg = false;
-if (isset($_GET["success"])):
-   if ($_GET["success"] == "0"):
-      $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">Ocurrió un error. Por favor, inténtelo de nuevo más tarde.</div>';
-   elseif ($_GET["success"] == "1"):
-      $form_msg = '<div style="color:#28a745;line-height:1.4em;">Tu mensaje ha sido enviado con éxito.</div>';
-   elseif ($_GET["success"] == "2"):
-      $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">La empresa no ha configurado los datos de envío. Por favor, espere o contacte al administrador.</div>';
+   $ubicacion_geografica = "";
+   if( $pais ):
+      $path_json_countries = get_template_directory()."/functions/php-countries/countries.php";
+      $array_countries = include $path_json_countries;
+      $label = $array_countries[$pais];
+      $ubicacion_geografica .= $label.", ";
    endif;
-endif;
+   if( $pais && $ciudad ):      
+      $path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
+      $array_states = include $path_json_countries_states;
+      $array_keys = explode("@", $ciudad);
+      $key_city = $array_keys[0];
+      $key_province = $array_keys[1];
+      $label = $array_states[$key_city][$key_province];
+      $ubicacion_geografica .= $label.", ";
+   endif;
+   if( $distrito ):
+      $ubicacion_geografica .= $distrito.", ";
+   endif;
+   $ubicacion_geografica = trim($ubicacion_geografica);
+   $ubicacion_geografica = trim($ubicacion_geografica, ",");
+
+
+
+   //var_dump($html_pie_de_pagina); die();
+
+   $banners_de_columna = get_field("banners_de_columna", "option");
+   $botones_compartir = get_field("botones_compartir", "option");
+
+   $mostrar_boton = get_field("mostrar_boton", $post_id);
+   $texto_boton = get_field("texto_boton", $post_id);
+   $url_boton = get_field("url_boton", $post_id);
+
+   $form_msg = false;
+   if (isset($_GET["success"])):
+      if ($_GET["success"] == "0"):
+         $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">Ocurrió un error. Por favor, inténtelo de nuevo más tarde.</div>';
+      elseif ($_GET["success"] == "1"):
+         $form_msg = '<div style="color:#28a745;line-height:1.4em;">Tu mensaje ha sido enviado con éxito.</div>';
+      elseif ($_GET["success"] == "2"):
+         $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">La empresa no ha configurado los datos de envío. Por favor, espere o contacte al administrador.</div>';
+      endif;
+   endif;
 ?>
 
 <?php get_header(); ?>
