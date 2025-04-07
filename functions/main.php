@@ -3,35 +3,7 @@
    wp_enqueue_style( 'custom-style', get_template_directory_uri() . '/css/styles.css', 10 );
    wp_enqueue_script( 'custom-scripts', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.0.0', true );
 
-   /*
-   add_action('wp_enqueue_scripts', 'agregar_scripts_personalizados');
-   function agregar_scripts_personalizados() {
-      wp_enqueue_script('main-script', get_template_directory_uri() . '/js/main.js', array('jquery'), null, true);
-   }
-
-   add_action('init', 'registrar_ofertas_laborales');
-   function registrar_ofertas_laborales() {
-      $args = array(
-         'public'       => true,
-         'label'        => 'Ofertas Laborales',
-         'supports'     => array( 'title', 'editor', 'thumbnail' ),
-         // Otros parámetros según tus necesidades
-      );
-      register_post_type('oferta-laboral', $args);
-   }*/
-
-
-   if(function_exists('acf_add_options_page')) {
-      acf_add_options_page(array(
-         'page_title' 	=> 'Opciones de ofertas laborales',
-         'menu_title'	=> 'Opciones de ofertas laborales',
-         'menu_slug' 	=> 'opciones-ofertas',
-         'redirect'		=> false,
-         //'capability'=>'edit_posts',
-         //'icon_url'=> get_template_directory_uri().'/images/logo.png',
-      ));
-   }
-
+   
    function get_user_role() {
       global $current_user;  
       $user_roles = $current_user->roles;
@@ -58,78 +30,7 @@
 
 
    
+   
 
-
-   add_filter('acf/load_field/name=pais', 'populateCountry');
-   function populateCountry( $field ){	
-      $field['choices'] = array();
-      $path_json_countries = get_template_directory()."/functions/php-countries/countries.php";
-      $array_countries = include $path_json_countries;
-      foreach($array_countries as $key=>$city_name):
-         $field['choices'][ $key ] = $city_name;
-      endforeach;
-      return $field;
-   }
-
-   add_filter('acf/load_field/name=ciudad', 'populateCity');
-   function populateCity( $field ){	
-      $field['choices'] = array();
-      /*$path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
-      $array_countries_states = include $path_json_countries_states;
-      foreach($array_countries_states as $key_city=>$array_states):
-         foreach($array_states as $key_state=>$state_name):
-            $field['choices'][ $key_city."@".$key_state ] = $state_name;
-         endforeach;
-      endforeach;*/
-      return $field;
-   }
-
-
-   add_action('admin_footer', 'agregar_js_personalizado_admin');
-   function agregar_js_personalizado_admin() {
-      $path_json_countries_states = get_template_directory() . "/functions/php-countries/states.php";
-      $array_countries_states = include $path_json_countries_states;
-      $ciudades = array();
-      foreach ($array_countries_states as $key_country => $array_states):
-         foreach ($array_states as $key_state => $state_name):
-            $ciudades[$key_country . "@" . $key_state] = $state_name;
-         endforeach;
-      endforeach;
-      $post_id = $_GET["post"];
-      $ciudad = get_field("ciudad", $post_id);
-      $js_ciudad = "";
-      if($ciudad):
-         $js_ciudad = 'jQuery("div[data-name=\'ciudad\'] select").val("'.$ciudad.'");';
-      endif;
-
-      $screen = get_current_screen();
-      if( in_array($screen->post_type, array("oferta-laboral")) ):
-         echo '
-         <script>
-            var array_ciudades = '.json_encode($ciudades).';
-            function updateSelectCiudades(){
-               let code_country = jQuery("div[data-name=\'pais\'] select").val();
-               code_country = code_country.trim();
-               jQuery("div[data-name=\'ciudad\'] select").html("");
-               jQuery.each(array_ciudades, function(indice, valor) {
-                  let code_country_state = indice;
-                  let array_codes = code_country_state.split("@");
-                  let c_country = array_codes[0];
-                  c_country = c_country.trim();
-                  if(c_country == code_country){
-                     let html_option = \'<option value="\'+indice+\'">\'+valor+\'</option>\';
-                     jQuery("div[data-name=\'ciudad\'] select").append(html_option);
-                  }
-               });
-            }
-            jQuery(document).ready(function () {
-               jQuery("div[data-name=\'pais\'] select").change(function(){
-                  updateSelectCiudades();                 
-               });
-               jQuery("div[data-name=\'pais\'] select").change();
-               '.$js_ciudad.'
-            });
-         </script>';
-      endif;
-  }
+   
   
