@@ -17,6 +17,17 @@
    $title_oferta = get_the_title($post_id);
    $permalink_oferta = get_the_permalink();
 
+   $titulo_pagina = $title_negocio." - ".$title_oferta;
+
+   $label_puesto = "";
+   $puestos = get_the_terms($post_id, 'puesto');
+   if (!is_wp_error($puestos) && !empty($puestos)):
+      foreach ($puestos as $term):
+         $label_puesto = $term->name;
+         break;
+      endforeach;
+   endif;
+
    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["form-oferta-laboral"]) && $empresa):
       if ($_POST["form-oferta-laboral"] == "1"):
          $code_response = "0";
@@ -126,6 +137,7 @@
    $exp_conocimientos = get_field("exp_conocimientos", $post_id);
    $html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
 
+
    $ubicacion_geografica = "";
    if( $distrito ):
       $ubicacion_geografica .= $distrito." / ";
@@ -163,12 +175,16 @@
    $form_msg = false;
    if (isset($_GET["success"])):
       if ($_GET["success"] == "0"):
-         $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">Ocurrió un error. Por favor, inténtelo de nuevo más tarde.</div>';
+         $form_msg = '<div id="form-message" style="margin:20px 0; color:#FF6B6B;line-height:1.4em;"> Ocurrió un error. Por favor, inténtelo de nuevo más tarde.</div>';
       elseif ($_GET["success"] == "1"):
-         $form_msg = '<div style="color:#28a745;line-height:1.4em;">Tu mensaje ha sido enviado con éxito.</div>';
+         //$form_msg = '<div style="color:#28a745;line-height:1.4em;">Tu mensaje ha sido enviado con éxito.</div>';
+         //$form_msg = '<div id="form-message" style="margin:20px 0; color:#28a745;line-height:1.4em;"> Gracias por postular a "'.$title_oferta.'" de la empresa "'.$title_negocio.'" </div>';
+         //$form_msg .= '<a style="margin:0 auto;" href="'.$permalink_negocio.'" class="btn-gray">Ver mas ofertas laborales de la empresa "'.$title_negocio.'" </a>';
+         $form_msg = '<div id="form-message" style="margin:20px 0; color:#28a745;line-height:1.4em;">Gracias por postular.<br>En breve te contactaremos.<br>Mientras tanto puedes seguir revisando más ofertas laborales de <a href="'.$permalink_negocio.'">'.$title_negocio.'</a>.';
       elseif ($_GET["success"] == "2"):
-         $form_msg = '<div style="color:#FF6B6B;line-height:1.4em;">La empresa no ha configurado los datos de envío. Por favor, espere o contacte al administrador.</div>';
-      endif;
+         $form_msg = '<div id="form-message" style="margin:20px 0; color:#FF6B6B;line-height:1.4em;">La empresa no ha configurado los datos de envío. Por favor, espere o contacte al administrador.</div>';
+      endif; 
+      $form_msg .= '<script> jQuery( document ).ready(function() { setTimeout(function() { window.scrollTo(0, jQuery("#form-message").offset().top+-250 ); }, 1000); }); </script>';
    endif;
 ?>
 
@@ -188,10 +204,10 @@
                         <li><span><?php echo $title_oferta; ?></span></li>
                      </ol>
 
-                     <h1 class="job-title"> <?php echo $nombre_de_la_empresa; ?> </h1>
+                     <h1 class="job-title"> <?php echo $titulo_pagina; ?> </h1>
 
                      <div class="primary-offer-details">
-                        <label class="label-details"><?php echo $nombre_de_la_empresa; ?></label>
+                        <label class="label-details"><?php echo $label_puesto; ?></label>
 
                         <div class="label-details">
                            <label>EMPRESA:</label>
@@ -328,9 +344,9 @@
                                  <button type="submit">ENVIAR</button>
                                  <input type="hidden" name="form-oferta-laboral" value="1">
                                  <?php
-                                 if ($form_msg):
-                                    echo $form_msg;
-                                 endif;
+                                    if ($form_msg):
+                                       echo $form_msg;
+                                    endif;
                                  ?>
                               </div>
                            </form>

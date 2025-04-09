@@ -10,7 +10,7 @@
 
    $post_id = get_the_ID();
 
-   $posts_per_page = 5;
+   $posts_per_page = 20;
 
    //Header
    $f_s1_background = get_field("s1_background", $post_id);
@@ -46,6 +46,7 @@
    $title_negocio = get_the_title($post_id);
    $permalink_negocio = get_permalink($post_id);
 
+   
    /*echo "<pre>";
    var_dump(Array("row"=>$rows, "total_rows"=>$total_rows));
    echo "</pre>";*/
@@ -88,6 +89,7 @@
                             </div>
                             <?php endif; ?>
 
+                            <?php if(false): ?>
                             <div class="empresa-info-details">
                               <?php if($email): ?>
                                  <div>
@@ -108,6 +110,7 @@
                                 </div>
                               <?php endif; ?>
                             </div>
+                            <?php endif; ?>
 
                             <div class="job-offers">
                                 <h4>CONVOCATORIAS VIGENTES</h4>
