@@ -49,6 +49,8 @@
    $permalink_negocio = get_permalink($post_id);
 
    
+   $svg_icon = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="133.333" height="108" viewBox="0 0 100 81"><path d="m44.3 19.4-3.7 7.4-10.5.7c-5.8.3-11.7.7-13.1.8-1.9.2 0 1.4 7.3 4.9 9.6 4.6 9.7 4.7 9.7 8.2 0 3.1.3 3.6 2.3 3.6 1.7 0 3.3-1.8 7-8 2.6-4.3 5.2-8.2 5.7-8.5.6-.3 2.2 1.5 3.7 4.1 5.7 9.5 8.3 12.5 10.6 12.2 1.7-.2 2.3-1.1 2.5-3.8.3-3.5.7-3.8 10-8.5l9.7-5-13.2-.3-13.2-.3-4.3-7.4c-2.4-4.1-4.9-7.5-5.6-7.5-.7 0-2.9 3.3-4.9 7.4z"/><path d="M11 37.9v7.9l6.4 3.6c3.5 2 6.8 3.6 7.3 3.6.8 0 5.7-12 5.1-12.5C28.6 39.6 11.7 30 11.4 30c-.2 0-.4 3.6-.4 7.9zM77.7 34.6c-5.3 2.7-8.7 5-8.4 5.7.2.7 1.3 3.8 2.3 6.9 1 3.2 2.2 5.8 2.8 5.8.6 0 4-1.7 7.6-3.8l6.5-3.7.3-7.8c.2-5.8 0-7.7-1-7.6-.7 0-5.3 2-10.1 4.5zM30.6 47.8c-.5.8-4.6 11.5-4.6 12 0 .1 1.4-.5 3-1.3 2.8-1.5 3-1.9 2.9-6.5-.2-5-.4-5.6-1.3-4.2zM68 51.9c0 4 .4 5.3 2.2 6.5 1.2.9 2.3 1.4 2.5 1.3.4-.4-3.8-12.7-4.3-12.7-.2 0-.4 2.2-.4 4.9zM37 58.1l-11.5 5 .3 7.4c.2 4.1.7 7.5 1.1 7.5.3 0 5.5-2 11.3-4.5C44.1 71 49.6 69 50.5 69c.8 0 5.9 2 11.2 4.5C67 76 71.7 78 72.1 78c.5 0 .9-3.4.9-7.5v-7.6L62.4 58c-5.8-2.8-11.3-5-12.3-4.9-.9 0-6.8 2.3-13.1 5z"/></svg>';
+
    /*echo "<pre>";
    var_dump(Array("row"=>$rows, "total_rows"=>$total_rows));
    echo "</pre>";*/
@@ -138,31 +140,53 @@
                                     $sf_permalink = get_permalink($sf_ID);
                                  ?>
 
-                                    <div class="job-card-main">
-                                       <a href="<?php echo $sf_permalink; ?>" >
-                                        <div class="job-card-sub">
-                                            <div class="job-card">
-                                                <div class="job-card-data">
-                                                   <?php if($sf_title): ?>
-                                                    <h3><?php echo $sf_title; ?></h3>
-                                                   <?php endif; ?>
-                                                   <?php if($sf_fecha): ?>
-                                                    <label><?php echo $sf_fecha; ?></label>
-                                                   <?php endif; ?>
-                                                   <?php if($sf_empresa): ?>
-                                                    <label><?php echo $sf_empresa; ?></label>
-                                                   <?php endif; ?>
-                                                   <?php if($sf_ubicacion): ?>
-                                                    <label><?php echo $sf_ubicacion; ?></label>
-                                                   <?php endif; ?>
-                                                </div>
-                                                <div class="button-details">
-                                                    <button>Ver detalles >></button>
-                                                </div>
-                                            </div>
-                                          </div>
-                                        </a>
-                                    </div>
+                                    
+                                    <a href="<?php echo $sf_permalink; ?>" class="job-item">
+                                        <span class="icon"><?php echo $svg_icon; ?></span>
+
+                                        <?php if ($sf_title): ?>
+                                            <span class="job-title-list"><?php echo $sf_title; ?> - </span>
+                                        <?php endif; ?>
+
+                                        <?php if ($sf_empresa): ?>
+                                            <span class="job-location"><?php echo $sf_empresa; ?> /</span>
+                                        <?php endif; ?>
+
+                                        <?php if ($sf_ubicacion || $sf_fecha): ?>
+                                            <span class="job-info">
+                                                <?php echo $sf_ubicacion; ?> -
+                                                <?php echo $sf_fecha; ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </a>
+                                    
+                                    <?php if(false): ?>
+                                       <div class="job-card-main">
+                                          <a href="<?php echo $sf_permalink; ?>" >
+                                          <div class="job-card-sub">
+                                             <div class="job-card">
+                                                   <div class="job-card-data">
+                                                      <?php if($sf_title): ?>
+                                                      <h3><?php echo $sf_title; ?></h3>
+                                                      <?php endif; ?>
+                                                      <?php if($sf_fecha): ?>
+                                                      <label><?php echo $sf_fecha; ?></label>
+                                                      <?php endif; ?>
+                                                      <?php if($sf_empresa): ?>
+                                                      <label><?php echo $sf_empresa; ?></label>
+                                                      <?php endif; ?>
+                                                      <?php if($sf_ubicacion): ?>
+                                                      <label><?php echo $sf_ubicacion; ?></label>
+                                                      <?php endif; ?>
+                                                   </div>
+                                                   <div class="button-details">
+                                                      <button>Ver detalles >></button>
+                                                   </div>
+                                             </div>
+                                             </div>
+                                          </a>
+                                       </div>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>
 
