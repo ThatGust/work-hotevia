@@ -35,6 +35,29 @@ $red : #ff0000;
       }
    }
 
+   .wrap-buttons{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      align-items: end;
+      @media (max-width: $resize-min) {
+         //justify-content: start;
+         justify-content: space-between;
+         align-items: center;
+         margin-bottom: 30px;
+      }
+      .btn-gray{
+         padding: 0 8px;
+         font-size: 16px;
+         margin: 0 0 0 10px;
+         flex: 0 0 auto;
+         @media (max-width: $resize-min) {
+            font-size: 15px;
+            margin: 0 0;
+         }
+      }
+   }
+
    .job-title {
       font-size: $size_h1_desktop;
       line-height: 1.3em;

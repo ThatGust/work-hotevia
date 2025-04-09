@@ -11,13 +11,16 @@
       $empresa_id = $empresa->ID;
    endif;
 
+   $permalink_home = get_bloginfo("url");
+   $permalink_ofertas_laborales = $permalink_home."/ofertas-laborales";
+
    $base_url = get_bloginfo("url");
    $title_negocio = get_the_title($empresa_id);
    $permalink_negocio = get_permalink($empresa_id);
    $title_oferta = get_the_title($post_id);
    $permalink_oferta = get_the_permalink();
 
-   $titulo_pagina = $title_negocio." - ".$title_oferta;
+   $titulo_pagina = $title_oferta." - ".$title_negocio;
 
    $label_puesto = "";
    $puestos = get_the_terms($post_id, 'puesto');
@@ -198,11 +201,21 @@
                <div class="row">
                   <div class="col col-offer-details">
 
-                     <ol class="breadcrumbs">
-                        <li><a href="<?php echo $base_url; ?>">Home</a></li>
-                        <li><a href="<?php echo $permalink_negocio; ?>"><?php echo $title_negocio; ?></a></li>
-                        <li><span><?php echo $title_oferta; ?></span></li>
-                     </ol>
+                     <div class="row custom-row">
+                        <div class="col-12 col-lg-6 custom-col">
+                           <ol class="breadcrumbs">
+                              <li><a href="<?php echo $base_url; ?>">Home</a></li>
+                              <li><a href="<?php echo $permalink_negocio; ?>"><?php echo $title_negocio; ?></a></li>
+                              <li><span><?php echo $title_oferta; ?></span></li>
+                           </ol>
+                        </div>
+                        <div class="col-12 col-lg-6 custom-col">
+                           <div class="wrap-buttons">
+                              <a href="<?php echo $permalink_negocio; ?>" class="btn-gray">Ver más Ofertas</a>
+                              <a href="<?php echo $permalink_ofertas_laborales; ?>" class="btn-gray">Volver al listado de ofertas</a>
+                           </div>
+                        </div>
+                     </div>
 
                      <h1 class="job-title"> <?php echo $titulo_pagina; ?> </h1>
 

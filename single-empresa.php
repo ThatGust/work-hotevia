@@ -12,6 +12,8 @@
 
    $posts_per_page = 20;
 
+   $permalink_ofertas_laborales = get_bloginfo("url")."/ofertas-laborales";
+
    //Header
    $f_s1_background = get_field("s1_background", $post_id);
 
@@ -62,10 +64,19 @@
                     <div class="row">
                         <div class="col col-empr-details">
 
-                            <ol class="breadcrumbs">
-                              <li><a href="<?php echo $base_url; ?>">Home</a></li>
-                              <li><span><?php echo $title_negocio; ?></span></li>
-                            </ol>
+                           <div class="row custom-row">
+                              <div class="col-12 col-lg-6 custom-col">
+                                 <ol class="breadcrumbs">
+                                    <li><a href="<?php echo $base_url; ?>">Home</a></li>
+                                    <li><span><?php echo $title_negocio; ?></span></li>
+                                 </ol>
+                              </div>
+                              <div class="col-12 col-lg-6 custom-col">
+                                 <div class="wrap-buttons">
+                                    <a href="<?php echo $permalink_ofertas_laborales; ?>" class="btn-gray">Volver al listado de ofertas</a>
+                                 </div>
+                              </div>
+                           </div>
 
                             <h1 class="job-title"><?php echo $nombre_de_la_empresa; ?></h1>
 

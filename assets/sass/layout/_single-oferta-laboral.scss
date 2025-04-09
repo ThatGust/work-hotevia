@@ -1,5 +1,5 @@
 .btn-gray{
-   padding: 0 20px;
+   padding: 0 15px;
    font-size: 24px;
    background-color: #777;
    color: #fff;
@@ -8,8 +8,9 @@
    cursor: pointer;
    text-align: center;
    margin-left: auto;
-   display: block;
+   //display: block;
    transition:all .3s ease-in-out;
+   display: table;
    &:hover{
       opacity: .8;
       background-color: #777;
@@ -158,6 +159,38 @@
             text-decoration: underline;
          }
       }
+   }
+
+   .wrap-buttons{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      align-items: end;
+      @media (max-width: $resize-min) {
+         //justify-content: start;
+         justify-content: space-between;
+         align-items: center;
+         margin-bottom: 30px;
+      }
+      .btn-gray{
+         padding: 0 8px;
+         font-size: 16px;
+         margin: 0 0 0 10px;
+         flex: 0 0 auto;
+         @media (max-width: $resize-min) {
+            font-size: 15px;
+            margin: 0 0;
+         }
+      }
+   }
+
+   .custom-rpw{
+      margin-left: 0;
+      margin-right: 0;
+   }
+   .custom-col{
+      padding-left: 0;
+      padding-right: 0;
    }
 
    .requirements {

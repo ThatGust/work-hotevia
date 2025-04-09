@@ -7,6 +7,8 @@
  * @version 4.0.3
  */
 
+ error_reporting(E_ERROR & ~E_WARNING);
+ 
 /**
  * Sets up the content width value based on the theme's design and stylesheet.
  */
