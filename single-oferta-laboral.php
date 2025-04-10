@@ -6,6 +6,7 @@
 
    $post_id = get_the_ID();
    $empresa = get_field("empresa", $post_id);
+   
    $empresa_id = $empresa;
    if (is_object($empresa)):
       $empresa_id = $empresa->ID;
@@ -17,10 +18,12 @@
    $base_url = get_bloginfo("url");
    $title_negocio = get_the_title($empresa_id);
    $permalink_negocio = get_permalink($empresa_id);
+   $empresa_nombre = get_field("nombre_de_la_empresa", $empresa_id);
    $title_oferta = get_the_title($post_id);
    $permalink_oferta = get_the_permalink();
 
-   $titulo_pagina = $title_oferta." - ".$title_negocio;
+   //$titulo_pagina = $title_oferta." - ".$title_negocio;
+   $titulo_pagina = $title_oferta." - ".$empresa_nombre;
 
    $label_puesto = "";
    $puestos = get_the_terms($post_id, 'puesto');
@@ -202,16 +205,16 @@
                   <div class="col col-offer-details">
 
                      <div class="row custom-row">
-                        <div class="col-12 col-lg-6 custom-col">
+                        <div class="col-12 col-lg-5 custom-col">
                            <ol class="breadcrumbs">
                               <li><a href="<?php echo $base_url; ?>">Home</a></li>
                               <li><a href="<?php echo $permalink_negocio; ?>"><?php echo $title_negocio; ?></a></li>
                               <li><span><?php echo $title_oferta; ?></span></li>
                            </ol>
                         </div>
-                        <div class="col-12 col-lg-6 custom-col">
+                        <div class="col-12 col-lg-7 custom-col">
                            <div class="wrap-buttons">
-                              <a href="<?php echo $permalink_negocio; ?>" class="btn-gray">Ver más Ofertas</a>
+                              <a href="<?php echo $permalink_negocio; ?>" class="btn-gray">Ver más ofertas de <?php echo $title_negocio; ?></a>
                               <a href="<?php echo $permalink_ofertas_laborales; ?>" class="btn-gray">Volver al listado de ofertas</a>
                            </div>
                         </div>
@@ -338,9 +341,11 @@
                                  </div>
                               </div>
 
+                              <?php if(false): ?>
                               <div class="label-details">
                                  <button type="button" class="upload-btn">Subir archivo</button>
                               </div>
+                              <?php endif; ?>
 
                               <div class="label-details">
                                  <div class="row">
