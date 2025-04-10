@@ -186,7 +186,7 @@
          //$form_msg = '<div style="color:#28a745;line-height:1.4em;">Tu mensaje ha sido enviado con éxito.</div>';
          //$form_msg = '<div id="form-message" style="margin:20px 0; color:#28a745;line-height:1.4em;"> Gracias por postular a "'.$title_oferta.'" de la empresa "'.$title_negocio.'" </div>';
          //$form_msg .= '<a style="margin:0 auto;" href="'.$permalink_negocio.'" class="btn-gray">Ver mas ofertas laborales de la empresa "'.$title_negocio.'" </a>';
-         $form_msg = '<div id="form-message" style="margin:20px 0; color:#28a745;line-height:1.4em;">Gracias por postular.<br>En breve te contactaremos.<br>Mientras tanto puedes seguir revisando más ofertas laborales de <a href="'.$permalink_negocio.'">'.$title_negocio.'</a>.';
+         $form_msg = '<div id="form-message" style="margin:20px 0; color:#28a745;line-height:1.4em;">Gracias por postular.<br>En breve te contactaremos.<br>Mientras tanto puedes seguir revisando más ofertas laborales de <a href="'.$permalink_negocio.'">'.$title_negocio.'</a>.</div>';
       elseif ($_GET["success"] == "2"):
          $form_msg = '<div id="form-message" style="margin:20px 0; color:#FF6B6B;line-height:1.4em;">La empresa no ha configurado los datos de envío. Por favor, espere o contacte al administrador.</div>';
       endif; 
