@@ -22,8 +22,6 @@
    $title_oferta = get_the_title($post_id);
    $permalink_oferta = get_the_permalink();
 
-   //$titulo_pagina = $title_oferta." - ".$title_negocio;
-   $titulo_pagina = $title_oferta." - ".$empresa_nombre;
 
    $label_puesto = "";
    $puestos = get_the_terms($post_id, 'puesto');
@@ -143,6 +141,10 @@
    $exp_conocimientos = get_field("exp_conocimientos", $post_id);
    $html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
 
+
+   //$titulo_pagina = $title_oferta." - ".$title_negocio;
+   //$titulo_pagina = $title_oferta." - ".$empresa_nombre;
+   $titulo_pagina = $title_oferta." - ".$empr_trabaj;
 
    $ubicacion_geografica = "";
    if( $distrito ):
