@@ -86,26 +86,33 @@
             endif;
 
             //correos destinatarios
+            //var_dump(array("f_form_emails_destinatarios"=>$f_form_emails_destinatarios), "<br><br>");
             if ($f_form_emails_destinatarios):
                $flag_send = false;
                foreach ($f_form_emails_destinatarios as $o_item):
                   $sf_nombre = $o_item["nombre"];
                   $sf_email = $o_item["email"];
+                  //var_dump(array("sf_nombre"=>$sf_nombre, "sf_email"=>$sf_email), "<br><br>");
                   if ($sf_nombre && $sf_email):
                      $email_to = $sf_nombre . " <" . $sf_email . ">";
                      $flag_send = wp_mail($email_to, $email_subject, $email_message, $headers, $attachments);
+                     //echo "<pre>";
+                     //var_dump(array("flag_send - f_form_emails_destinatarios"=>$flag_send, "email_to"=>$email_to, "email_subject"=>$email_subject, "email_message"=>$email_message, "headers"=>$headers, "attachments"=>$attachments), "<br><br>");
+                     //echo "</pre>";
                   endif;
                endforeach;
 
                //falta copia al administrador
                $admin_email = get_option('admin_email');
                if (is_email($admin_email)):
-                  $flag_send = wp_mail($admin_email, $email_subject, $email_message, $headers, $attachments);
+                  //$flag_send = wp_mail($admin_email, $email_subject, $email_message, $headers, $attachments);
+                  //var_dump(array("flag_send - admin_email"=>$flag_send));
                endif;
 
                //falta correo al postulante
                if (is_email($sf_email)):
                   $flag_send = wp_mail($sf_email, $email_subject, $email_message, $headers, $attachments);
+                  //var_dump(array("flag_send - sf_email"=>$flag_send), "<br><br>");
                endif;
 
 
