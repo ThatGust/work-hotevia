@@ -146,7 +146,8 @@
    $empr_trabaj = get_field("empr_trabaj", $post_id);
    $requisitos = get_field("requisitos", $post_id);
    $exp_conocimientos = get_field("exp_conocimientos", $post_id);
-   $html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
+   //$html_pie_de_pagina = get_field("html_pie_de_pagina", $post_id);
+   $html_pie_de_pagina = get_field("html_pie_de_pagina", "option");
 
 
    //$titulo_pagina = $title_oferta." - ".$title_negocio;
@@ -223,8 +224,8 @@
                         </div>
                         <div class="col-12 col-lg-7 custom-col">
                            <div class="wrap-buttons">
-                              <a href="<?php echo $permalink_negocio; ?>" class="btn-gray">Ver más ofertas de <?php echo $title_negocio; ?></a>
-                              <a href="<?php echo $permalink_ofertas_laborales; ?>" class="btn-gray">Volver al listado de ofertas</a>
+                              <a href="<?php echo $permalink_negocio; ?>" class="btn-gray">Otras ofertas de la empresa</a>
+                              <a href="<?php echo $permalink_ofertas_laborales; ?>" class="btn-gray">Ir al listado de ofertas</a>
                            </div>
                         </div>
                      </div>
@@ -235,7 +236,7 @@
                         <label class="label-details"><?php echo $label_puesto; ?></label>
 
                         <div class="label-details">
-                           <label>EMPRESA:</label>
+                           <label>EMPRESA QUE SELECCIONA:</label>
                            <p><?php echo $nombre_de_la_empresa; ?></p>
                         </div>
 

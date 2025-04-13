@@ -71,7 +71,7 @@
    
 
    $rows = get_custom_posts(
-      $post_type = "oferta-laboral",
+      $post_type = "empleo",
       $search = $v_search_text,
       $taxonomies_array,
       $custom_field_array,  //%meta_value% 
@@ -260,24 +260,26 @@
                                        $sf_permalink = get_permalink($sf_ID);
                                     ?>
 
-                                    <a href="<?php echo $sf_permalink; ?>" class="job-item">
-                                        <span class="icon"><?php echo $svg_icon; ?></span>
+                                    <div class="wrap-item">
+                                       <a href="<?php echo $sf_permalink; ?>" class="job-item">
+                                          <span class="icon"><?php echo $svg_icon; ?></span>
 
-                                        <?php if ($sf_title): ?>
-                                            <span class="job-title-list"><?php echo $sf_title; ?> - </span>
-                                        <?php endif; ?>
+                                          <?php if ($sf_title): ?>
+                                             <span class="job-title-list"><?php echo $sf_title; ?> - </span>
+                                          <?php endif; ?>
 
-                                        <?php if ($sf_empresa): ?>
-                                            <span class="job-location"><?php echo $sf_empresa; ?> /</span>
-                                        <?php endif; ?>
+                                          <?php if ($sf_empresa): ?>
+                                             <span class="job-location"><?php echo $sf_empresa; ?> /</span>
+                                          <?php endif; ?>
 
-                                        <?php if ($sf_ubicacion || $sf_fecha): ?>
-                                            <span class="job-info">
-                                                <?php echo $sf_ubicacion; ?> -
-                                                <?php echo $sf_fecha; ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </a>
+                                          <?php if ($sf_ubicacion || $sf_fecha): ?>
+                                             <span class="job-info">
+                                                   <?php echo $sf_ubicacion; ?> -
+                                                   <?php echo $sf_fecha; ?>
+                                             </span>
+                                          <?php endif; ?>
+                                       </a>
+                                    </div>
 
                                     <?php
                                     $contador++;
