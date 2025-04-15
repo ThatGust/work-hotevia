@@ -18,7 +18,7 @@
          $user_role = get_user_role();
          if( is_admin() && $query->is_main_query() && $user_role == "editor"  ):
             $screen = get_current_screen();
-            if( in_array($screen->post_type, array("oferta-laboral","empresa")) ):
+            if( in_array($screen->post_type, array("empleo","empresa")) ):
                $user = wp_get_current_user();
                if (in_array('editor', $user->roles) || in_array('author', $user->roles)):
                   $query->set('author', $user->ID);

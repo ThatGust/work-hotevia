@@ -18,6 +18,26 @@
       color: #fff;
    }
 }
+.btn-red{
+   padding: 0 15px;
+   font-size: 24px;
+   background-color: #c83239;
+   color: #fff;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   text-align: center;
+   margin-left: auto;
+   //display: block;
+   line-height: 2em;
+   transition:all .3s ease-in-out;
+   display: table;
+   &:hover{
+      opacity: .8;
+      background-color: #c83239;
+      color: #fff;
+   }
+}
 .single-oferta-laboral{
    .wrap{
       max-width: 1170px;
@@ -173,6 +193,7 @@
          align-items: center;
          margin-bottom: 30px;
       }
+      .btn-red,
       .btn-gray{
          //padding: 0 8px;
          //font-size: 16px;

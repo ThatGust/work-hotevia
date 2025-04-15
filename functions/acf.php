@@ -70,7 +70,7 @@
       endif;
 
       $screen = get_current_screen();
-      if( in_array($screen->post_type, array("oferta-laboral")) ):
+      if( in_array($screen->post_type, array("empleo")) ):
          echo '
          <script>
             var array_ciudades = '.json_encode($ciudades).';
