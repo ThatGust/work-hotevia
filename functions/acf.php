@@ -1,8 +1,8 @@
 <?php
    if(function_exists('acf_add_options_page')) {
       acf_add_options_page(array(
-         'page_title' 	=> 'Opciones de ofertas laborales',
-         'menu_title'	=> 'Opciones de ofertas laborales',
+         'page_title' 	=> 'Opciones de empleos',
+         'menu_title'	=> 'Opciones de empleos',
          'menu_slug' 	=> 'opciones-ofertas',
          'redirect'		=> false,
          //'capability'=>'edit_posts',

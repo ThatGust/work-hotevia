@@ -1,11 +1,22 @@
 <?php
+   //add_action('admin_menu', 'ver_capacities_de_paginas_admin', 999);
+   /*function ver_capacities_de_paginas_admin() {
+      global $menu, $submenu;
+
+      echo '<pre>';
+      print_r($menu);      // Menús de nivel superior
+      print_r($submenu);   // Submenús
+      echo '</pre>';
+      die();
+   }*/
+
    add_action('admin_init', 'restringir_admin_para_rol_personalizado');
    function restringir_admin_para_rol_personalizado() {
-      $rol = get_role('editor');
       /*echo "<div><pre>";
       var_dump($rol);
       echo "</pre></div>";
       die();*/
+      $rol = get_role('editor');
       if($rol):
          //$rol->remove_cap('edit_posts'); //afecta ofetas y empresas
          $rol->remove_cap('edit_empresa');
@@ -14,7 +25,12 @@
          $rol->remove_cap('edit_kc-section');
          $rol->remove_cap('edit_medio');
          $rol->remove_cap('moderate_comments');
+         //$rol->add_cap('manage_options');
+         //$rol->add_cap('edit_posts');
+         //var_dump("test"); die();
       endif;
+
+      
    }
 
    add_action('current_screen', 'mi_funcion_con_get_current_screen');
@@ -25,10 +41,10 @@
       var_dump($screen);
       echo "</pre></center><br><br><br><br><br><br><br><br><br>";*/
       if (in_array('editor', $user->roles)):
-         $flag = !($screen && in_array($screen->id, array( "edit-oferta-laboral", "oferta-laboral", "edit-puesto", "profile")));
+         $flag = !($screen && in_array($screen->id, array( "edit-empleo", "empleo", "edit-puesto", "profile")));
          //var_dump($screen->id, $flag); die();
          if ( $flag ):
-            wp_redirect(admin_url('edit.php?post_type=oferta-laboral'));
+            wp_redirect(admin_url('edit.php?post_type=empleo'));
          endif;
       endif;
    }
@@ -81,7 +97,7 @@
             return home_url('/pagina-para-autores/');
          endif;*/
          if (in_array('editor', $user->roles)):
-            return admin_url('edit.php?post_type=oferta-laboral');
+            return admin_url('edit.php?post_type=empleo');
          endif;
       endif;
       return $redirect_to;
