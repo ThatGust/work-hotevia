@@ -226,7 +226,7 @@
                            <div class="wrap-buttons">
                               <a href="<?php echo $permalink_negocio; ?>" class="btn-gray">Otras ofertas de la empresa</a>
                               <a href="<?php echo $permalink_ofertas_laborales; ?>" class="btn-red">Ir al listado de ofertas</a>
-                           </div>
+                           </div> 
                         </div>
                      </div>
 
