@@ -90,14 +90,14 @@
             if ($f_form_emails_destinatarios):
                $flag_send = false;
                foreach ($f_form_emails_destinatarios as $o_item):
-                  $sf_nombre = $o_item["nombre"];
-                  $sf_email = $o_item["email"];
+                  $ssf_nombre = $o_item["nombre"];
+                  $ssf_email = $o_item["email"];
                   //var_dump(array("sf_nombre"=>$sf_nombre, "sf_email"=>$sf_email), "<br><br>");
-                  if ($sf_nombre && $sf_email):
-                     $email_to = $sf_nombre . " <" . $sf_email . ">";
-                     $flag_send = wp_mail($email_to, $email_subject, $email_message, $headers, $attachments);
+                  if ($ssf_nombre && $ssf_email):
+                     $s_email_to = $ssf_nombre . " <" . $ssf_email . ">";
+                     $flag_send = wp_mail($s_email_to, $email_subject, $email_message, $headers, $attachments);
                      //echo "<pre>";
-                     //var_dump(array("flag_send - f_form_emails_destinatarios"=>$flag_send, "email_to"=>$email_to, "email_subject"=>$email_subject, "email_message"=>$email_message, "headers"=>$headers, "attachments"=>$attachments), "<br><br>");
+                     //var_dump(array("flag_send - f_form_emails_destinatarios"=>$flag_send, "email_to"=>$s_email_to, "email_subject"=>$email_subject, "email_message"=>$email_message, "headers"=>$headers, "attachments"=>$attachments), "<br><br>");
                      //echo "</pre>";
                   endif;
                endforeach;
@@ -105,7 +105,7 @@
                //falta copia al administrador
                $admin_email = get_option('admin_email');
                if (is_email($admin_email)):
-                  //$flag_send = wp_mail($admin_email, $email_subject, $email_message, $headers, $attachments);
+                  $flag_send = wp_mail($admin_email, $email_subject, $email_message, $headers, $attachments);
                   //var_dump(array("flag_send - admin_email"=>$flag_send));
                endif;
 
@@ -276,7 +276,7 @@
 
                         <div class="apply-form">
                            <h3>Postula a esta oferta aquí:</h3>
-                           <form action="" method="post" enctype="multipart/form-data">
+                           <form id="job-application-form" action="" method="post" enctype="multipart/form-data">
                               <div class="label-details">
                                  <div class="row">
                                     <div class="custom-col-1">
