@@ -58,7 +58,7 @@
             $headers = "MIME-Version: 1.0" . "\r\n";
             $headers .= "Content-type: text/html;charset=utf-8" . "\r\n";
             $headers .= "Return-Path: " . $email_from . "\r\n";
-            $headers .= "Reply-To: " . $email_from . "\r\n";
+            $headers .= "Reply-To: " . $sf_email . "\r\n";
             $headers .= "Errors-To: " . $email_from . "\r\n";
             $headers .= "From: " . $email_from . "\r\n";
 
@@ -103,17 +103,17 @@
                endforeach;
 
                //falta copia al administrador
-               $admin_email = get_option('admin_email');
+               /*$admin_email = get_option('admin_email');
                if (is_email($admin_email)):
                   $flag_send = wp_mail($admin_email, $email_subject, $email_message, $headers, $attachments);
                   //var_dump(array("flag_send - admin_email"=>$flag_send));
-               endif;
+               endif;*/
 
                //falta correo al postulante
-               if (is_email($sf_email)):
+               /*if (is_email($sf_email)):
                   $flag_send = wp_mail($sf_email, $email_subject, $email_message, $headers, $attachments);
                   //var_dump(array("flag_send - sf_email"=>$flag_send), "<br><br>");
-               endif;
+               endif;*/
 
 
                if ($flag_send):
