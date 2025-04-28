@@ -11,7 +11,7 @@
    $v_puesto_id = false;
    $v_pais_slug = false;
    $v_ciudad_slug = false;
-   $v_paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;;
+   $v_paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
    if( isset($_GET["se"]) ):
       if( !empty($_GET["se"]) ):
          $v_search_text = $_GET["se"];
