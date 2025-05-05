@@ -22,6 +22,8 @@
    $title_oferta = get_the_title($post_id);
    $permalink_oferta = get_the_permalink();
 
+   $distrito = get_field("distrito", $post_id);
+
 
    $label_puesto = "";
    $puestos = get_the_terms($post_id, 'puesto');
@@ -53,7 +55,8 @@
          if ($f_form_nombre_remitente && $f_form_email_remitente && $f_form_asunto && $f_form_mensaje):
 
             $email_from = $f_form_nombre_remitente . " <" . $f_form_email_remitente . ">";
-            $email_subject = $f_form_asunto;
+            $email_subject = $f_form_asunto.", ".$title_oferta.", ".$distrito;
+            //var_dump($email_subject); die();
 
             $headers = "MIME-Version: 1.0" . "\r\n";
             $headers .= "Content-type: text/html;charset=utf-8" . "\r\n";
@@ -140,7 +143,6 @@
    $fecha_de_expiracion = get_field("fecha_de_expiracion", $post_id);
    $pais = get_field("pais", $post_id);
    $ciudad = get_field("ciudad", $post_id);
-   $distrito = get_field("distrito", $post_id);
    $direccion = get_field("direccion", $post_id);
 
    $empr_trabaj = get_field("empr_trabaj", $post_id);
