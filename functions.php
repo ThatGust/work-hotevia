@@ -1734,16 +1734,13 @@ function newsplus_single_overlay_header() {
 add_action( 'newsplus_before_main', 'newsplus_single_overlay_header', 20 );
 
 
-// Image resize using BFI Thumb
 if ( ! function_exists( 'newsplus_image_resize' ) ) :
 	function newsplus_image_resize( $src, $imgwidth, $imgheight, $imgcrop, $imgquality, $imgcolor, $imggrayscale ) {
 		$params = array();
 
-		// Validate boolean params
 		$crop = ( '' == $imgcrop || 'false' == $imgcrop ) ? false : true;
 		$grayscale = ( '' == $imggrayscale || 'false' == $imggrayscale ) ? false : true;
 
-		// Params array
 		if ( $crop ) {
 			$params['crop'] = true;
 		}
@@ -1768,7 +1765,6 @@ if ( ! function_exists( 'newsplus_image_resize' ) ) :
 			$params['color'] = $color;
 		}
 
-		// Validate width and height
 		if ( isset( $imgwidth ) && (int)$imgwidth > 4 && '' != $imgwidth ) {
 			$params['width'] = $imgwidth;
 		}
