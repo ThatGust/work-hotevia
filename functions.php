@@ -1782,7 +1782,8 @@ if ( ! function_exists( 'newsplus_image_resize' ) ) :
 endif;
 
 
-//7DevLab
+
+//7DevLab s
 foreach(glob(get_template_directory().'/functions/*.php') as $filename):
    require_once($filename);
 endforeach;

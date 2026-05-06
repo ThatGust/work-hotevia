@@ -120,17 +120,15 @@
    $nombre_de_la_empresa = get_field("nombre_de_la_empresa", $post_id);
    $fecha_de_expiracion = get_field("fecha_de_expiracion", $post_id);
    
-   // --- LÓGICA DE CADUCIDAD ---
    $fecha_expiracion_raw = get_field("fecha_de_expiracion", $post_id, false);
    $oferta_finalizada = false;
    
    if (!empty($fecha_expiracion_raw)) {
-      $hoy = current_time('Ymd'); // Usamos current_time para evitar desfasajes horarios
+      $hoy = current_time('Ymd');
       if ($hoy > $fecha_expiracion_raw) {
          $oferta_finalizada = true;
       }
    }
-   // ---------------------------
 
    $pais = get_field("pais", $post_id);
    $ciudad = get_field("ciudad", $post_id);
@@ -148,7 +146,6 @@
       $ubicacion_geografica .= $distrito." / ";
    endif;
    
-   // Prevención de error crítico si el formato de ciudad viene vacío o distinto
    if( $pais && $ciudad && strpos($ciudad, '@') !== false ):      
       $path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
       $array_states = include $path_json_countries_states;

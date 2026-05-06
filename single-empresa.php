@@ -132,6 +132,7 @@
                                     $sf_ID = $o_row->ID;
                                     $sf_title = $o_row->post_title;
                                     //$sf_fecha = get_post_meta($sf_ID, 'fecha_de_expiracion', true);
+                                    
                                     //$sf_empresa = get_post_meta($sf_ID, 'nombre_de_la_empresa', true);
                                     //$sf_ubicacion = get_post_meta($sf_ID, 'ubicacion_geografica', true);
                                     $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
