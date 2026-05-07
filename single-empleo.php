@@ -75,6 +75,10 @@
             $email_message .= "<strong>Mensaje: </strong>" . $sf_mensaje . "<br />";
             $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='" . $permalink_oferta . "'> " . $permalink_oferta . " </a><br />";
             $email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
+            $banner_email = get_field('banner_publicitario_email', 'option');
+            if ( !empty($banner_email) ) {
+                $email_message .= '<br><br><hr style="border:0; border-top:1px solid #ccc; margin: 20px 0;"><br>' . $banner_email;
+            }
 
             $attachments = array();
             $upload_path = false;
