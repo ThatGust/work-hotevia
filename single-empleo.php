@@ -106,6 +106,10 @@
 
             $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='" . $permalink_oferta . "'> " . $permalink_oferta . " </a><br />";
             $email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
+            $banner_email = get_field('banner_publicitario_email', 'option');
+            if ( !empty($banner_email) ) {
+                $email_message .= '<br><br><hr style="border:0; border-top:1px solid #ccc; margin: 20px 0;"><br>' . $banner_email;
+            }
 
             $attachments = array();
             $upload_path = false;
@@ -117,27 +121,77 @@
                endif;
             endif;
 
-            if ($f_form_emails_destinatarios):
-               $flag_send = false;
-               foreach ($f_form_emails_destinatarios as $o_item):
-                  $ssf_nombre = $o_item["nombre"];
-                  $ssf_email = $o_item["email"];
-                  if ($ssf_nombre && $ssf_email):
-                     $s_email_to = $ssf_nombre . " <" . $ssf_email . ">";
-                     $flag_send = wp_mail($s_email_to, $email_subject, $email_message, $headers, $attachments);
-                  endif;
-               endforeach;
+            $nueva_postulacion = array(
+                'post_title'    => $sf_nombre . ' ' . $sf_apellidos,
+                'post_type'     => 'postulacion',
+                'post_status'   => 'publish'
+            );
+            $post_id_nuevo = wp_insert_post( $nueva_postulacion );
 
-               if ($flag_send):
-                  $code_response = "1";
-               else:
-                  $code_response = "0";
-               endif;
+            if ( $post_id_nuevo ) {
+                update_post_meta($post_id_nuevo, 'nombre', $sf_nombre);
+                update_post_meta($post_id_nuevo, 'apellidos', $sf_apellidos);
+                update_post_meta($post_id_nuevo, 'email', $sf_email);
+                update_post_meta($post_id_nuevo, 'telefono', $sf_telefono);
+                update_post_meta($post_id_nuevo, 'linkedin', $sf_linkedin);
+                update_post_meta($post_id_nuevo, 'mensaje', $sf_mensaje);
+                update_post_meta($post_id_nuevo, 'puesto_postulado', $title_oferta);
+                update_post_meta($post_id_nuevo, 'empresa', $title_negocio);
+                
+                if ($upload_path && file_exists($upload_path)) {
+                    require_once( ABSPATH . 'wp-admin/includes/image.php' );
+                    require_once( ABSPATH . 'wp-admin/includes/file.php' );
+                    require_once( ABSPATH . 'wp-admin/includes/media.php' );
+                    
+                    $wp_filetype = wp_check_filetype(basename($upload_path), null );
+                    $attachment = array(
+                        'post_mime_type' => $wp_filetype['type'],
+                        'post_title'     => preg_replace( '/\.[^.]+$/', '', basename($upload_path) ),
+                        'post_content'   => '',
+                        'post_status'    => 'inherit'
+                    );
+                    
+                    $attach_id = wp_insert_attachment( $attachment, $upload_path, $post_id_nuevo );
+                    if ( ! is_wp_error( $attach_id ) ) {
+                        $attach_data = wp_generate_attachment_metadata( $attach_id, $upload_path );
+                        wp_update_attachment_metadata( $attach_id, $attach_data );
+                        update_post_meta($post_id_nuevo, 'cv', $attach_id);
+                    }
+                }
+            }
+
+            $emails_personalizados = get_field("emails_personalizados_oferta", $post_id);
+            $flag_send = false;
+
+            if (!empty($emails_personalizados)) {
+                $lista_emails = array_map('trim', explode(',', $emails_personalizados));
+                foreach ($lista_emails as $ssf_email_dest) {
+                    if (is_email($ssf_email_dest)) {
+                        $envio_ok = wp_mail($ssf_email_dest, $email_subject, $email_message, $headers, $attachments);
+                        if ($envio_ok) { $flag_send = true; }
+                    }
+                }
+            } else {
+                if ($f_form_emails_destinatarios):
+                   foreach ($f_form_emails_destinatarios as $o_item):
+                      $ssf_nombre_dest = $o_item["nombre"];
+                      $ssf_email_dest = $o_item["email"];
+                      if ($ssf_nombre_dest && $ssf_email_dest):
+                         $s_email_to = $ssf_nombre_dest . " <" . $ssf_email_dest . ">";
+                         $envio_ok = wp_mail($s_email_to, $email_subject, $email_message, $headers, $attachments);
+                         if ($envio_ok) { $flag_send = true; }
+                      endif;
+                   endforeach;
+                endif;
+            }
+
+            if ($flag_send):
+               $code_response = "1";
+            else:
+               $code_response = "0";
             endif;
 
-            if ($upload_path):
-               unlink($upload_path);
-            endif;
+
          else:
             $code_response = "2";
 
@@ -151,17 +205,15 @@
    $nombre_de_la_empresa = get_field("nombre_de_la_empresa", $post_id);
    $fecha_de_expiracion = get_field("fecha_de_expiracion", $post_id);
    
-   // --- LÓGICA DE CADUCIDAD ---
    $fecha_expiracion_raw = get_field("fecha_de_expiracion", $post_id, false);
    $oferta_finalizada = false;
    
    if (!empty($fecha_expiracion_raw)) {
-      $hoy = current_time('Ymd'); // Usamos current_time para evitar desfasajes horarios
+      $hoy = current_time('Ymd');
       if ($hoy > $fecha_expiracion_raw) {
          $oferta_finalizada = true;
       }
    }
-   // ---------------------------
 
    $pais = get_field("pais", $post_id);
    $ciudad = get_field("ciudad", $post_id);
@@ -179,7 +231,6 @@
       $ubicacion_geografica .= $distrito." / ";
    endif;
    
-   // Prevención de error crítico si el formato de ciudad viene vacío o distinto
    if( $pais && $ciudad && strpos($ciudad, '@') !== false ):      
       $path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
       $array_states = include $path_json_countries_states;
@@ -430,7 +481,6 @@
                                           <?php 
                                              $texto_disclaimer = get_field("texto_disclaimer_cv", $post_id);
                                              
-                                             // Limpiamos los espacios en blanco con trim() para evitar que lo reconozca como texto válido
                                              if(!$texto_disclaimer || trim((string)$texto_disclaimer) === '') {
                                                 echo $texto_default;
                                              } else {
