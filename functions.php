@@ -1823,6 +1823,32 @@ function notificar_cambio_fecha_expiracion_hotevia($value, $post_id, $field) {
     return $value; 
 }
 
+function registrar_cpt_postulaciones() {
+    $labels = array(
+        'name'                  => 'Postulaciones',
+        'singular_name'         => 'Postulación',
+        'menu_name'             => 'Postulaciones',
+        'add_new'               => 'Añadir Nueva',
+        'all_items'             => 'Todas las Postulaciones',
+        'view_item'             => 'Ver Postulación',
+    );
+
+    $args = array(
+        'labels'             => $labels,
+        'public'             => false, // No queremos que tengan una URL pública
+        'show_ui'            => true,  // Pero sí queremos verlas en el admin
+        'show_in_menu'       => true,
+        'capability_type'    => 'post',
+        'map_meta_cap'       => true,
+        'hierarchical'       => false,
+        'menu_icon'          => 'dashicons-businessperson', // Icono de persona
+        'supports'           => array( 'title' ), // Solo usaremos el título para el nombre del candidato
+    );
+
+    register_post_type( 'postulacion', $args );
+}
+add_action( 'init', 'registrar_cpt_postulaciones' );
+
 
 //7DevLab
 foreach(glob(get_template_directory().'/functions/*.php') as $filename):
