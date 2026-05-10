@@ -19,6 +19,8 @@
    $permalink_oferta = get_the_permalink();
 
    $distrito = get_field("distrito", $post_id);
+   $preguntas_personalizadas = get_field("preguntas_personalizadas", $post_id);
+   
 
    $texto_default = 'Acepto a registrarme en la bbdd de oe2 by hotevia para recibir información personalizada sobre empleabilidad, desarrollo profesional y noticias y contenidos de Hotevia y abanza. oe2 by Hoteiva y Hotevia son marcas de abanZa consulting EIRL.';
 
@@ -44,6 +46,27 @@
          $sf_email = $_POST["email"];
          $sf_linkedin = $_POST["linkedin"];
          $sf_mensaje = $_POST["mensaje"];
+
+
+         $array_pregunta = array();
+         $array_respuesta = array();
+         if($preguntas_personalizadas):
+            $index = 1;
+            foreach($preguntas_personalizadas as $o_item):
+               //var_dump($o_item);
+               $key = "field-".$index; 
+               $pregunta_id = $o_item["pregunta_txt"];
+               $question_txt = get_field("pregunta", $pregunta_id);
+               $answer_txt = $_POST[$key];
+               if($question_txt && $answer_txt):
+                  $array_pregunta[] = $question_txt;
+                  $array_respuesta[] = $answer_txt;
+               endif;
+               $index++;
+            endforeach;
+         endif;
+
+
 
          $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
          $f_form_nombre_remitente = get_field("form_nombre_remitente", $empresa_id);
@@ -73,6 +96,14 @@
             $email_message .= "<strong>Email: </strong>" . $sf_email . "<br />";
             $email_message .= "<strong>LinkedIn: </strong>" . $sf_linkedin . "<br />";
             $email_message .= "<strong>Mensaje: </strong>" . $sf_mensaje . "<br />";
+
+            if( count($array_pregunta) > 0 ):
+               for($i=0 ; $i<count($array_pregunta) ; $i++):
+                  $email_message .= "<strong>".$array_pregunta[$i].": </strong>" . $array_respuesta[$i] . "<br />";
+               endfor;
+            endif;
+            $email_message .= "<br />";
+
             $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='" . $permalink_oferta . "'> " . $permalink_oferta . " </a><br />";
             $email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
 
@@ -261,6 +292,7 @@
                            <h3 style="color: #721c24; margin: 0; font-size: 24px; font-weight: bold;">OFERTA LABORAL FINALIZADA</h3>
                            <p style="color: #721c24; margin: 10px 0 0 0; font-size: 16px;">El plazo para postular a esta oferta ha terminado.</p>
                         </div>
+
                      <?php else: ?>
 
                         <?php if (!empty($mostrar_boton) && is_array($mostrar_boton) && in_array('1', $mostrar_boton)): ?>
@@ -365,6 +397,31 @@
                                        </div>
                                     </div>
                                  </div>
+
+                                 <?php if($preguntas_personalizadas): ?>
+                                    <?php $index = 1; ?>
+                                    <?php foreach($preguntas_personalizadas as $o_item): ?>
+                                       <?php 
+                                          //var_dump($o_item);
+                                          $key = "field-".$index; 
+                                          $pregunta_id = $o_item["pregunta_txt"];
+                                          $question_txt = get_field("pregunta", $pregunta_id);
+                                       ?>
+                                       <?php if($question_txt): ?>
+                                          <div class="label-details">
+                                             <div class="row">
+                                                <div class="custom-col-1">
+                                                   <label for="<?php echo $key ?>" style="display:inline-block; line-height:1.3em;"><?php echo $question_txt; ?>:</label>
+                                                </div>
+                                                <div class="custom-col-2">
+                                                   <input type="text" id="<?php echo $key ?>" name="<?php echo $key ?>" />
+                                                </div>
+                                             </div>
+                                          </div>
+                                       <?php endif; ?>
+                                       <?php $index++; ?>
+                                    <?php endforeach; ?>
+                                 <?php endif; ?>
 
                                  <div class="label-details disclaimer-checkbox" style="margin-top: 20px; margin-bottom: 30px;">
                                     <div style="display: flex; align-items: flex-start; gap: 15px;">
