@@ -34,7 +34,7 @@
 
     
     //Preguntas Personalizadas (Admin)
-    add_filter('acf/prepare_field/key=field_69fc1f3055d65', function($field) {
+    add_filter('acf/prepare_field/key=field_6a010eb29f1c8', function($field) {
         global $post;
         if (!$post || $post->post_type !== 'empleo') {
             return $field;
@@ -52,7 +52,7 @@
             return $field;
         }
         
-        $keys_objetivo = ['field_69fc35ac586f3', 'field_69fc35c1586f4'];
+        $keys_objetivo = ['field_6a010f6207a67', 'field_6a010f9e07a68'];
 
         // Si el campo actual no está en nuestra lista, lo devolvemos tal cual
         if ( !in_array($field['key'], $keys_objetivo) ):
