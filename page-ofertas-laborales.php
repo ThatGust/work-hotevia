@@ -252,35 +252,58 @@
                                 ?>
 
                                 <?php foreach ($rows as $o_row): ?>
-                                    <?php
-                                       $sf_ID = $o_row->ID;
-                                       $sf_title = $o_row->post_title;
-                                       $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
-                                       $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
-                                       $sf_ubicacion = get_field('distrito', $sf_ID);
-                                       $sf_permalink = get_permalink($sf_ID);
-                                    ?>
+                                    <?php 
+                                            // 1. Creamos un array vacío para llevar la cuenta de qué IDs ya mostramos
+                                            $ids_ya_mostrados = array(); 
 
-                                    <div class="wrap-item">
-                                       <a href="<?php echo $sf_permalink; ?>" class="job-item">
-                                          <span class="icon"><?php echo $svg_icon; ?></span>
+                                            foreach ($rows as $o_row): 
+                                                // 2. Si el ID actual ya está en nuestro rastreador, saltamos a la siguiente vuelta del bucle
+                                                if ( in_array( $o_row->ID, $ids_ya_mostrados ) ) {
+                                                    continue;
+                                                }
 
-                                          <?php if ($sf_title): ?>
-                                             <span class="job-title-list"><?php echo $sf_title; ?> - </span>
-                                          <?php endif; ?>
+                                                // 3. Si es nuevo, lo guardamos en el rastreador para que no se repita
+                                                $ids_ya_mostrados[] = $o_row->ID;
 
-                                          <?php if ($sf_empresa): ?>
-                                             <span class="job-location"><?php echo $sf_empresa; ?> /</span>
-                                          <?php endif; ?>
+                                                $sf_ID = $o_row->ID;
+                                                
+                                                // --- Lógica de formato de título (Punto 10) ---
+                                                $titulo_min = mb_strtolower($o_row->post_title, 'UTF-8');
+                                                $sf_title = mb_convert_case($titulo_min, MB_CASE_TITLE, 'UTF-8');
+                                                
+                                                $sf_title = str_replace(
+                                                    array(' De ', ' En ', ' El ', ' La ', ' Los ', ' Las ', ' Y ', ' A ', ' O ', ' Por ', ' Para ', ' Del ', ' Al ', ' Con '),
+                                                    array(' de ', ' en ', ' el ', ' la ', ' los ', ' las ', ' y ', ' a ', ' o ', ' por ', ' para ', ' del ', ' al ', ' con '),
+                                                    $sf_title
+                                                );
 
-                                          <?php if ($sf_ubicacion || $sf_fecha): ?>
-                                             <span class="job-info">
-                                                   <?php echo $sf_ubicacion; ?> -
-                                                   <?php echo $sf_fecha; ?>
-                                             </span>
-                                          <?php endif; ?>
-                                       </a>
-                                    </div>
+                                                $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
+                                                $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
+                                                $sf_ubicacion = get_field('distrito', $sf_ID);
+                                                $sf_permalink = get_permalink($sf_ID);
+                                            ?>
+
+                                                <div class="wrap-item">
+                                                    <a href="<?php echo $sf_permalink; ?>" class="job-item">
+                                                        <span class="icon"><?php echo $svg_icon; ?></span>
+
+                                                        <?php if ($sf_title): ?>
+                                                            <span class="job-title-list" style="text-transform: none !important;"><?php echo $sf_title; ?> - </span>
+                                                        <?php endif; ?>
+
+                                                        <?php if ($sf_empresa): ?>
+                                                            <span class="job-location"><?php echo $sf_empresa; ?> /</span>
+                                                        <?php endif; ?>
+
+                                                        <?php if ($sf_ubicacion || $sf_fecha): ?>
+                                                            <span class="job-info">
+                                                                <?php echo $sf_ubicacion; ?> - <?php echo $sf_fecha; ?>
+                                                            </span>
+                                                        <?php endif; ?>
+                                                    </a>
+                                                </div>
+
+                                            <?php endforeach; ?>
 
                                     <?php
                                     $contador++;
