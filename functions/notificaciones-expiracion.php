@@ -12,14 +12,23 @@ function notificar_cambio_fecha_expiracion_hotevia($value, $post_id, $field) {
     if ($old_value !== $value && !empty($value)) {
         
         $post_title = get_the_title($post_id);
+        
+        $nombre_hotel = get_field('nombre_de_la_empresa', $post_id);
+        if (!$nombre_hotel) {
+            $nombre_hotel = 'No especificado';
+        }
+
         $admin_email = get_option('admin_email');
         $extra_email = 'postulaciones@hotevia.info';
         
         $destinatarios = array($admin_email, $extra_email);
-        $asunto = 'Alerta: Fecha de expiración modificada - ' . $post_title;
+        $asunto = 'Alerta: Fecha modificada - ' . $nombre_hotel . ' - ' . $post_title;
         
         $mensaje = "Hola,\n\n";
-        $mensaje .= "Se ha detectado un cambio (reactivación/modificación) en la fecha de expiración de la siguiente oferta de empleo.\n\n";
+        $mensaje .= "Se ha detectado un cambio (reactivación/modificación) en la fecha de expiración de la siguiente oferta.\n\n";
+        
+        $mensaje .= "Empresa/Hotel: " . $nombre_hotel . "\n";
+        
         $mensaje .= "Oferta: " . $post_title . "\n";
         $mensaje .= "Fecha Anterior: " . ($old_value ? $old_value : 'No establecida') . "\n";
         $mensaje .= "Nueva Fecha: " . $value . "\n\n";
