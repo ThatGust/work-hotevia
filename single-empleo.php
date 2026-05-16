@@ -46,18 +46,17 @@
          $sf_email = $_POST["email"];
          $sf_linkedin = $_POST["linkedin"];
          $sf_mensaje = $_POST["mensaje"];
-
+         $sf_disclaimer = isset($_POST["disclaimer_cv"]) ? "Sí, aceptado" : "No";
 
          $array_pregunta = array();
          $array_respuesta = array();
          if($preguntas_personalizadas):
             $index = 1;
             foreach($preguntas_personalizadas as $o_item):
-               //var_dump($o_item);
                $key = "field-".$index; 
                $pregunta_id = $o_item["pregunta_txt"];
                $question_txt = get_field("pregunta", $pregunta_id);
-               $answer_txt = $_POST[$key];
+               $answer_txt = isset($_POST[$key]) ? $_POST[$key] : '';
                if($question_txt && $answer_txt):
                   $array_pregunta[] = $question_txt;
                   $array_respuesta[] = $answer_txt;
@@ -66,13 +65,75 @@
             endforeach;
          endif;
 
+         $attachments = array();
+         $upload_path = false;
+         if (isset($_FILES['cv'])):
+            $upload_dir = wp_upload_dir();
+            $upload_path = $upload_dir['path'] . '/' . basename($_FILES['cv']['name']);
+            if (move_uploaded_file($_FILES['cv']['tmp_name'], $upload_path)):
+               $attachments = array($upload_path);
+            endif;
+         endif;
 
+         $contenido_post = "<strong>Mensaje:</strong><br>" . nl2br(esc_html($sf_mensaje)) . "<br><br>";
+         if( count($array_pregunta) > 0 ):
+            $contenido_post .= "<strong>Respuestas a preguntas personalizadas:</strong><br>";
+            for($i=0 ; $i<count($array_pregunta) ; $i++):
+               $contenido_post .= "<strong>".$array_pregunta[$i].": </strong>" . $array_respuesta[$i] . "<br />";
+            endfor;
+         endif;
+
+         // AQUÍ ESTÁN LOS CAMBIOS APLICADOS: Cierre correcto del array
+         $nueva_postulacion = array(
+             'post_title'    => sanitize_text_field($sf_nombre . ' ' . $sf_apellidos),
+             'post_content'  => $contenido_post,
+             'post_type'     => 'postulacion',
+             'post_status'   => 'publish',
+             'post_author'   => 1 
+         ); 
+         
+         $post_id_nuevo = wp_insert_post( $nueva_postulacion, true );
+
+         if ( !is_wp_error($post_id_nuevo) && $post_id_nuevo > 0 ) {
+             update_post_meta($post_id_nuevo, 'nombre', sanitize_text_field($sf_nombre));
+             update_post_meta($post_id_nuevo, 'apellidos', sanitize_text_field($sf_apellidos));
+             update_post_meta($post_id_nuevo, 'email', sanitize_email($sf_email));
+             update_post_meta($post_id_nuevo, 'telefono', sanitize_text_field($sf_telefono));
+             update_post_meta($post_id_nuevo, 'linkedin', esc_url_raw($sf_linkedin));
+             update_post_meta($post_id_nuevo, 'mensaje', sanitize_textarea_field($sf_mensaje));
+             update_post_meta($post_id_nuevo, 'puesto_postulado', sanitize_text_field($title_oferta));
+             update_post_meta($post_id_nuevo, 'empresa', sanitize_text_field($title_negocio));
+             
+             if ($upload_path && file_exists($upload_path)) {
+                 
+                 // AQUÍ ESTÁN LOS CAMBIOS APLICADOS: Carga de funciones segura
+                 if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+                     require_once( ABSPATH . 'wp-admin/includes/image.php' );
+                     require_once( ABSPATH . 'wp-admin/includes/file.php' );
+                     require_once( ABSPATH . 'wp-admin/includes/media.php' );
+                 }
+                 
+                 $wp_filetype = wp_check_filetype(basename($upload_path), null );
+                 $attachment = array(
+                     'post_mime_type' => $wp_filetype['type'],
+                     'post_title'     => preg_replace( '/\.[^.]+$/', '', basename($upload_path) ),
+                     'post_content'   => '',
+                     'post_status'    => 'inherit'
+                 );
+                 
+                 $attach_id = wp_insert_attachment( $attachment, $upload_path, $post_id_nuevo );
+                 if ( ! is_wp_error( $attach_id ) ) {
+                     $attach_data = wp_generate_attachment_metadata( $attach_id, $upload_path );
+                     wp_update_attachment_metadata( $attach_id, $attach_data );
+                     update_post_meta($post_id_nuevo, 'cv', $attach_id);
+                 }
+             }
+         }
 
          $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
          $f_form_nombre_remitente = get_field("form_nombre_remitente", $empresa_id);
          $f_form_email_remitente = get_field("form_email_remitente", $empresa_id);
          $f_form_asunto = get_field("form_asunto", $empresa_id);
-         $sf_disclaimer = isset($_POST["disclaimer_cv"]) ? "Sí, aceptado" : "No";
          $f_form_mensaje = get_field("form_mensaje", $empresa_id);
 
          if ($f_form_nombre_remitente && $f_form_email_remitente && $f_form_asunto && $f_form_mensaje):
@@ -106,58 +167,10 @@
 
             $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='" . $permalink_oferta . "'> " . $permalink_oferta . " </a><br />";
             $email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
+            
             $banner_email = get_field('banner_publicitario_email', 'option');
             if ( !empty($banner_email) ) {
                 $email_message .= '<br><br><hr style="border:0; border-top:1px solid #ccc; margin: 20px 0;"><br>' . $banner_email;
-            }
-
-            $attachments = array();
-            $upload_path = false;
-            if (isset($_FILES['cv'])):
-               $upload_dir = wp_upload_dir();
-               $upload_path = $upload_dir['path'] . '/' . basename($_FILES['cv']['name']);
-               if (move_uploaded_file($_FILES['cv']['tmp_name'], $upload_path)):
-                  $attachments = array($upload_path);
-               endif;
-            endif;
-
-            $nueva_postulacion = array(
-                'post_title'    => $sf_nombre . ' ' . $sf_apellidos,
-                'post_type'     => 'postulacion',
-                'post_status'   => 'publish'
-            );
-            $post_id_nuevo = wp_insert_post( $nueva_postulacion );
-
-            if ( $post_id_nuevo ) {
-                update_post_meta($post_id_nuevo, 'nombre', $sf_nombre);
-                update_post_meta($post_id_nuevo, 'apellidos', $sf_apellidos);
-                update_post_meta($post_id_nuevo, 'email', $sf_email);
-                update_post_meta($post_id_nuevo, 'telefono', $sf_telefono);
-                update_post_meta($post_id_nuevo, 'linkedin', $sf_linkedin);
-                update_post_meta($post_id_nuevo, 'mensaje', $sf_mensaje);
-                update_post_meta($post_id_nuevo, 'puesto_postulado', $title_oferta);
-                update_post_meta($post_id_nuevo, 'empresa', $title_negocio);
-                
-                if ($upload_path && file_exists($upload_path)) {
-                    require_once( ABSPATH . 'wp-admin/includes/image.php' );
-                    require_once( ABSPATH . 'wp-admin/includes/file.php' );
-                    require_once( ABSPATH . 'wp-admin/includes/media.php' );
-                    
-                    $wp_filetype = wp_check_filetype(basename($upload_path), null );
-                    $attachment = array(
-                        'post_mime_type' => $wp_filetype['type'],
-                        'post_title'     => preg_replace( '/\.[^.]+$/', '', basename($upload_path) ),
-                        'post_content'   => '',
-                        'post_status'    => 'inherit'
-                    );
-                    
-                    $attach_id = wp_insert_attachment( $attachment, $upload_path, $post_id_nuevo );
-                    if ( ! is_wp_error( $attach_id ) ) {
-                        $attach_data = wp_generate_attachment_metadata( $attach_id, $upload_path );
-                        wp_update_attachment_metadata( $attach_id, $attach_data );
-                        update_post_meta($post_id_nuevo, 'cv', $attach_id);
-                    }
-                }
             }
 
             $emails_personalizados = get_field("emails_personalizados_oferta", $post_id);
@@ -191,11 +204,11 @@
                $code_response = "0";
             endif;
 
-
          else:
-            $code_response = "2";
+            $code_response = "2"; // Esto pasará si no hay correos configurados, pero ¡la postulación SÍ se habrá guardado en BD!
 
          endif;
+         
          $redirect_url = $permalink_oferta . "?success=" . $code_response;
          wp_redirect($redirect_url);
          exit;
@@ -465,7 +478,7 @@
                                                    <label for="<?php echo $key ?>" style="display:inline-block; line-height:1.3em;"><?php echo $question_txt; ?>:</label>
                                                 </div>
                                                 <div class="custom-col-2">
-                                                   <input type="text" id="<?php echo $key ?>" name="<?php echo $key ?>" />
+                                                    <input type="text" id="<?php echo $key ?>" name="<?php echo $key ?>" />
                                                 </div>
                                              </div>
                                           </div>
