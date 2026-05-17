@@ -566,15 +566,28 @@
       </div>
    </div>
    <script>
-      document.addEventListener("DOMContentLoaded", function() {
+      function hidePopup(){
          const popupExito = document.getElementById("popup-exito-cv");
          if (popupExito) {
+            popupExito.style.display = "none";
+            const url = new URL(window.location.href);
+            url.searchParams.delete('success');
+            window.history.replaceState({}, document.title, url.toString());
+         }
+      }
+      document.addEventListener("DOMContentLoaded", function() {
+         if (popupExito) {
             setTimeout(function() {
-               popupExito.style.display = "none";
-               const url = new URL(window.location.href);
-               url.searchParams.delete('success');
-               window.history.replaceState({}, document.title, url.toString());
+               hidePopup();
             }, 15000);
+         }
+      });
+      document.addEventListener("click", function(event) {
+         const popupExito = document.getElementById("popup-exito-cv");
+         if (popupExito) {
+            if (popupExito.contains(event.target)) {
+               hidePopup();
+            }
          }
       });
    </script>
