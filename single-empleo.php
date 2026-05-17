@@ -83,7 +83,6 @@
             endfor;
          endif;
 
-         // AQUÍ ESTÁN LOS CAMBIOS APLICADOS: Cierre correcto del array
          $nueva_postulacion = array(
              'post_title'    => sanitize_text_field($sf_nombre . ' ' . $sf_apellidos),
              'post_content'  => $contenido_post,
@@ -93,6 +92,12 @@
          ); 
          
          $post_id_nuevo = wp_insert_post( $nueva_postulacion, true );
+
+         if ( is_wp_error($post_id_nuevo) ) {
+             wp_die( "Error de WordPress al guardar: " . $post_id_nuevo->get_error_message() . " | Slug intentado: " . $nueva_postulacion['post_type'] );
+         } elseif ($post_id_nuevo === 0) {
+             wp_die( "Fallo crítico: wp_insert_post devolvió 0. El post_type podría no existir." );
+         }
 
          if ( !is_wp_error($post_id_nuevo) && $post_id_nuevo > 0 ) {
              update_post_meta($post_id_nuevo, 'nombre', sanitize_text_field($sf_nombre));
@@ -106,7 +111,6 @@
              
              if ($upload_path && file_exists($upload_path)) {
                  
-                 // AQUÍ ESTÁN LOS CAMBIOS APLICADOS: Carga de funciones segura
                  if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
                      require_once( ABSPATH . 'wp-admin/includes/image.php' );
                      require_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -157,6 +161,7 @@
             $email_message .= "<strong>Email: </strong>" . $sf_email . "<br />";
             $email_message .= "<strong>LinkedIn: </strong>" . $sf_linkedin . "<br />";
             $email_message .= "<strong>Mensaje: </strong>" . $sf_mensaje . "<br />";
+            $email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
 
             if( count($array_pregunta) > 0 ):
                for($i=0 ; $i<count($array_pregunta) ; $i++):
@@ -166,7 +171,6 @@
             $email_message .= "<br />";
 
             $email_message .= "<strong>Enviado desde: </strong> <a target='_blank' href='" . $permalink_oferta . "'> " . $permalink_oferta . " </a><br />";
-            $email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
             
             $banner_email = get_field('banner_publicitario_email', 'option');
             if ( !empty($banner_email) ) {
