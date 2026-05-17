@@ -557,26 +557,28 @@
 </main>
 
 <?php if (isset($_GET["success"]) && $_GET["success"] == "1"): ?>
-<div id="popup-exito-cv" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 99999;">
-   <div style="background-color: #ffffff; padding: 40px 50px; border: 1px solid #cccccc; text-align: center; max-width: 400px; width: 90%;">
-      <div style="color: #22c55e; font-size: 55px; line-height: 1; margin-bottom: 15px;">&#10004;</div>
-      <p style="font-size: 18px; color: #333333; margin: 0; font-family: sans-serif;">
-         ¡Se ha enviado su postulación con <strong>éxito</strong>!
-      </p>
+   <div id="popup-exito-cv" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 99999;">
+      <div style="background-color: #ffffff; padding: 40px 50px; border: 1px solid #cccccc; text-align: center; max-width: 400px; width: 90%;">
+         <div style="color: #22c55e; font-size: 55px; line-height: 1; margin-bottom: 15px;">&#10004;</div>
+         <p style="font-size: 18px; color: #333333; margin: 0; font-family: sans-serif;">
+            ¡Se ha enviado su postulación con <strong>éxito</strong>!
+         </p>
+      </div>
    </div>
-</div>
+   <script>
+      document.addEventListener("DOMContentLoaded", function() {
+         const popupExito = document.getElementById("popup-exito-cv");
+         if (popupExito) {
+            setTimeout(function() {
+               popupExito.style.display = "none";
+               const url = new URL(window.location.href);
+               url.searchParams.delete('success');
+               window.history.replaceState({}, document.title, url.toString());
+            }, 15000);
+         }
+      });
+   </script>
 <?php endif; ?>
-
-<script>
-   document.addEventListener("DOMContentLoaded", function() {
-      const popupExito = document.getElementById("popup-exito-cv");
-      if (popupExito) {
-         setTimeout(function() {
-            popupExito.style.display = "none";
-         }, 2000);
-      }
-   });
-</script>
 <script>
    function validateFile() {
       const fileInput = document.getElementById("cv");
