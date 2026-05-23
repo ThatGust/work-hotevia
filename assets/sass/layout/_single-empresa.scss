@@ -45,26 +45,32 @@ $red : #ff0000;
          }
 
          .job-title-list {
-            font-weight: bold;
+            font-weight: bold !important;
             font-size: 18px;
-            //color: $red;
-            color: #757575;
-            text-transform: none;
+            color: #000000 !important;
+            text-transform: none !important;
+         }
+
+         .job-separator {
+            font-weight: normal !important;
+            font-size: 18px;
+            color: #757575 !important;
             margin-right: 5px;
          }
 
          .job-location {
-            font-weight: bold;
-            color: #000;
-            text-transform: uppercase;
+            font-weight: normal !important;
+            font-size: 18px;
+            color: #757575 !important;
+            text-transform: uppercase !important;
             margin-right: 5px;
          }
 
          .job-info {
-            color: #757575;
-            font-size: 16px;
-
-            font-weight: normal;
+            font-weight: normal !important;
+            font-size: 18px;
+            color: #757575 !important;
+            text-transform: none !important;
          }
       }
    }

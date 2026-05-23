@@ -146,7 +146,8 @@
                                           <span class="icon"><?php echo $svg_icon; ?></span>
 
                                           <?php if ($sf_title): ?>
-                                             <span class="job-title-list"><?php echo $sf_title; ?> - </span>
+                                             <span class="job-title-list"><?php echo $sf_title; ?></span>
+                                             <span class="job-separator"> - </span>
                                           <?php endif; ?>
 
                                           <?php if ($sf_empresa): ?>
