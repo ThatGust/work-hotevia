@@ -106,8 +106,10 @@
              update_post_meta($post_id_nuevo, 'telefono', sanitize_text_field($sf_telefono));
              update_post_meta($post_id_nuevo, 'linkedin', esc_url_raw($sf_linkedin));
              update_post_meta($post_id_nuevo, 'mensaje', sanitize_textarea_field($sf_mensaje));
-             update_post_meta($post_id_nuevo, 'puesto_postulado', sanitize_text_field($title_oferta));
-             update_post_meta($post_id_nuevo, 'empresa', sanitize_text_field($title_negocio));
+             //update_post_meta($post_id_nuevo, 'puesto_postulado', sanitize_text_field($title_oferta));
+             //update_post_meta($post_id_nuevo, 'empresa', sanitize_text_field($title_negocio));
+             update_post_meta($post_id_nuevo, 'puesto_postulado', $post_id);
+             update_post_meta($post_id_nuevo, 'empresa', $empresa_id);
              /*
              if ($upload_path && file_exists($upload_path)) {
                  
