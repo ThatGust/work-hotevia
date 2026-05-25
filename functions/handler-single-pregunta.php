@@ -53,6 +53,7 @@
         }
         
         $keys_objetivo = ['field_6a010f6207a67', 'field_6a010f9e07a68'];
+        //$keys_objetivo = ['field_6a010eb29f1c8', 'field_6a010eca9f1c9'];
 
         // Si el campo actual no está en nuestra lista, lo devolvemos tal cual
         if ( !in_array($field['key'], $keys_objetivo) ):
