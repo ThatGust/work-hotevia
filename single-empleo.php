@@ -108,7 +108,7 @@
              update_post_meta($post_id_nuevo, 'mensaje', sanitize_textarea_field($sf_mensaje));
              update_post_meta($post_id_nuevo, 'puesto_postulado', sanitize_text_field($title_oferta));
              update_post_meta($post_id_nuevo, 'empresa', sanitize_text_field($title_negocio));
-             
+             /*
              if ($upload_path && file_exists($upload_path)) {
                  
                  if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
@@ -131,7 +131,7 @@
                      wp_update_attachment_metadata( $attach_id, $attach_data );
                      update_post_meta($post_id_nuevo, 'cv', $attach_id);
                  }
-             }
+             }*/
          }
 
          $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
