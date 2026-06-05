@@ -163,7 +163,7 @@
             $email_message .= "<strong>Email: </strong>" . $sf_email . "<br />";
             $email_message .= "<strong>LinkedIn: </strong>" . $sf_linkedin . "<br />";
             $email_message .= "<strong>Mensaje: </strong>" . $sf_mensaje . "<br />";
-            $email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
+            //$email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
 
             if( count($array_pregunta) > 0 ):
                for($i=0 ; $i<count($array_pregunta) ; $i++):
