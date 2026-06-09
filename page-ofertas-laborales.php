@@ -39,6 +39,7 @@
    $ofertas_num = get_field("ofertas_num", $page_id);
    $banners_de_columna = get_field("banners_de_columna", "option");
    $banners_de_contenido = get_field("banners_de_contenido", "option");
+   $empresas_destacadas = get_field('empresas_seleccionadas', 'option');
 
    $posts_per_page = 35;
    if( is_numeric($ofertas_num) ):
@@ -237,6 +238,39 @@
                                                 <span>Filtro</span>
                                             </a>
 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="logo-grid-container">
+                                <div class="wrap">
+                                    <div class="container">
+                                        <div class="logo-grid">
+                                            <?php 
+                                            foreach ( $empresas_destacadas as $empresa_obj ): 
+                                                $empresa_id = $empresa_obj->ID;
+                                                
+                                                $permalink = get_permalink( $empresa_id );
+                                                $title     = get_the_title( $empresa_id );
+                                                
+                                                $logotipo_array = get_field('logotipo', $empresa_id);
+                                                $logo_url = '';
+                                                
+                                                if ( $logotipo_array && is_array($logotipo_array) ) {
+                                                    $logo_url = isset($logotipo_array['sizes']['medium']) ? $logotipo_array['sizes']['medium'] : $logotipo_array['url'];
+                                                }
+                                                ?>
+                                                
+                                                <a href="<?php echo esc_url( $permalink ); ?>" class="logo-item" title="<?php echo esc_attr( $title ); ?>">
+                                                    <?php if ( $logo_url ): ?>
+                                                        <img src="<?php echo esc_url( $logo_url ); ?>" alt="Logo de <?php echo esc_attr( $title ); ?>">
+                                                    <?php else: ?>
+                                                        <span class="logo-text"><?php echo esc_html( $title ); ?></span>
+                                                    <?php endif; ?>
+                                                </a>
+
+                                            <?php endforeach; ?>
                                         </div>
                                     </div>
                                 </div>
