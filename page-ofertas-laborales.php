@@ -2,7 +2,7 @@
 /**
  * @package WordPress
  * @subpackage Default_Theme
- * Template Name: Ofertas Laborales v1
+ * Template Name: Ofertas Laborales
  */
    //$paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
    //$selected_puesto = isset($_GET['puesto']) ? sanitize_text_field($_GET['puesto']) : '';
@@ -39,6 +39,7 @@
    $ofertas_num = get_field("ofertas_num", $page_id);
    $banners_de_columna = get_field("banners_de_columna", "option");
    $banners_de_contenido = get_field("banners_de_contenido", "option");
+   $empresas_destacadas = get_field('empresas_seleccionadas', 'option');
 
    $posts_per_page = 35;
    if( is_numeric($ofertas_num) ):
@@ -139,6 +140,7 @@
                                 }
                             }
                             ?>
+
 
                             <div class="search-bar">
                               <form id="form-ofertas-laborales" method="GET" action="">
@@ -241,21 +243,55 @@
                                 </div>
                             </div>
 
+                            <div class="logo-grid-container">
+                                <div class="wrap">
+                                    <div class="container">
+                                        <div class="logo-grid">
+                                            <?php 
+                                            foreach ( $empresas_destacadas as $empresa_obj ): 
+                                                $empresa_id = $empresa_obj->ID;
+                                                
+                                                $permalink = get_permalink( $empresa_id );
+                                                $title     = get_the_title( $empresa_id );
+                                                
+                                                $logotipo_array = get_field('logotipo', $empresa_id);
+                                                $logo_url = '';
+                                                
+                                                if ( $logotipo_array && is_array($logotipo_array) ) {
+                                                    $logo_url = isset($logotipo_array['sizes']['medium']) ? $logotipo_array['sizes']['medium'] : $logotipo_array['url'];
+                                                }
+                                                ?>
+                                                
+                                                <a href="<?php echo esc_url( $permalink ); ?>" class="logo-item" title="<?php echo esc_attr( $title ); ?>">
+                                                    <?php if ( $logo_url ): ?>
+                                                        <img src="<?php echo esc_url( $logo_url ); ?>" alt="Logo de <?php echo esc_attr( $title ); ?>">
+                                                    <?php else: ?>
+                                                        <span class="logo-text"><?php echo esc_html( $title ); ?></span>
+                                                    <?php endif; ?>
+                                                </a>
+
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <div class="job-listings">
                                 <?php
-                                    $contador = 0;
-                                    $total_banners = !empty($banners_de_contenido) ? count($banners_de_contenido) : 0;
-                                    $indice_banner = 1;
+                                $contador = 0;
+                                $total_banners = !empty($banners_de_contenido) ? count($banners_de_contenido) : 0;
+                                $indice_banner = 1;
                                 ?>
 
                                 <?php foreach ($rows as $o_row): ?>
                                     <?php
-                                        $sf_ID = $o_row->ID;
-                                        $sf_title = $o_row->post_title;
-                                        $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
-                                        $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
-                                        $sf_ubicacion = get_field('distrito', $sf_ID);
-                                        $sf_permalink = get_permalink($sf_ID);
+                                       $sf_ID = $o_row->ID;
+                                       $sf_title = $o_row->post_title;
+                                       $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
+                                       $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
+                                       $sf_ubicacion = get_field('distrito', $sf_ID);
+                                       $sf_permalink = get_permalink($sf_ID);
                                     ?>
 
                                     <div class="wrap-item">
@@ -376,4 +412,3 @@
       <?php endif; ?>
    });
 </script>
-
