@@ -254,6 +254,7 @@ $red : #ff0000;
       margin-bottom: 30px;
       text-align: center;
 
+      button,
       a,
       span {
          padding: 8px 12px;
@@ -263,13 +264,15 @@ $red : #ff0000;
          color: #757575;
          background-color: #f9f9f9;
          transition: all 0.3s ease;
-
+         min-width: unset;
+         line-height: 1em;
          &:hover {
             background-color: #e0e0e0;
          }
       }
 
-      .current {
+      .current,
+      .active {
          background-color: #ddd;
          font-weight: bold;
          color: black;
@@ -298,15 +301,12 @@ $red : #ff0000;
       border: 1px solid #7bcde3;
       background-color: #7bcde3;
       box-shadow: 0px 4px 6px rgba(241, 252, 255, 0.5);
-      //border-radius: 30px;
-      //width: 450px;
-      max-width: 450px;
+      //max-width: 450px;
       width: 100%;
       overflow: hidden;
       box-sizing: border-box;
       @media (max-width: $resize-min) {
          max-width: unset;
-         //padding: 10px;
          .search-bar-inside {
             width: 100%;
             border-radius: 20px;

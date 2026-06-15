@@ -2,7 +2,7 @@
 /**
  * @package WordPress
  * @subpackage Default_Theme
- * Template Name: Ofertas Laborales
+ * Template Name: Ofertas Laborales v1
  */
    //$paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
    //$selected_puesto = isset($_GET['puesto']) ? sanitize_text_field($_GET['puesto']) : '';
@@ -140,7 +140,6 @@
                             }
                             ?>
 
-
                             <div class="search-bar">
                               <form id="form-ofertas-laborales" method="GET" action="">
                                  <div class="search-bar-inside">
@@ -242,22 +241,21 @@
                                 </div>
                             </div>
 
-
                             <div class="job-listings">
                                 <?php
-                                $contador = 0;
-                                $total_banners = !empty($banners_de_contenido) ? count($banners_de_contenido) : 0;
-                                $indice_banner = 1;
+                                    $contador = 0;
+                                    $total_banners = !empty($banners_de_contenido) ? count($banners_de_contenido) : 0;
+                                    $indice_banner = 1;
                                 ?>
 
                                 <?php foreach ($rows as $o_row): ?>
                                     <?php
-                                       $sf_ID = $o_row->ID;
-                                       $sf_title = $o_row->post_title;
-                                       $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
-                                       $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
-                                       $sf_ubicacion = get_field('distrito', $sf_ID);
-                                       $sf_permalink = get_permalink($sf_ID);
+                                        $sf_ID = $o_row->ID;
+                                        $sf_title = $o_row->post_title;
+                                        $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
+                                        $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
+                                        $sf_ubicacion = get_field('distrito', $sf_ID);
+                                        $sf_permalink = get_permalink($sf_ID);
                                     ?>
 
                                     <div class="wrap-item">
@@ -378,3 +376,4 @@
       <?php endif; ?>
    });
 </script>
+
