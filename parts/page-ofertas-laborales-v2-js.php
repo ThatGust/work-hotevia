@@ -281,7 +281,7 @@
     * ARQUITECTURA VISUAL: style.css (COMPLETO)
     */
     .google-style-search-container {
-        
+        position: relative;
     }
     .search-input-wrapper {
         display: flex;
