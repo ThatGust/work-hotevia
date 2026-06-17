@@ -257,7 +257,8 @@ get_header();
                                                         $logo_url = '';
                                                         
                                                         if ( $logotipo_array && is_array($logotipo_array) ) {
-                                                            $logo_url = isset($logotipo_array['sizes']['medium']) ? $logotipo_array['sizes']['medium'] : $logotipo_array['url'];
+                                                            //$logo_url = isset($logotipo_array['sizes']['medium']) ? $logotipo_array['sizes']['medium'] : $logotipo_array['url'];
+                                                            $logo_url = $logotipo_array['url'];
                                                         }
                                                         ?>
                                                         <a href="<?php echo esc_url( $permalink ); ?>" class="logo-item" title="<?php echo esc_attr( $title ); ?>">

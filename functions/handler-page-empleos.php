@@ -235,16 +235,33 @@ function filtrar_y_paginar_empleos_callback() {
             $join_counter++;
 
             if ($key === 'palabra_clave') {
-                // Filtro especial global: Busca coincidencias por LIKE en título, etiquetas o empresa texto
                 $like_val = '%' . $wpdb->esc_like(strtolower($value)) . '%';
-                
-                $join_clauses[] = "LEFT JOIN $postmeta_table m_global_tag_{$join_counter} ON (p.ID = m_global_tag_{$join_counter}.post_id AND m_global_tag_{$join_counter}.meta_key = 'etiquetas')";
-                $join_clauses[] = "LEFT JOIN $postmeta_table m_global_emp_{$join_counter} ON (p.ID = m_global_emp_{$join_counter}.post_id AND m_global_emp_{$join_counter}.meta_key = 'nombre_de_la_empresa')";
-                
-                $where_clauses[] = $wpdb->prepare(
-                    "(LOWER(p.post_title) LIKE %s OR LOWER(m_global_tag_{$join_counter}.meta_value) LIKE %s OR LOWER(m_global_emp_{$join_counter}.meta_value) LIKE %s)",
-                    $like_val, $like_val, $like_val
+
+                $join_clauses[] = "
+                    LEFT JOIN $postmeta_table m_global_tag_{$join_counter}
+                    ON (
+                        p.ID = m_global_tag_{$join_counter}.post_id
+                        AND m_global_tag_{$join_counter}.meta_key = 'etiquetas'
+                    )
+                ";
+
+                $join_clauses[] = "
+                    LEFT JOIN $postmeta_table m_global_emp_{$join_counter}
+                    ON (
+                        p.ID = m_global_emp_{$join_counter}.post_id
+                        AND m_global_emp_{$join_counter}.meta_key = 'nombre_de_la_empresa'
+                    )
+                ";
+
+                $keyword_clauses[] = $wpdb->prepare(
+                    "(LOWER(p.post_title) LIKE %s
+                    OR LOWER(m_global_tag_{$join_counter}.meta_value) LIKE %s
+                    OR LOWER(m_global_emp_{$join_counter}.meta_value) LIKE %s)",
+                    $like_val,
+                    $like_val,
+                    $like_val
                 );
+
             } elseif ($key === 'empresa') {
                 $join_clauses[] = "LEFT JOIN $postmeta_table m_tx_{$join_counter} ON (p.ID = m_tx_{$join_counter}.post_id AND m_tx_{$join_counter}.meta_key = 'nombre_de_la_empresa')";
                 $join_clauses[] = "LEFT JOIN $postmeta_table m_obj_{$join_counter} ON (p.ID = m_obj_{$join_counter}.post_id AND m_obj_{$join_counter}.meta_key = 'empresa')";
@@ -283,6 +300,11 @@ function filtrar_y_paginar_empleos_callback() {
     }
 
     $joins = implode(' ', $join_clauses);
+
+    if (!empty($keyword_clauses)) {
+        $where_clauses[] = '(' . implode(' OR ', $keyword_clauses) . ')';
+    }
+
     $where = implode(' AND ', $where_clauses);
 
     // Universo total de resultados
@@ -304,8 +326,8 @@ function filtrar_y_paginar_empleos_callback() {
         ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC
         LIMIT %d OFFSET %d
     ";
-    
-    $results = $wpdb->get_results($wpdb->prepare($query, $per_page, $offset));
+    $query = $wpdb->prepare($query, $per_page, $offset);
+    $results = $wpdb->get_results($query);
 
     $empleos = [];
     if ($results) {
@@ -331,6 +353,7 @@ function filtrar_y_paginar_empleos_callback() {
     wp_send_json_success([
         'empleos'      => $empleos,
         'total_pages'  => $total_pages,
-        'current_page' => $paged
+        'current_page' => $paged,
+        "query"=>$query
     ]);
 }
