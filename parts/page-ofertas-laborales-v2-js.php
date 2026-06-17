@@ -309,6 +309,42 @@
             const urlParams = new URLSearchParams(window.location.search);
             const paginaInicial = parseInt(urlParams.get('paged')) || 1;
             cargarListadoEmpleos(paginaInicial, true);
+
+
+            
+            $('.google-style-search-container form').on('submit', function(e) {
+                e.preventDefault();
+                const query = $input.val().trim();
+                if (query.length < 3) {
+                    $('#search-validation-error').remove();
+                    const $errorMessage = $(`
+                        <div id="search-validation-error" style="
+                            color: #d93025; 
+                            font-size: 13px; 
+                            margin-top: 8px; 
+                            margin-left: 15px; 
+                            font-weight: 500;
+                            display: none;
+                        ">
+                            Debe ingresar al menos 3 caracteres para filtrar.
+                        </div>
+                    `);
+
+                    $('.google-style-search-container').append($errorMessage);
+                    
+                    $errorMessage.fadeIn(200).delay(3000).fadeOut(400, function() {
+                        $(this).remove();
+                    });
+
+                    $input.focus();
+                    return false;
+                }
+                createTagElement('Buscar término', query, 'palabra_clave');
+                $input.val('');
+                $resultsBox.hide().empty();
+                cargarListadoEmpleos(1);
+                $input.focus();
+            });
         });
     })(jQuery);
 </script>
