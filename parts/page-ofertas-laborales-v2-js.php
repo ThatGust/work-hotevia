@@ -155,13 +155,49 @@
                 });
             }
 
-            function renderPaginacion(totalPages, currentPage) {
+            /*function renderPaginacion(totalPages, currentPage) {
                 $paginacion.empty();
                 if (totalPages <= 1) return;
 
                 for (let i = 1; i <= totalPages; i++) {
                     let activeClass = (i === currentPage) ? 'active' : '';
                     $paginacion.append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
+                }
+            }*/
+
+            function renderPaginacion(totalPages, currentPage) {
+                $paginacion.empty();
+                if (totalPages <= 1) return;
+
+                let rango = 2;
+                let rangoInicio = Math.max(1, currentPage - rango);
+                let rangoFin = Math.min(totalPages, currentPage + rango);
+
+                if (currentPage > 1) {
+                    $paginacion.append(`<button class="page-btn prev-btn prev" data-page="${currentPage - 1}">« Anterior</button>`);
+                }
+
+                if (rangoInicio > 1) {
+                    $paginacion.append(`<button class="page-btn" data-page="1">1</button>`);
+                    if (rangoInicio > 2) {
+                        $paginacion.append(`<span class="pagination-dots" style="padding: 6px 12px; color: #70757a;">...</span>`);
+                    }
+                }
+
+                for (let i = rangoInicio; i <= rangoFin; i++) {
+                    let activeClass = (i === currentPage) ? 'active' : '';
+                    $paginacion.append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
+                }
+
+                if (rangoFin < totalPages) {
+                    if (rangoFin < totalPages - 1) {
+                        $paginacion.append(`<span class="pagination-dots" style="padding: 6px 12px; color: #70757a;">...</span>`);
+                    }
+                    $paginacion.append(`<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`);
+                }
+
+                if (currentPage < totalPages) {
+                    $paginacion.append(`<button class="page-btn next-btn next" data-page="${currentPage + 1}">Siguiente »</button>`);
                 }
             }
 
