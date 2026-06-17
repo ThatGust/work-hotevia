@@ -11,10 +11,22 @@ $base_url = get_bloginfo("url");
 $permalink_ofertas_laborales = get_bloginfo("url")."/ofertas-laborales";
 
 // ----------------------------------------------------------------------
+// FUNCIÓN ESCUDO: Evita errores fatales con Objetos de Publicación
+// ----------------------------------------------------------------------
+if (!function_exists('obtener_texto_acf')) {
+    function obtener_texto_acf($valor_acf) {
+        if (empty($valor_acf)) return '';
+        if (is_object($valor_acf)) return get_the_title($valor_acf->ID);
+        if (is_numeric($valor_acf)) return get_the_title($valor_acf);
+        if (is_array($valor_acf) && isset($valor_acf[0])) return (is_object($valor_acf[0]) ? get_the_title($valor_acf[0]->ID) : get_the_title($valor_acf[0]));
+        return (string) $valor_acf;
+    }
+}
+
+// ----------------------------------------------------------------------
 // OBTENER CAMPO NUEVO Y BÁSICOS
 // ----------------------------------------------------------------------
 $nombre_ciudad = get_field("nombre_ciudad", $post_id);
-// Si no se llenó el campo nombre_ciudad, usamos el título del post por defecto
 $title_ciudad = !empty($nombre_ciudad) ? $nombre_ciudad : get_the_title($post_id);
 
 // ----------------------------------------------------------------------
@@ -33,30 +45,32 @@ $banners_de_columna = get_field("banners_de_columna", "option");
 
 $svg_icon = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="133.333" height="108" viewBox="0 0 100 81"><path d="m44.3 19.4-3.7 7.4-10.5.7c-5.8.3-11.7.7-13.1.8-1.9.2 0 1.4 7.3 4.9 9.6 4.6 9.7 4.7 9.7 8.2 0 3.1.3 3.6 2.3 3.6 1.7 0 3.3-1.8 7-8 2.6-4.3 5.2-8.2 5.7-8.5.6-.3 2.2 1.5 3.7 4.1 5.7 9.5 8.3 12.5 10.6 12.2 1.7-.2 2.3-1.1 2.5-3.8.3-3.5.7-3.8 10-8.5l9.7-5-13.2-.3-13.2-.3-4.3-7.4c-2.4-4.1-4.9-7.5-5.6-7.5-.7 0-2.9 3.3-4.9 7.4z"/><path d="M11 37.9v7.9l6.4 3.6c3.5 2 6.8 3.6 7.3 3.6.8 0 5.7-12 5.1-12.5C28.6 39.6 11.7 30 11.4 30c-.2 0-.4 3.6-.4 7.9zM77.7 34.6c-5.3 2.7-8.7 5-8.4 5.7.2.7 1.3 3.8 2.3 6.9 1 3.2 2.2 5.8 2.8 5.8.6 0 4-1.7 7.6-3.8l6.5-3.7.3-7.8c.2-5.8 0-7.7-1-7.6-.7 0-5.3 2-10.1 4.5zM30.6 47.8c-.5.8-4.6 11.5-4.6 12 0 .1 1.4-.5 3-1.3 2.8-1.5 3-1.9 2.9-6.5-.2-5-.4-5.6-1.3-4.2zM68 51.9c0 4 .4 5.3 2.2 6.5 1.2.9 2.3 1.4 2.5 1.3.4-.4-3.8-12.7-4.3-12.7-.2 0-.4 2.2-.4 4.9zM37 58.1l-11.5 5 .3 7.4c.2 4.1.7 7.5 1.1 7.5.3 0 5.5-2 11.3-4.5C44.1 71 49.6 69 50.5 69c.8 0 5.9 2 11.2 4.5C67 76 71.7 78 72.1 78c.5 0 .9-3.4.9-7.5v-7.6L62.4 58c-5.8-2.8-11.3-5-12.3-4.9-.9 0-6.8 2.3-13.1 5z"/></svg>';
 $posts_per_page = 20;
-$paged = isset($_GET["pg"]) ? $_GET["pg"] : 1;
+$paged = isset($_GET["pg"]) ? max(1, intval($_GET["pg"])) : 1;
 $total_rows = 0;
 
+// Consulta Listado General (A-Z)
 $rows = get_custom_posts( 
       $post_type = "empleo", 
       $search = false, 
       $taxonomies_array = false, 
       $custom_field_array = array( 
           array( "meta_key"=>"fecha_de_expiracion", "condition"=>"AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()"), 
-          array( "meta_key"=>"ciudad", "condition"=>"AND %meta_value% = ".$post_id) // Relación mediante ID por Objeto de Publicación
+          array( "meta_key"=>"ciudad", "condition"=>"AND %meta_value% = ".$post_id) 
       ),  
-      $order = array( 0=>'ORDER BY post_title ASC'), // Ordenado de la A-Z como requeriste
+      $order = array( 0=>'ORDER BY post_title ASC'), 
       $page = $paged, 
       $posts_per_page, 
       $total_rows 
 );
 $max_num_pages = ceil($total_rows / $posts_per_page);
 
+// Consulta Destacados (Con los nuevos slugs "peso" y "destacado")
 $args_destacados = array(
     'post_type'      => 'empleo',
     'posts_per_page' => -1,
-    'meta_key'       => 'peso_destacado', // Clave para ordenar
-    'orderby'        => 'meta_value_num', // Orden numérico
-    'order'          => 'DESC', // De mayor peso a menor
+    'meta_key'       => 'peso', // Actualizado
+    'orderby'        => 'meta_value_num', 
+    'order'          => 'DESC', 
     'meta_query'     => array(
         'relation' => 'AND',
         array(
@@ -65,7 +79,7 @@ $args_destacados = array(
             'compare' => '='
         ),
         array(
-            'key'     => 'es_destacado',
+            'key'     => 'destacado', // Actualizado
             'value'   => '1',
             'compare' => '='
         ),
@@ -142,9 +156,15 @@ get_header();
                                         <?php
                                         $sf_ID = get_the_ID();
                                         $sf_title = get_the_title();
-                                        $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
-                                        $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
-                                        $sf_ubicacion = get_field('distrito', $sf_ID); 
+                                        $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $sf_ID));
+                                        
+                                        // Extracción segura de Empresa
+                                        $sf_empresa = obtener_texto_acf(get_field('empresa', $sf_ID));
+                                        if (empty($sf_empresa)) { $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID); }
+                                        
+                                        // Extracción segura de Distrito
+                                        $sf_ubicacion = obtener_texto_acf(get_field('distrito', $sf_ID)); 
+                                        
                                         $sf_permalink = get_permalink($sf_ID);
                                         ?>
                                         
@@ -181,9 +201,15 @@ get_header();
                                             <?php
                                             $sf_ID = $o_row->ID;
                                             $sf_title = $o_row->post_title;
-                                            $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
-                                            $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
-                                            $sf_ubicacion = get_field('distrito', $sf_ID);
+                                            $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $sf_ID));
+                                            
+                                            // Extracción segura de Empresa
+                                            $sf_empresa = obtener_texto_acf(get_field('empresa', $sf_ID));
+                                            if (empty($sf_empresa)) { $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID); }
+                                            
+                                            // Extracción segura de Distrito
+                                            $sf_ubicacion = obtener_texto_acf(get_field('distrito', $sf_ID)); 
+                                            
                                             $sf_permalink = get_permalink($sf_ID);
                                             ?>
                                             

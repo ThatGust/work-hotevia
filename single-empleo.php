@@ -18,10 +18,12 @@
    $title_oferta = get_the_title($post_id);
    $permalink_oferta = get_the_permalink();
 
-   $distrito = get_field("distrito", $post_id);
+   // SOLUCIÓN: Extraer título si el distrito es un objeto Post Object de ACF
+   $distrito_obj = get_field("distrito", $post_id);
+   $nombre_distrito = is_object($distrito_obj) ? $distrito_obj->post_title : (is_string($distrito_obj) ? $distrito_obj : '');
+
    $preguntas_personalizadas = get_field("preguntas_personalizadas", $post_id);
    
-
    $texto_default = 'Acepto a registrarme en la bbdd de oe2 by hotevia para recibir información personalizada sobre empleabilidad, desarrollo profesional y noticias y contenidos de Hotevia y abanza. oe2 by Hoteiva y Hotevia son marcas de abanZa consulting EIRL.';
 
    $mostrar_inclusion = get_field("mostrar_politica_inclusion", $post_id);
@@ -106,34 +108,8 @@
              update_post_meta($post_id_nuevo, 'telefono', sanitize_text_field($sf_telefono));
              update_post_meta($post_id_nuevo, 'linkedin', esc_url_raw($sf_linkedin));
              update_post_meta($post_id_nuevo, 'mensaje', sanitize_textarea_field($sf_mensaje));
-             //update_post_meta($post_id_nuevo, 'puesto_postulado', sanitize_text_field($title_oferta));
-             //update_post_meta($post_id_nuevo, 'empresa', sanitize_text_field($title_negocio));
              update_post_meta($post_id_nuevo, 'puesto_postulado', $post_id);
              update_post_meta($post_id_nuevo, 'empresa', $empresa_id);
-             /*
-             if ($upload_path && file_exists($upload_path)) {
-                 
-                 if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-                     require_once( ABSPATH . 'wp-admin/includes/image.php' );
-                     require_once( ABSPATH . 'wp-admin/includes/file.php' );
-                     require_once( ABSPATH . 'wp-admin/includes/media.php' );
-                 }
-                 
-                 $wp_filetype = wp_check_filetype(basename($upload_path), null );
-                 $attachment = array(
-                     'post_mime_type' => $wp_filetype['type'],
-                     'post_title'     => preg_replace( '/\.[^.]+$/', '', basename($upload_path) ),
-                     'post_content'   => '',
-                     'post_status'    => 'inherit'
-                 );
-                 
-                 $attach_id = wp_insert_attachment( $attachment, $upload_path, $post_id_nuevo );
-                 if ( ! is_wp_error( $attach_id ) ) {
-                     $attach_data = wp_generate_attachment_metadata( $attach_id, $upload_path );
-                     wp_update_attachment_metadata( $attach_id, $attach_data );
-                     update_post_meta($post_id_nuevo, 'cv', $attach_id);
-                 }
-             }*/
          }
 
          $f_form_emails_destinatarios = get_field("form_emails_destinatarios", $empresa_id);
@@ -145,7 +121,9 @@
          if ($f_form_nombre_remitente && $f_form_email_remitente && $f_form_asunto && $f_form_mensaje):
 
             $email_from = $f_form_nombre_remitente . " <" . $f_form_email_remitente . ">";
-            $email_subject = $f_form_asunto.", ".$title_oferta.", ".$distrito;
+            
+            // SOLUCIÓN: Usar la variable en texto plano para el asunto
+            $email_subject = $f_form_asunto.", ".$title_oferta.", ".$nombre_distrito;
 
             $headers = "MIME-Version: 1.0" . "\r\n";
             $headers .= "Content-type: text/html;charset=utf-8" . "\r\n";
@@ -163,7 +141,6 @@
             $email_message .= "<strong>Email: </strong>" . $sf_email . "<br />";
             $email_message .= "<strong>LinkedIn: </strong>" . $sf_linkedin . "<br />";
             $email_message .= "<strong>Mensaje: </strong>" . $sf_mensaje . "<br />";
-            //$email_message .= "<strong>Autorización BBDD y Newsletter: </strong>" . $sf_disclaimer . "<br />";
 
             if( count($array_pregunta) > 0 ):
                for($i=0 ; $i<count($array_pregunta) ; $i++):
@@ -211,7 +188,7 @@
             endif;
 
          else:
-            $code_response = "2"; // Esto pasará si no hay correos configurados, pero ¡la postulación SÍ se habrá guardado en BD!
+            $code_response = "2"; 
 
          endif;
          
@@ -235,7 +212,11 @@
    }
 
    $pais = get_field("pais", $post_id);
-   $ciudad = get_field("ciudad", $post_id);
+   
+   // SOLUCIÓN: Extraer título si la ciudad es un objeto Post Object de ACF
+   $ciudad_obj = get_field("ciudad", $post_id);
+   $nombre_ciudad = is_object($ciudad_obj) ? $ciudad_obj->post_title : (is_string($ciudad_obj) ? $ciudad_obj : '');
+   
    $direccion = get_field("direccion", $post_id);
 
    $empr_trabaj = get_field("empr_trabaj", $post_id);
@@ -245,21 +226,14 @@
 
    $titulo_pagina = $title_oferta." - ".$empr_trabaj;
 
+   // SOLUCIÓN: Nuevo constructor de ubicación geográfica utilizando los textos puros extraídos
    $ubicacion_geografica = "";
-   if( $distrito ):
-      $ubicacion_geografica .= $distrito." / ";
+   if( !empty($nombre_distrito) ):
+      $ubicacion_geografica .= $nombre_distrito." / ";
    endif;
    
-   if( $pais && $ciudad && strpos($ciudad, '@') !== false ):      
-      $path_json_countries_states = get_template_directory()."/functions/php-countries/states.php";
-      $array_states = include $path_json_countries_states;
-      $array_keys = explode("@", $ciudad);
-      $key_city = $array_keys[0];
-      $key_province = $array_keys[1];
-      if (isset($array_states[$key_city][$key_province])) {
-         $label = $array_states[$key_city][$key_province];
-         $ubicacion_geografica .= $label." / ";
-      }
+   if( !empty($nombre_ciudad) ):      
+      $ubicacion_geografica .= $nombre_ciudad." / ";
    endif;
    
    if( $pais ):
@@ -348,7 +322,6 @@
 
                      </div>
 
-
                      <div class="requirements">
                         <h3>REQUISITOS</h3>
                         <div><?php echo $requisitos; ?></div>
@@ -385,6 +358,7 @@
                            <div class="apply-form">
                               <h3>Postula a esta oferta aquí:</h3>
                               <form id="job-application-form" action="" method="post" enctype="multipart/form-data">
+                                 <!-- Campos del formulario omitidos aquí para brevedad en la explicación, pero incluidos en el código -->
                                  <div class="label-details">
                                     <div class="row">
                                        <div class="custom-col-1">
@@ -472,7 +446,6 @@
                                     <?php $index = 1; ?>
                                     <?php foreach($preguntas_personalizadas as $o_item): ?>
                                        <?php 
-                                          //var_dump($o_item);
                                           $key = "field-".$index; 
                                           $pregunta_id = $o_item["pregunta_txt"];
                                           $question_txt = get_field("pregunta", $pregunta_id);
