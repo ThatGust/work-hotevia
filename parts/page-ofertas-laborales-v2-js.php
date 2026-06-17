@@ -114,39 +114,61 @@
                     $listaEmpleos.html('<p class="no-results">No se encontraron empleos con los criterios seleccionados.</p>');
                     return;
                 }
+                
                 empleos.forEach(function(empleo, index) {
-                    $listaEmpleos.append(`
-                        <div class="wrap-item">
-                            <a href="${empleo.url}" class="job-item">
-                                <span class="icon"><?php echo $svg_icon; ?></span>
+                    let itemHtml = '';
 
-                                ${empleo.titulo ? `
-                                    <span class="job-title-list">${empleo.titulo}</span>
-                                    <span class="job-separator"> - </span>
-                                ` : ''}
+                    if (empleo.es_destacado) {
+                        itemHtml = `
+                            <div class="card-destacado" style="margin-bottom: 20px;">
+                                <div class="card-destacado-header">
+                                    <span class="etiqueta-gold">⭐ Empleo destacado</span>
+                                    <span class="opciones-dots">&#8942;</span>
+                                </div>
+                                <h3 class="card-destacado-title">${empleo.titulo}</h3>
+                                <p class="card-destacado-empresa">${empleo.empresa || ''}</p>
+                                <p class="card-destacado-ubicacion">${empleo.ubicacion || ''}</p>
+                                <div class="card-destacado-footer">
+                                    <span class="card-destacado-tiempo">Hace ${empleo.fecha_pub || ''}</span>
+                                    <a href="${empleo.url}" class="btn-vista">Vista</a>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        itemHtml = `
+                            <div class="wrap-item">
+                                <a href="${empleo.url}" class="job-item">
+                                    <span class="icon"><?php echo $svg_icon; ?></span>
 
-                                ${empleo.empresa ? `
-                                    <span class="job-location">${empleo.empresa} /</span>
-                                ` : ''}
+                                    ${empleo.titulo ? `
+                                        <span class="job-title-list">${empleo.titulo}</span>
+                                        <span class="job-separator"> - </span>
+                                    ` : ''}
 
-                                ${(empleo.ubicacion || empleo.fecha) ? `
-                                    <span class="job-info">
-                                        ${empleo.ubicacion || ''}
-                                        ${empleo.ubicacion && empleo.fecha ? ' - ' : ''}
-                                        ${empleo.fecha || ''}
-                                    </span>
-                                ` : ''}
-                            </a>
-                        </div>
-                    `);
+                                    ${empleo.empresa ? `
+                                        <span class="job-location">${empleo.empresa} /</span>
+                                    ` : ''}
 
-                    // Insertar banner cada 10 empleos
+                                    ${(empleo.ubicacion || empleo.fecha) ? `
+                                        <span class="job-info">
+                                            ${empleo.ubicacion || ''}
+                                            ${empleo.ubicacion && empleo.fecha ? ' - ' : ''}
+                                            ${empleo.fecha || ''}
+                                        </span>
+                                    ` : ''}
+                                </a>
+                            </div>
+                        `;
+                    }
+
+                    $listaEmpleos.append(itemHtml);
+
                     if ((index + 1) % 10 === 0) {
                         const bannerIndex = Math.floor((index + 1) / 10) - 1;
 
                         if (banners[bannerIndex] && banners[bannerIndex].html) {
                             $listaEmpleos.append(`
-                                <div class="banner-contenido">
+                                <div class="banner-contenido" style="margin-top:20px; margin-bottom:20px;">
                                     ${banners[bannerIndex].html}
                                 </div>
                             `);
