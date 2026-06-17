@@ -10,6 +10,8 @@
       ));
    }
 
+
+
    add_filter('acf/fields/post_object/query/name=empresa', 'populateEmpresa', 10, 3);
    function populateEmpresa( $args, $field, $post_id){	
       $current_user = wp_get_current_user();
@@ -19,6 +21,8 @@
       //$args['post__not_in'] = array(123, 456);
       return $args;
    }
+
+   
 
    add_filter('acf/load_field/name=pais', 'populateCountry');
    function populateCountry( $field ){	
@@ -54,26 +58,12 @@
             $ciudades[$key_country . "@" . $key_state] = $state_name;
          endforeach;
       endforeach;
-      
-      // Validación preventiva para evitar avisos si $_GET["post"] no existe (ej. al crear nuevo post)
-      $post_id = isset($_GET["post"]) ? $_GET["post"] : null;
-      $ciudad = $post_id ? get_field("ciudad", $post_id) : null;
-      
-      // SOLUCIÓN: Verificar si la ciudad es un objeto WP_Post y extraer el ID o título
-      $ciudad_val = "";
-      if (is_object($ciudad)) {
-         $ciudad_val = $ciudad->post_title; // Opcional: cámbialo a $ciudad->ID si el JS requiere el ID
-      } elseif (is_array($ciudad) && isset($ciudad[0]) && is_object($ciudad[0])) {
-         $ciudad_val = $ciudad[0]->post_title;
-      } else {
-         $ciudad_val = $ciudad;
-      }
-
+      $post_id = $_GET["post"];
+      $ciudad = get_field("ciudad", $post_id);
       $js_ciudad = "";
-      if($ciudad_val):
-         $js_ciudad = 'jQuery("div[data-name=\'ciudad\'] select").val("'.$ciudad_val.'");';
+      if($ciudad):
+         $js_ciudad = 'jQuery("div[data-name=\'ciudad\'] select").val("'.$ciudad.'");';
       endif;
-      
       $html_default_option_selected = "";
       if( !is_numeric($post_id) ):
          $html_default_option_selected = 'jQuery("div[data-name=\'pais\'] select").val("PE")';
@@ -86,7 +76,7 @@
             var array_ciudades = '.json_encode($ciudades).';
             function updateSelectCiudades(){
                let code_country = jQuery("div[data-name=\'pais\'] select").val();
-               if(code_country) { code_country = code_country.trim(); }
+               code_country = code_country.trim();
                jQuery("div[data-name=\'ciudad\'] select").html("");
                jQuery.each(array_ciudades, function(indice, valor) {
                   let code_country_state = indice;
@@ -124,4 +114,3 @@
          </script>
       ';
    }
-?>

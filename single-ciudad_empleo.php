@@ -10,9 +10,6 @@ $post_id = get_the_ID();
 $base_url = get_bloginfo("url");
 $permalink_ofertas_laborales = get_bloginfo("url")."/ofertas-laborales";
 
-// ----------------------------------------------------------------------
-// FUNCIÓN ESCUDO: Evita errores fatales con Objetos de Publicación
-// ----------------------------------------------------------------------
 if (!function_exists('obtener_texto_acf')) {
     function obtener_texto_acf($valor_acf) {
         if (empty($valor_acf)) return '';
@@ -23,23 +20,30 @@ if (!function_exists('obtener_texto_acf')) {
     }
 }
 
-// ----------------------------------------------------------------------
-// OBTENER CAMPO NUEVO Y BÁSICOS
-// ----------------------------------------------------------------------
 $nombre_ciudad = get_field("nombre_ciudad", $post_id);
-$title_ciudad = !empty($nombre_ciudad) ? $nombre_ciudad : get_the_title($post_id);
+$valor_real_acf = get_field("nombre_ciudad", $post_id, false); // 'false' nos da el valor raw (PE@LIM)
+$codigo_busqueda = esc_sql($valor_real_acf);
 
-// ----------------------------------------------------------------------
-// OBTENER CAMPOS ACF DE BLOQUES
-// ----------------------------------------------------------------------
-$activar_bloque_1   = get_field("activar_bloque_1", $post_id);
-$contenido_bloque_1 = get_field("contenido_bloque_1", $post_id);
+$nombre_visual = $valor_real_acf; // Por defecto
+$path_states = get_template_directory() . "/functions/php-countries/states.php";
+if (file_exists($path_states)) {
+    $array_states = include $path_states;
+    if (strpos($valor_real_acf, '@') !== false) {
+        $parts = explode("@", $valor_real_acf);
+        if (isset($array_states[$parts[0]][$parts[1]])) {
+            $nombre_visual = $array_states[$parts[0]][$parts[1]];
+        }
+    }
+}
 
-$activar_bloque_2   = get_field("activar_bloque_2", $post_id);
+$activar_bloque_1_c   = get_field("activar_bloque_1_c", $post_id);
+$contenido_bloque_1_c = get_field("contenido_bloque_1_c", $post_id);
+
+$activar_bloque_2_c   = get_field("activar_bloque_2_c", $post_id);
 $texto_contador     = get_field("texto_contador_bloque_2", $post_id);
 
-$activar_bloque_3   = get_field("activar_bloque_3", $post_id);
-$activar_bloque_4   = get_field("activar_bloque_4", $post_id);
+$activar_bloque_3_c   = get_field("activar_bloque_3_c", $post_id);
+$activar_bloque_4_c   = get_field("activar_bloque_4_c", $post_id);
 
 $banners_de_columna = get_field("banners_de_columna", "option");
 
@@ -48,14 +52,15 @@ $posts_per_page = 20;
 $paged = isset($_GET["pg"]) ? max(1, intval($_GET["pg"])) : 1;
 $total_rows = 0;
 
-// Consulta Listado General (A-Z)
+// (línea eliminada: $title_ciudad_sql nunca se usaba y referenciaba una variable indefinida)
+
 $rows = get_custom_posts( 
       $post_type = "empleo", 
       $search = false, 
       $taxonomies_array = false, 
       $custom_field_array = array( 
           array( "meta_key"=>"fecha_de_expiracion", "condition"=>"AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()"), 
-          array( "meta_key"=>"ciudad", "condition"=>"AND %meta_value% = ".$post_id) 
+          array( "meta_key"=>"ciudad", "condition"=>"AND %meta_value% = '".$codigo_busqueda."'")
       ),  
       $order = array( 0=>'ORDER BY post_title ASC'), 
       $page = $paged, 
@@ -64,22 +69,21 @@ $rows = get_custom_posts(
 );
 $max_num_pages = ceil($total_rows / $posts_per_page);
 
-// Consulta Destacados (Con los nuevos slugs "peso" y "destacado")
 $args_destacados = array(
     'post_type'      => 'empleo',
     'posts_per_page' => -1,
-    'meta_key'       => 'peso', // Actualizado
+    'meta_key'       => 'peso', 
     'orderby'        => 'meta_value_num', 
     'order'          => 'DESC', 
     'meta_query'     => array(
         'relation' => 'AND',
         array(
             'key'     => 'ciudad',
-            'value'   => $post_id,
+            'value'   => $codigo_busqueda,
             'compare' => '='
         ),
         array(
-            'key'     => 'destacado', // Actualizado
+            'key'     => 'destacado',
             'value'   => '1',
             'compare' => '='
         ),
@@ -87,16 +91,17 @@ $args_destacados = array(
             'key'     => 'fecha_de_expiracion',
             'value'   => date('Ymd'),
             'compare' => '>=',
-            'type'    => 'DATE'
+            'type'    => 'NUMERIC'
         )
     )
 );
 $query_destacados = new WP_Query($args_destacados);
 
+
 get_header(); 
 ?>
 
-<main id="main-content" class="page wrapper page-single-ciudad" role="main">
+<main id="main-content" class="page wrapper page-single-empresa page-single-ciudad" role="main">
     <section class="section1 wrapper">
         <div class="container">
             <div class="wrapper inner-container">
@@ -104,35 +109,35 @@ get_header();
                     <div class="row">
                         <div class="col col-empr-details">
 
-                            <div class="row custom-row">
+                            <div class="row custom-row mb-3">
                                 <div class="col-12 col-lg-6 custom-col">
                                     <ol class="breadcrumbs">
                                         <li><a href="<?php echo esc_url($base_url); ?>">Home</a></li>
                                         <li><a href="<?php echo esc_url($permalink_ofertas_laborales); ?>">Empleos</a></li>
-                                        <li><span><?php echo esc_html($title_ciudad); ?></span></li>
+                                        <li><span><?php echo esc_html($nombre_visual); ?></span></li>
                                     </ol>
                                 </div>
-                                <div class="col-12 col-lg-6 custom-col">
+                                <div class="col-12 col-lg-6 custom-col text-lg-end">
                                     <div class="wrap-buttons">
                                         <a href="<?php echo esc_url($permalink_ofertas_laborales); ?>" class="btn-gray">Volver al listado general</a>
-                                    </div>
+                                    </div> 
                                 </div>
                             </div>
 
-                            <?php if ($activar_bloque_1 && !empty($contenido_bloque_1)): ?>
+                            <?php if ($activar_bloque_1_c && !empty($contenido_bloque_1_c)): ?>
                                 <div class="ciudad-bloque ciudad-banner">
-                                    <?php echo wp_kses_post($contenido_bloque_1); ?>
+                                    <?php echo wp_kses_post($contenido_bloque_1_c); ?>
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_2): ?>
+                            <?php if ($activar_bloque_2_c): ?>
                                 <div class="ciudad-bloque search-bar">
                                     <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
                                         <div class="search-bar-inside">
-                                            <input type="text" class="search-input" placeholder="Buscar puesto en <?php echo esc_attr($title_ciudad); ?>..." value="<?php echo get_search_query(); ?>" name="s" />
+                                            <input type="text" class="search-input" placeholder="Buscar puesto en <?php echo esc_attr($nombre_visual); ?>..." value="<?php echo get_search_query(); ?>" name="s" />
                                             <input type="hidden" name="post_type" value="empleo" />
                                             <input type="hidden" name="meta_key" value="ciudad" />
-                                            <input type="hidden" name="meta_value" value="<?php echo esc_attr($post_id); ?>" />
+                                            <input type="hidden" name="meta_value" value="<?php echo esc_attr($title_ciudad); ?>" />
                                             <button type="submit" class="search-button">
                                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
                                             </button>
@@ -142,15 +147,15 @@ get_header();
                                 <?php
                                 if (!empty($texto_contador)) {
                                     $texto_mostrar = str_replace('{count}', '<strong>' . $total_rows . '</strong>', $texto_contador);
-                                    $texto_mostrar = str_replace('{ciudad}', '<strong>' . esc_html($title_ciudad) . '</strong>', $texto_mostrar);
+                                    $texto_mostrar = str_replace('{ciudad}', '<strong>' . esc_html($nombre_visual) . '</strong>', $texto_mostrar);
                                     echo '<p class="contador-ofertas" style="font-size: 1.1em;">' . wp_kses_post($texto_mostrar) . '</p>';
                                 }
                                 ?>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_3 && $query_destacados->have_posts()): ?>
+                            <?php if ($activar_bloque_3_c && $query_destacados->have_posts()): ?>
                                 <div class="ciudad-bloque ciudad-destacados job-offers">
-                                    <h4>PUESTOS DESTACADOS EN <?php echo strtoupper(esc_html($title_ciudad)); ?></h4>
+                                    <h4>PUESTOS DESTACADOS EN <?php echo strtoupper(esc_html($nombre_visual)); ?></h4>
                                     
                                     <?php while ($query_destacados->have_posts()): $query_destacados->the_post(); ?>
                                         <?php
@@ -158,11 +163,9 @@ get_header();
                                         $sf_title = get_the_title();
                                         $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $sf_ID));
                                         
-                                        // Extracción segura de Empresa
                                         $sf_empresa = obtener_texto_acf(get_field('empresa', $sf_ID));
                                         if (empty($sf_empresa)) { $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID); }
                                         
-                                        // Extracción segura de Distrito
                                         $sf_ubicacion = obtener_texto_acf(get_field('distrito', $sf_ID)); 
                                         
                                         $sf_permalink = get_permalink($sf_ID);
@@ -192,9 +195,9 @@ get_header();
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_4): ?>
+                            <?php if ($activar_bloque_4_c): ?>
                                 <div class="ciudad-bloque ciudad-listado job-offers">
-                                    <h4>TODOS LOS PUESTOS EN <?php echo strtoupper(esc_html($title_ciudad)); ?> (A-Z)</h4>
+                                    <h4>TODOS LOS PUESTOS EN <?php echo strtoupper(esc_html($nombre_visual)); ?> (A-Z)</h4>
                                     
                                     <?php if (!empty($rows)): ?>
                                         <?php foreach ($rows as $o_row): ?>
@@ -203,11 +206,9 @@ get_header();
                                             $sf_title = $o_row->post_title;
                                             $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $sf_ID));
                                             
-                                            // Extracción segura de Empresa
                                             $sf_empresa = obtener_texto_acf(get_field('empresa', $sf_ID));
                                             if (empty($sf_empresa)) { $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID); }
                                             
-                                            // Extracción segura de Distrito
                                             $sf_ubicacion = obtener_texto_acf(get_field('distrito', $sf_ID)); 
                                             
                                             $sf_permalink = get_permalink($sf_ID);
