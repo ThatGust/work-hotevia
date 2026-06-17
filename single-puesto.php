@@ -20,32 +20,21 @@ if (!function_exists('obtener_texto_acf')) {
     }
 }
 
-$valor_real_acf = get_field("nombre_area", $post_id, false); 
-$codigo_busqueda = esc_sql($valor_real_acf);
-$nombre_visual = $valor_real_acf;
+// "nombre_area" es un campo de TEXTO libre (Ej: "Alimentos y Bebidas").
+// Si está vacío, o si todavía conserva un valor numérico heredado de cuando
+// este campo era un selector de post/término (antes del cambio de tipo en ACF),
+// se usa el título de la página como respaldo.
+$nombre_area     = trim((string) get_field("nombre_area", $post_id, false));
+$nombre_visual   = (!empty($nombre_area) && !is_numeric($nombre_area)) ? $nombre_area : get_the_title($post_id);
+$codigo_busqueda = esc_sql($nombre_visual);
 
-if (is_numeric($valor_real_acf)) {
-    $post_title = get_the_title($valor_real_acf);
-    if (!empty($post_title) && $post_title != $valor_real_acf) {
-        $nombre_visual = $post_title;
-    } else {
-        $term = get_term($valor_real_acf);
-        if ($term && !is_wp_error($term)) {
-            $nombre_visual = $term->name;
-        } else {
-            $nombre_visual = get_the_title($post_id); // Fallback: Título de esta misma página
-        }
-    }
-}
+$activar_bloque_1   = get_field("activar_bloque_1_a", $post_id);
+$contenido_bloque_1 = get_field("contenido_bloque_1_a", $post_id);
 
-$activar_bloque_1_a   = get_field("activar_bloque_1_a", $post_id);
-$contenido_bloque_1_a = get_field("contenido_bloque_1_a", $post_id);
-
-$activar_bloque_2_a   = get_field("activar_bloque_2_a", $post_id);
+$activar_bloque_2   = get_field("activar_bloque_2_a", $post_id);
 $texto_contador     = get_field("texto_contador_bloque_2_a", $post_id);
 
-$activar_bloque_3_a   = get_field("activar_bloque_3_a", $post_id);
-$activar_bloque_4_a   = get_field("activar_bloque_4_a", $post_id);
+$activar_bloque_3   = get_field("activar_bloque_3_a", $post_id);
 
 $banners_de_columna = get_field("banners_de_columna", "option");
 
@@ -114,20 +103,18 @@ get_header();
                             </div>
 
 
-                            <?php if ($activar_bloque_1_a && !empty($contenido_bloque_1_a)): ?>
+                            <?php if ($activar_bloque_1 && !empty($contenido_bloque_1)): ?>
                                 <div class="ciudad-bloque ciudad-banner mb-4">
-                                    <?php echo wp_kses_post($contenido_bloque_1_a); ?>
+                                    <?php echo wp_kses_post($contenido_bloque_1); ?>
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_2_a): ?>
+                            <?php if ($activar_bloque_2): ?>
                                 <div class="ciudad-bloque search-bar">
                                     <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
                                         <div class="search-bar-inside">
-                                            <input type="text" class="search-input" placeholder="Buscar puesto en <?php echo esc_attr($title_ciudad); ?>..." value="<?php echo get_search_query(); ?>" name="s" />
+                                            <input type="text" class="search-input" placeholder="Buscar puesto en <?php echo esc_attr($nombre_visual); ?>..." value="<?php echo get_search_query(); ?>" name="s" />
                                             <input type="hidden" name="post_type" value="empleo" />
-                                            <input type="hidden" name="meta_key" value="ciudad" />
-                                            <input type="hidden" name="meta_value" value="<?php echo esc_attr($title_ciudad); ?>" />
                                             <button type="submit" class="search-button">
                                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
                                             </button>
@@ -135,15 +122,15 @@ get_header();
                                     </form>
                                 </div>
                                 <?php
-                                if (!empty($texto_contador)) {
-                                    $texto_mostrar = str_replace('{count}', '<strong>' . $total_rows . '</strong>', $texto_contador);
+                                if (!empty($texto_contador_bloque_2)) {
+                                    $texto_mostrar = str_replace('{count}', '<strong>' . $total_rows . '</strong>', $texto_contador_bloque_2);
                                     $texto_mostrar = str_replace('{area}', '<strong>' . esc_html($nombre_visual) . '</strong>', $texto_mostrar);
                                     echo '<p class="contador-ofertas" style="font-size: 1.1em;">' . wp_kses_post($texto_mostrar) . '</p>';
                                 }
                                 ?>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_3_a && $query_destacados->have_posts()): ?>
+                            <?php if ($activar_bloque_3 && $query_destacados->have_posts()): ?>
                                 <div class="ciudad-bloque ciudad-destacados job-offers job-offers-highlighted mb-4">
                                     <h4>EMPLEOS DESTACADOS</h4>
                                     <?php 
@@ -179,7 +166,6 @@ get_header();
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_4_a): ?>
                                 <div class="ciudad-bloque ciudad-listado job-offers">
                                     <h4>TODOS LOS PUESTOS EN <?php echo strtoupper(esc_html($nombre_visual)); ?> (A-Z)</h4>
                                     
@@ -251,7 +237,6 @@ get_header();
                                         ?>
                                     </div>
                                 <?php endif; ?>
-                            <?php endif; ?>
 
                         </div>
 
