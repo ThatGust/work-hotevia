@@ -378,6 +378,7 @@
     * ARQUITECTURA VISUAL: style.css (COMPLETO)
     */
     .google-style-search-container {
+        width: 100%;
         position: relative;
     }
     .search-input-wrapper {
