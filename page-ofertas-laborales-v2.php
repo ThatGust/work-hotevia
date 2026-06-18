@@ -16,15 +16,18 @@
 <?php get_header(); ?>
 
 <main id="main-content" class="page wrapper page-ofertas-laborales" role="main">
+<main id="main-content" class="page wrapper page-ofertas-laborales" role="main">
     <section class="section1 wrapper">
         <div class="container">
             <div class="wrapper inner-container">
                 <div class="wrap-info">
                     <div class="row">
                         <div class="col col-ofertas-laborales">
+                        <div class="col col-ofertas-laborales">
 
                             <ol class="breadcrumbs">
                                 <li><a href="<?php echo $base_url; ?>">Home</a></li>
+                                <li><span><?php echo $title_negocio; ?></span></li>
                                 <li><span><?php echo $title_negocio; ?></span></li>
                             </ol>
 
@@ -49,7 +52,16 @@
                                 </div>
                                 <div id="autocompleteResults" class="autocomplete-suggestions-box" style="display:none;"></div>
                             </div>
+                                <div id="autocompleteResults" class="autocomplete-suggestions-box" style="display:none;"></div>
+                            </div>
 
+                            <div id="lista-empleos-container">
+                                <div id="mainSpinner" class="main-spinner-wrapper" style="display: none;">
+                                    <div class="loader-wheel"></div>
+                                </div>
+                                <div id="lista-empleos" class="empleos-grid job-listings"></div>
+                                <div id="paginacion-empleos" class="paginacion-container1 paginate-links"></div>
+                            </div>
                             <div id="lista-empleos-container">
                                 <div id="mainSpinner" class="main-spinner-wrapper" style="display: none;">
                                     <div class="loader-wheel"></div>
@@ -62,9 +74,13 @@
                               <?php
                                 echo $html_pie_de_pagina;
                               ?>
+                              <?php
+                                echo $html_pie_de_pagina;
+                              ?>
                             </div>
 
                         </div>
+                        <?php if ($banners_de_columna): ?>
                         <?php if ($banners_de_columna): ?>
                             <div class="col col-ad-place">
                                 <?php foreach ($banners_de_columna as $o_item): ?>
@@ -89,4 +105,5 @@
 </main>
 <?php get_footer(); ?>
 
+<?php get_template_part('parts/page-ofertas-laborales-v2-js'); ?>
 <?php get_template_part('parts/page-ofertas-laborales-v2-js'); ?>
