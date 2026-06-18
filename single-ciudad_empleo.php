@@ -20,6 +20,35 @@ if (!function_exists('obtener_texto_acf')) {
     }
 }
 
+if (!function_exists('formatear_empresa_destacada_ciudad')) {
+    function formatear_empresa_destacada_ciudad($value, $post_id, $field) {
+        return obtener_texto_acf($value);
+    }
+}
+
+if (!function_exists('obtener_datos_item_empleo_ciudad')) {
+    function obtener_datos_item_empleo_ciudad($empleo_id) {
+        $sf_title = get_the_title($empleo_id);
+        $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $empleo_id));
+
+        $sf_empresa = obtener_texto_acf(get_field('empresa', $empleo_id));
+        if (empty($sf_empresa)) {
+            $sf_empresa = get_field('nombre_de_la_empresa', $empleo_id);
+        }
+
+        $sf_ubicacion = obtener_texto_acf(get_field('distrito', $empleo_id));
+        $sf_permalink = get_permalink($empleo_id);
+
+        return array(
+            'title' => $sf_title,
+            'fecha' => $sf_fecha,
+            'empresa' => $sf_empresa,
+            'ubicacion' => $sf_ubicacion,
+            'permalink' => $sf_permalink,
+        );
+    }
+}
+
 $nombre_ciudad = get_field("nombre_ciudad", $post_id);
 $valor_real_acf = get_field("nombre_ciudad", $post_id, false); // 'false' nos da el valor raw (PE@LIM)
 $codigo_busqueda = esc_sql($valor_real_acf);
@@ -51,8 +80,8 @@ $svg_icon = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="133.33
 $posts_per_page = 20;
 $paged = isset($_GET["pg"]) ? max(1, intval($_GET["pg"])) : 1;
 $total_rows = 0;
+global $wpdb;
 
-// (línea eliminada: $title_ciudad_sql nunca se usaba y referenciaba una variable indefinida)
 
 $rows = get_custom_posts( 
       $post_type = "empleo", 
@@ -69,33 +98,28 @@ $rows = get_custom_posts(
 );
 $max_num_pages = ceil($total_rows / $posts_per_page);
 
-$args_destacados = array(
-    'post_type'      => 'empleo',
-    'posts_per_page' => -1,
-    'meta_key'       => 'peso', 
-    'orderby'        => 'meta_value_num', 
-    'order'          => 'DESC', 
-    'meta_query'     => array(
-        'relation' => 'AND',
-        array(
-            'key'     => 'ciudad',
-            'value'   => $codigo_busqueda,
-            'compare' => '='
-        ),
-        array(
-            'key'     => 'destacado',
-            'value'   => '1',
-            'compare' => '='
-        ),
-        array(
-            'key'     => 'fecha_de_expiracion',
-            'value'   => date('Ymd'),
-            'compare' => '>=',
-            'type'    => 'NUMERIC'
-        )
-    )
-);
-$query_destacados = new WP_Query($args_destacados);
+$total_rows_destacados = 0;
+$rows_destacados = array();
+
+if (!empty($valor_real_acf)) {
+    $rows_destacados = $wpdb->get_results($wpdb->prepare(
+        "SELECT DISTINCT p.ID, p.post_title
+        FROM {$wpdb->posts} p
+        INNER JOIN {$wpdb->postmeta} m_exp ON (p.ID = m_exp.post_id AND m_exp.meta_key = 'fecha_de_expiracion')
+        INNER JOIN {$wpdb->postmeta} m_city ON (p.ID = m_city.post_id AND m_city.meta_key = 'ciudad')
+        INNER JOIN {$wpdb->postmeta} m_destacado ON (p.ID = m_destacado.post_id AND m_destacado.meta_key = 'destacado')
+        LEFT JOIN {$wpdb->postmeta} m_peso ON (p.ID = m_peso.post_id AND m_peso.meta_key = 'peso')
+        WHERE p.post_type = 'empleo'
+        AND p.post_status = 'publish'
+        AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()
+        AND m_city.meta_value = %s
+        AND m_destacado.meta_value = '1'
+        ORDER BY CAST(COALESCE(NULLIF(m_peso.meta_value, ''), 0) AS SIGNED) DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') ASC",
+        $valor_real_acf
+    ));
+
+    $total_rows_destacados = count($rows_destacados);
+}
 
 
 get_header(); 
@@ -137,7 +161,7 @@ get_header();
                                             <input type="text" class="search-input" placeholder="Buscar puesto en <?php echo esc_attr($nombre_visual); ?>..." value="<?php echo get_search_query(); ?>" name="s" />
                                             <input type="hidden" name="post_type" value="empleo" />
                                             <input type="hidden" name="meta_key" value="ciudad" />
-                                            <input type="hidden" name="meta_value" value="<?php echo esc_attr($title_ciudad); ?>" />
+                                            <input type="hidden" name="meta_value" value="<?php echo esc_attr($valor_real_acf); ?>" />
                                             <button type="submit" class="search-button">
                                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
                                             </button>
@@ -153,45 +177,21 @@ get_header();
                                 ?>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_3_c && $query_destacados->have_posts()): ?>
+                            <?php if ($activar_bloque_3_c && !empty($rows_destacados)): ?>
                                 <div class="ciudad-bloque ciudad-destacados job-offers">
                                     <h4>PUESTOS DESTACADOS EN <?php echo strtoupper(esc_html($nombre_visual)); ?></h4>
+
+                                    <?php add_filter('acf/format_value/name=empresa', 'formatear_empresa_destacada_ciudad', 20, 3); ?>
                                     
-                                    <?php while ($query_destacados->have_posts()): $query_destacados->the_post(); ?>
+                                    <?php foreach ($rows_destacados as $o_row): ?>
                                         <?php
-                                        $sf_ID = get_the_ID();
-                                        $sf_title = get_the_title();
-                                        $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $sf_ID));
-                                        
-                                        $sf_empresa = obtener_texto_acf(get_field('empresa', $sf_ID));
-                                        if (empty($sf_empresa)) { $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID); }
-                                        
-                                        $sf_ubicacion = obtener_texto_acf(get_field('distrito', $sf_ID)); 
-                                        
-                                        $sf_permalink = get_permalink($sf_ID);
+                                        if (function_exists('get_html_list_empleo')) {
+                                            echo get_html_list_empleo($o_row->ID);
+                                        }
                                         ?>
-                                        
-                                        <div class="wrap-item destacado-item">
-                                            <a href="<?php echo esc_url($sf_permalink); ?>" class="job-item">
-                                                <span class="icon"><?php echo $svg_icon; ?></span>
+                                    <?php endforeach; ?>
 
-                                                <?php if ($sf_title): ?>
-                                                    <span class="job-title-list"><strong><?php echo esc_html($sf_title); ?></strong></span>
-                                                    <span class="job-separator"> - </span>
-                                                <?php endif; ?>
-
-                                                <?php if ($sf_empresa): ?>
-                                                    <span class="job-location"><?php echo esc_html($sf_empresa); ?> /</span>
-                                                <?php endif; ?>
-
-                                                <?php if ($sf_ubicacion || $sf_fecha): ?>
-                                                    <span class="job-info">
-                                                        <?php echo esc_html($sf_ubicacion); ?> - <?php echo esc_html($sf_fecha); ?>
-                                                    </span>
-                                                <?php endif; ?>
-                                            </a>
-                                        </div>
-                                    <?php endwhile; wp_reset_postdata(); ?>
+                                    <?php remove_filter('acf/format_value/name=empresa', 'formatear_empresa_destacada_ciudad', 20); ?>
                                 </div>
                             <?php endif; ?>
 
@@ -202,34 +202,25 @@ get_header();
                                     <?php if (!empty($rows)): ?>
                                         <?php foreach ($rows as $o_row): ?>
                                             <?php
-                                            $sf_ID = $o_row->ID;
-                                            $sf_title = $o_row->post_title;
-                                            $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $sf_ID));
-                                            
-                                            $sf_empresa = obtener_texto_acf(get_field('empresa', $sf_ID));
-                                            if (empty($sf_empresa)) { $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID); }
-                                            
-                                            $sf_ubicacion = obtener_texto_acf(get_field('distrito', $sf_ID)); 
-                                            
-                                            $sf_permalink = get_permalink($sf_ID);
+                                            $sf_data = obtener_datos_item_empleo_ciudad($o_row->ID);
                                             ?>
                                             
                                             <div class="wrap-item">
-                                                <a href="<?php echo esc_url($sf_permalink); ?>" class="job-item">
+                                                <a href="<?php echo esc_url($sf_data['permalink']); ?>" class="job-item">
                                                     <span class="icon"><?php echo $svg_icon; ?></span>
 
-                                                    <?php if ($sf_title): ?>
-                                                        <span class="job-title-list"><?php echo esc_html($sf_title); ?></span>
+                                                    <?php if ($sf_data['title']): ?>
+                                                        <span class="job-title-list"><?php echo esc_html($sf_data['title']); ?></span>
                                                         <span class="job-separator"> - </span>
                                                     <?php endif; ?>
 
-                                                    <?php if ($sf_empresa): ?>
-                                                        <span class="job-location"><?php echo esc_html($sf_empresa); ?> /</span>
+                                                    <?php if ($sf_data['empresa']): ?>
+                                                        <span class="job-location"><?php echo esc_html($sf_data['empresa']); ?> /</span>
                                                     <?php endif; ?>
 
-                                                    <?php if ($sf_ubicacion || $sf_fecha): ?>
+                                                    <?php if ($sf_data['ubicacion'] || $sf_data['fecha']): ?>
                                                         <span class="job-info">
-                                                            <?php echo esc_html($sf_ubicacion); ?> - <?php echo esc_html($sf_fecha); ?>
+                                                            <?php echo esc_html($sf_data['ubicacion']); ?> - <?php echo esc_html($sf_data['fecha']); ?>
                                                         </span>
                                                     <?php endif; ?>
                                                 </a>

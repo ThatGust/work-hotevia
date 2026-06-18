@@ -47,7 +47,7 @@
             $html = '
                 <div class="card-destacado">
                     <div class="card-destacado-header">
-                        <span class="etiqueta-gold">⭐ Empleo destacado</span>
+                        <span class="etiqueta-gold">Empleo destacado</span>
                     </div>
                     <h3 class="card-destacado-title">'.$title.'</h3>
                     <p class="card-destacado-empresa">'.$empresa.'</p>

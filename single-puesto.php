@@ -20,72 +20,98 @@ if (!function_exists('obtener_texto_acf')) {
     }
 }
 
-$valor_real_acf = get_field("nombre_area", $post_id, false); 
-$codigo_busqueda = esc_sql($valor_real_acf);
-$nombre_visual = $valor_real_acf;
+$nombre_area_raw = get_field("nombre_area", $post_id, false);
+$nombre_visual = get_the_title($post_id);
+$puesto_term_id = 0;
 
-if (is_numeric($valor_real_acf)) {
-    $post_title = get_the_title($valor_real_acf);
-    if (!empty($post_title) && $post_title != $valor_real_acf) {
-        $nombre_visual = $post_title;
-    } else {
-        $term = get_term($valor_real_acf);
-        if ($term && !is_wp_error($term)) {
-            $nombre_visual = $term->name;
-        } else {
-            $nombre_visual = get_the_title($post_id); // Fallback: Título de esta misma página
-        }
+if (is_object($nombre_area_raw) && isset($nombre_area_raw->term_id)) {
+    $puesto_term_id = intval($nombre_area_raw->term_id);
+    $nombre_visual = $nombre_area_raw->name;
+} elseif (is_numeric($nombre_area_raw) && intval($nombre_area_raw) > 0) {
+    $puesto_term_id = intval($nombre_area_raw);
+    $term_from_id = get_term_by('id', $puesto_term_id, 'puesto');
+    if ($term_from_id && !is_wp_error($term_from_id)) {
+        $nombre_visual = $term_from_id->name;
+    }
+} elseif (is_string($nombre_area_raw) && trim($nombre_area_raw) !== '') {
+    $nombre_visual = trim($nombre_area_raw);
+    $term_from_name = get_term_by('name', $nombre_visual, 'puesto');
+    if ($term_from_name && !is_wp_error($term_from_name)) {
+        $puesto_term_id = intval($term_from_name->term_id);
+        $nombre_visual = $term_from_name->name;
     }
 }
 
-$activar_bloque_1_a   = get_field("activar_bloque_1_a", $post_id);
-$contenido_bloque_1_a = get_field("contenido_bloque_1_a", $post_id);
+$queried_object = get_queried_object();
+if (is_object($queried_object) && isset($queried_object->term_id) && isset($queried_object->taxonomy) && $queried_object->taxonomy === 'puesto') {
+    $puesto_term_id = intval($queried_object->term_id);
+    $nombre_visual = $queried_object->name;
+}
 
-$activar_bloque_2_a   = get_field("activar_bloque_2_a", $post_id);
+$activar_bloque_1   = get_field("activar_bloque_1_a", $post_id);
+$contenido_bloque_1 = get_field("contenido_bloque_1_a", $post_id);
+
+$activar_bloque_2   = get_field("activar_bloque_2_a", $post_id);
 $texto_contador     = get_field("texto_contador_bloque_2_a", $post_id);
 
-$activar_bloque_3_a   = get_field("activar_bloque_3_a", $post_id);
-$activar_bloque_4_a   = get_field("activar_bloque_4_a", $post_id);
+$activar_bloque_3   = get_field("activar_bloque_3_a", $post_id);
 
 $banners_de_columna = get_field("banners_de_columna", "option");
 
 $svg_icon = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="133.333" height="108" viewBox="0 0 100 81"><path d="m44.3 19.4-3.7 7.4-10.5.7c-5.8.3-11.7.7-13.1.8-1.9.2 0 1.4 7.3 4.9 9.6 4.6 9.7 4.7 9.7 8.2 0 3.1.3 3.6 2.3 3.6 1.7 0 3.3-1.8 7-8 2.6-4.3 5.2-8.2 5.7-8.5.6-.3 2.2 1.5 3.7 4.1 5.7 9.5 8.3 12.5 10.6 12.2 1.7-.2 2.3-1.1 2.5-3.8.3-3.5.7-3.8 10-8.5l9.7-5-13.2-.3-13.2-.3-4.3-7.4c-2.4-4.1-4.9-7.5-5.6-7.5-.7 0-2.9 3.3-4.9 7.4z"/><path d="M11 37.9v7.9l6.4 3.6c3.5 2 6.8 3.6 7.3 3.6.8 0 5.7-12 5.1-12.5C28.6 39.6 11.7 30 11.4 30c-.2 0-.4 3.6-.4 7.9zM77.7 34.6c-5.3 2.7-8.7 5-8.4 5.7.2.7 1.3 3.8 2.3 6.9 1 3.2 2.2 5.8 2.8 5.8.6 0 4-1.7 7.6-3.8l6.5-3.7.3-7.8c.2-5.8 0-7.7-1-7.6-.7 0-5.3 2-10.1 4.5zM30.6 47.8c-.5.8-4.6 11.5-4.6 12 0 .1 1.4-.5 3-1.3 2.8-1.5 3-1.9 2.9-6.5-.2-5-.4-5.6-1.3-4.2zM68 51.9c0 4 .4 5.3 2.2 6.5 1.2.9 2.3 1.4 2.5 1.3.4-.4-3.8-12.7-4.3-12.7-.2 0-.4 2.2-.4 4.9zM37 58.1l-11.5 5 .3 7.4c.2 4.1.7 7.5 1.1 7.5.3 0 5.5-2 11.3-4.5C44.1 71 49.6 69 50.5 69c.8 0 5.9 2 11.2 4.5C67 76 71.7 78 72.1 78c.5 0 .9-3.4.9-7.5v-7.6L62.4 58c-5.8-2.8-11.3-5-12.3-4.9-.9 0-6.8 2.3-13.1 5z"/></svg>';
 $posts_per_page = 20;
 $paged = isset($_GET["pg"]) ? max(1, intval($_GET["pg"])) : 1;
-global $wpdb;
 
-
-$query_ids_str = $wpdb->prepare("
-    SELECT p.ID 
-    FROM {$wpdb->posts} p
-    INNER JOIN {$wpdb->postmeta} pm ON ( p.ID = pm.post_id )
-    WHERE p.post_type = 'empleo'
-    AND p.post_status = 'publish'
-    AND pm.meta_value LIKE %s
-    AND pm.meta_key NOT IN ('_edit_lock', '_edit_last', 'peso_destacado', 'destacado', 'empresa', 'ciudad', 'distrito')
-", '%' . $wpdb->esc_like($codigo_busqueda) . '%');
-
-$post_ids_arr = $wpdb->get_col($query_ids_str);
-$total_rows = count($post_ids_arr);
-$max_num_pages = ceil($total_rows / $posts_per_page);
-
-// Query Destacados
-$args_destacados = array(
-    'post_type'      => 'empleo',
-    'posts_per_page' => -1,
-    'post__in'       => !empty($post_ids_arr) ? $post_ids_arr : array(0),
-    'meta_key'       => 'peso_destacado',
-    'orderby'        => 'meta_value_num',
-    'order'          => 'DESC',
-    'meta_query'     => array(
+$taxonomies_array = false;
+if ($puesto_term_id > 0) {
+    $taxonomies_array = array(
         array(
-            'key'     => 'destacado',
-            'value'   => '1',
-            'compare' => '='
+            'term_id' => $puesto_term_id,
+            'taxonomy' => 'puesto'
         )
-    )
-);
-$query_destacados = new WP_Query($args_destacados);
+    );
+}
+
+$total_rows = 0;
+$rows = array();
+$total_rows_destacados = 0;
+$rows_destacados = array();
+
+if ($taxonomies_array) {
+    $rows = get_custom_posts(
+        $post_type = "empleo",
+        $search_text = false,
+        $taxonomies_array,
+        $custom_fields_array = array(
+            array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")
+        ),
+        $order = array(0 => 'ORDER BY wp.post_title ASC'),
+        $page = $paged,
+        $posts_per_page,
+        $total_rows
+    );
+
+    $rows_destacados = get_custom_posts(
+        $post_type = "empleo",
+        $search_text = false,
+        $taxonomies_array,
+        $custom_fields_array = array(
+            array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()"),
+            array("meta_key" => "destacado", "condition" => "AND %meta_value% = '1'"),
+            array("meta_key" => "peso_destacado", "condition" => "AND %meta_value% IS NOT NULL")
+        ),
+        $order = array(
+            0 => '',
+            1 => '',
+            2 => 'ORDER BY CAST(%meta_value% AS SIGNED) DESC'
+        ),
+        $page = 1,
+        $cant_destacados = 9999,
+        $total_rows_destacados
+    );
+}
+
+$max_num_pages = ceil($total_rows / $posts_per_page);
 
 get_header(); 
 ?>
@@ -114,20 +140,18 @@ get_header();
                             </div>
 
 
-                            <?php if ($activar_bloque_1_a && !empty($contenido_bloque_1_a)): ?>
+                            <?php if ($activar_bloque_1 && !empty($contenido_bloque_1)): ?>
                                 <div class="ciudad-bloque ciudad-banner mb-4">
-                                    <?php echo wp_kses_post($contenido_bloque_1_a); ?>
+                                    <?php echo wp_kses_post($contenido_bloque_1); ?>
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_2_a): ?>
+                            <?php if ($activar_bloque_2): ?>
                                 <div class="ciudad-bloque search-bar">
                                     <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
                                         <div class="search-bar-inside">
-                                            <input type="text" class="search-input" placeholder="Buscar puesto en <?php echo esc_attr($title_ciudad); ?>..." value="<?php echo get_search_query(); ?>" name="s" />
+                                            <input type="text" class="search-input" placeholder="Buscar puesto en <?php echo esc_attr($nombre_visual); ?>..." value="<?php echo get_search_query(); ?>" name="s" />
                                             <input type="hidden" name="post_type" value="empleo" />
-                                            <input type="hidden" name="meta_key" value="ciudad" />
-                                            <input type="hidden" name="meta_value" value="<?php echo esc_attr($title_ciudad); ?>" />
                                             <button type="submit" class="search-button">
                                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
                                             </button>
@@ -143,20 +167,20 @@ get_header();
                                 ?>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_3_a && $query_destacados->have_posts()): ?>
+                            <?php if ($activar_bloque_3 && !empty($rows_destacados)): ?>
                                 <div class="ciudad-bloque ciudad-destacados job-offers job-offers-highlighted mb-4">
                                     <h4>EMPLEOS DESTACADOS</h4>
                                     <?php 
-                                    while ($query_destacados->have_posts()) : $query_destacados->the_post(); 
-                                        $sf_id = get_the_ID();
-                                        $sf_title = get_the_title();
-                                        $sf_link = get_the_permalink();
+                                    foreach ($rows_destacados as $o_row):
+                                        $sf_id = $o_row->ID;
+                                        $sf_title = $o_row->post_title;
+                                        $sf_link = get_permalink($sf_id);
                                         $sf_empresa = obtener_texto_acf(get_field('empresa', $sf_id));
                                         
                                         $ciudad_obj = get_field("ciudad", $sf_id);
                                         $sf_ubicacion = is_object($ciudad_obj) ? $ciudad_obj->post_title : (is_string($ciudad_obj) ? $ciudad_obj : '');
                                         
-                                        $sf_fecha = get_the_date('d/m/Y', $sf_id);
+                                        $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $sf_id));
                                     ?>
                                         <div class="wrap-item">
                                             <a href="<?php echo esc_url($sf_link); ?>" class="job-item">
@@ -173,31 +197,19 @@ get_header();
                                             </a>
                                         </div>
                                     <?php 
-                                    endwhile; 
-                                    wp_reset_postdata(); 
+                                    endforeach;
                                     ?>
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ($activar_bloque_4_a): ?>
                                 <div class="ciudad-bloque ciudad-listado job-offers">
                                     <h4>TODOS LOS PUESTOS EN <?php echo strtoupper(esc_html($nombre_visual)); ?> (A-Z)</h4>
                                     
                                     <?php 
-                                    if (!empty($post_ids_arr)): 
-                                        $args_all = array(
-                                            'post_type'      => 'empleo',
-                                            'post_status'    => 'publish',
-                                            'post__in'       => $post_ids_arr,
-                                            'posts_per_page' => $posts_per_page,
-                                            'paged'          => $paged
-                                        );
-                                        $query_all = new WP_Query($args_all);
-                                        
-                                        if ($query_all->have_posts()) :
-                                            while ($query_all->have_posts()) : $query_all->the_post();
-                                                $sf_ID = get_the_ID();
-                                                $sf_title = get_the_title();
+                                    if (!empty($rows)):
+                                            foreach ($rows as $o_row):
+                                                $sf_ID = $o_row->ID;
+                                                $sf_title = $o_row->post_title;
                                                 $sf_fecha = obtener_texto_acf(get_field('fecha_de_expiracion', $sf_ID));
                                                 
                                                 $sf_empresa = obtener_texto_acf(get_field('empresa', $sf_ID));
@@ -229,9 +241,7 @@ get_header();
                                                     </a>
                                                 </div>
                                                 <?php
-                                            endwhile;
-                                            wp_reset_postdata();
-                                        endif;
+                                            endforeach;
                                     else: ?>
                                         <p>Actualmente no hay ofertas vigentes para esta área.</p>
                                     <?php endif; ?>
@@ -251,7 +261,6 @@ get_header();
                                         ?>
                                     </div>
                                 <?php endif; ?>
-                            <?php endif; ?>
 
                         </div>
 
