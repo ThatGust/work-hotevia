@@ -221,6 +221,8 @@ function browser_sync(done) {
 function browser_sync_watch(){
    gulp.watch('./assets/sass/**/*.scss').on('all', gulp.series(build_sass));
    gulp.watch("./assets/js/*.js").on('all', gulp.series(build_js_main));
+   gulp.watch('./functions/*.php').on('all', browserSync.reload);
+   gulp.watch('./parts/*.php').on('all', browserSync.reload);
    gulp.watch('./*.php').on('all', browserSync.reload);
 }
 

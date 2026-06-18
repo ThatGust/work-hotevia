@@ -340,12 +340,14 @@ function filtrar_y_paginar_empleos_callback() {
             $sf_permalink = get_permalink($sf_ID);
 
             $empleos[] = [
-                'id'     => $sf_ID,
-                'titulo' => $sf_titulo,
-                'fecha' => $sf_fecha,
-                'empresa' => $sf_empresa,
-                'ubicacion' => $sf_ubicacion,
-                'url'    => get_permalink($row->ID)
+                'id'           => $sf_ID,
+                'titulo'       => $sf_titulo,
+                'fecha'        => $sf_fecha,
+                'empresa'      => $sf_empresa,
+                'ubicacion'    => $sf_ubicacion,
+                'url'          => get_permalink($row->ID),
+                'es_destacado' => (bool) $row->es_destacado,
+                'fecha_pub'    => human_time_diff(get_the_time('U', $sf_ID), current_time('timestamp'))
             ];
         }
     }

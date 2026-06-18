@@ -201,6 +201,92 @@ $red : #ff0000;
       }
    }
 
+   // ESTILOS DE LA TARJETA DE DESTACADOS
+   .card-destacado {
+      border: 1px solid #cce0f5; // Borde sutil celeste/gris basado en el diseño
+      border-radius: 8px;
+      padding: 18px 24px;
+      margin-bottom: 15px;
+      background: #ffffff;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+
+      &:hover {
+         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+         border-color: #a3cbf7;
+      }
+
+      .card-destacado-header {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         margin-bottom: 8px;
+
+         .etiqueta-gold {
+            color: #d89f2a;
+            font-size: 0.85rem;
+            font-weight: 500;
+         }
+
+         .opciones-dots {
+            color: #555;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 5px;
+         }
+      }
+
+      .card-destacado-title {
+         margin: 0 0 6px 0;
+         font-size: 1.25rem;
+         color: #2c3e50;
+         font-weight: 700;
+      }
+
+      .card-destacado-empresa, 
+      .card-destacado-ubicacion {
+         margin: 0 0 6px 0;
+         color: #555;
+         font-size: 0.95rem;
+      }
+
+      .card-destacado-ubicacion {
+         color: #6c757d;
+         margin-bottom: 12px;
+      }
+
+      .card-destacado-footer {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         margin-top: 15px;
+
+         .card-destacado-tiempo {
+            color: #6c757d;
+            font-size: 0.85rem;
+         }
+
+         .btn-vista {
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            border: 1px solid #ced4da;
+            padding: 5px 18px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+
+            &:hover {
+               background-color: #f8f9fa;
+               color: #343a40;
+               border-color: #adb5bd;
+            }
+         }
+      }
+   }
+
+
    @media (max-width: $resize-min) {
       display: flex;
       justify-content: center;
@@ -215,6 +301,15 @@ $red : #ff0000;
          .job-location,
          .job-info {
             font-size: 16px;
+         }
+      }
+
+      // Ajustes responsivos para la tarjeta destacada
+      .card-destacado {
+         padding: 15px;
+         
+         .card-destacado-title {
+            font-size: 1.1rem;
          }
       }
    }
@@ -296,12 +391,9 @@ $red : #ff0000;
       margin-top: 70px;
       padding: 5px;
       margin-bottom: 10px;
-      //border: 1px solid #f1fcff;
-      //background-color: #f0faff;
       border: 1px solid #7bcde3;
       background-color: #7bcde3;
       box-shadow: 0px 4px 6px rgba(241, 252, 255, 0.5);
-      //max-width: 450px;
       width: 100%;
       overflow: hidden;
       box-sizing: border-box;
@@ -325,7 +417,6 @@ $red : #ff0000;
       .search-bar-inside {
          display: flex;
          background-color: #fff;
-         //padding: 5px 5px 0 0;
       }
       .search-input {
          flex: 1;
@@ -340,8 +431,6 @@ $red : #ff0000;
       .search-button {
          background-color: $red;
          border: none;
-         //width: 40px;
-         //height: 40px;
          padding: 0;
          min-width: unset;
          border-radius: 50%;
@@ -436,7 +525,6 @@ $red : #ff0000;
             padding: 12px;
             display: grid;
             grid-template-columns: 1fr auto;
-            //gap: 16px;
             align-items: center;
             position: relative;
             
@@ -476,8 +564,6 @@ $red : #ff0000;
                .dropdown-menu {
                   flex: 0 0 auto;
                   display: none;
-                  //position: absolute; 
-                  //top: 0;
                   position: relative; 
                   top: 100%; 
                   right: 0;
@@ -494,7 +580,6 @@ $red : #ff0000;
                   margin: 0;
                   border-top: 2px solid #fff;
                   li {
-                     //margin-bottom: 8px;
                      width: 100%;
                      a{
                         display: block;
@@ -537,14 +622,11 @@ $red : #ff0000;
                   width: 100%;
                   select{
                      width: 100%;
-                     //padding: 0 8px;
                      padding: 0 .5rem;
                   }
                }
             }
          }
-         
-         
          
          .remove-filters{
             font-size: 14px;
@@ -582,8 +664,7 @@ $red : #ff0000;
          .dropdown-group {
             display: flex;
             flex-direction: column;
-            gap: 1rem; // Espacio entre los elementos
-            
+            gap: 1rem;
             flex: 0 0 auto;
             width: 100%;
 
@@ -594,25 +675,23 @@ $red : #ff0000;
       
                label {
                   font-size: 14px;
-                  margin-bottom: 0.5rem; // Espacio entre el label y el select/input
+                  margin-bottom: 0.5rem;
                }
       
                select,
                input[type="text"] {
-                  width: 100%; // Ocupa todo el ancho disponible
-                  max-width: 100%; // Asegura que no se expanda más de lo permitido
-                  padding: 0.5rem; // Espacio interno del input/select
+                  width: 100%; 
+                  max-width: 100%; 
+                  padding: 0.5rem; 
                   border: 1px solid #ccc;
                   border-radius: 4px;
                   font-size: 14px;
-                  box-sizing: border-box; // Asegura que el padding no expanda el input
+                  box-sizing: border-box; 
                }
             }
          }
 
       }
-
-
 
       @media (max-width: $resize-min) {
          display: block;
@@ -640,17 +719,9 @@ $red : #ff0000;
    }
 
 
-
-
-
-
-
-
    .form-floating{
       position: relative;
    }
-
-
 
    .form-floating > .form-control,
    .form-floating > .form-select {
@@ -659,15 +730,6 @@ $red : #ff0000;
    }
    
    .form-floating > label {
-     /*position: absolute;
-     top: 0;
-     left: 0;
-     height: 100%;
-     padding: 1rem 0.75rem;
-     pointer-events: none;
-     border: 1px solid transparent;
-     transform-origin: 0 0;
-     transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;*/
      position: absolute;
      top: 0px;
      left: 10px;
@@ -756,7 +818,5 @@ $red : #ff0000;
       }
    }
 }
-
-   
 
 }
