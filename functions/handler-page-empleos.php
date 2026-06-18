@@ -64,6 +64,10 @@ function buscar_empleos_autocomplete_callback() {
     $prefix = 'WordPress34127_wp_';
     $posts_table = $prefix . 'posts';
     $postmeta_table = $prefix . 'postmeta';
+    $terms_table = $prefix . 'terms';
+    $term_taxonomy_table = $prefix . 'term_taxonomy';
+    $term_relationships_table = $prefix . 'term_relationships';
+    
     $like_term = '%' . $wpdb->esc_like($term) . '%';
 
     // LOAD DATABASE CITIES
@@ -79,7 +83,6 @@ function buscar_empleos_autocomplete_callback() {
     endforeach;
     $cities_result = arrayLikeSearch($ciudades, '%'.$term.'%');
     
-
     $suggestions = [];
 
     // OPTION PRIMARIA: Búsqueda exacta/literal por palabra clave ingresada (Estilo Google)
@@ -89,23 +92,25 @@ function buscar_empleos_autocomplete_callback() {
         'key'   => 'palabra_clave'
     ];
 
-
-    /*// CONSULTA A: CIUDADES (Máxima prioridad)
-    $ciudades = $wpdb->get_col($wpdb->prepare("
-        SELECT DISTINCT pm.meta_value 
-        FROM $postmeta_table pm
-        INNER JOIN $posts_table p ON pm.post_id = p.ID
-        WHERE p.post_type = 'empleo' AND p.post_status = 'publish'
-          AND pm.meta_key = 'ciudad' AND LOWER(pm.meta_value) LIKE %s
+    // NUEVA CONSULTA: TAXONOMÍA "PUESTO"
+    $puestos = $wpdb->get_col($wpdb->prepare("
+        SELECT DISTINCT t.name 
+        FROM $terms_table t
+        INNER JOIN $term_taxonomy_table tt ON t.term_id = tt.term_id
+        INNER JOIN $term_relationships_table tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+        INNER JOIN $posts_table p ON tr.object_id = p.ID
+        WHERE p.post_type = 'empleo' 
+          AND p.post_status = 'publish'
+          AND tt.taxonomy = 'puesto' 
+          AND LOWER(t.name) LIKE %s
         LIMIT 5
     ", $like_term));
 
-    foreach ($ciudades as $pais_ciudad) {
-        $city_name = $ciudades[$pais_ciudad];
-        if (!empty(trim($city_name))) {
-            $suggestions[] = ['label' => trim($city_name), 'tipo' => 'Ciudad', 'key' => 'ciudad'];
+    foreach ($puestos as $puesto) {
+        if (!empty(trim($puesto))) {
+            $suggestions[] = ['label' => trim($puesto), 'tipo' => 'Puesto', 'key' => 'puesto'];
         }
-    }*/
+    }
 
     foreach($cities_result as $city_key){
         $city_label = $ciudades[$city_key];
@@ -127,23 +132,6 @@ function buscar_empleos_autocomplete_callback() {
         if (empty(trim($distrito))) continue;
         $suggestions[] = ['label' => trim($distrito), 'tipo' => 'Distrito', 'key' => 'distrito'];
     }
-    
-
-    /*// CONSULTA C: PAÍSES
-    $paises = $wpdb->get_col($wpdb->prepare("
-        SELECT DISTINCT pm.meta_value 
-        FROM $postmeta_table pm
-        INNER JOIN $posts_table p ON pm.post_id = p.ID
-        WHERE p.post_type = 'empleo' AND p.post_status = 'publish'
-          AND pm.meta_key = 'pais' AND LOWER(pm.meta_value) LIKE %s
-        LIMIT 5
-    ", $like_term));
-
-    foreach ($paises as $pais) {
-        if (!empty(trim($pais))) {
-            $suggestions[] = ['label' => trim($pais), 'tipo' => 'País', 'key' => 'pais'];
-        }
-    }*/
 
     // CONSULTA D: EMPRESAS (Texto plano en ACF)
     $empresas_texto = $wpdb->get_col($wpdb->prepare("
@@ -185,7 +173,7 @@ function buscar_empleos_autocomplete_callback() {
     
     foreach ($suggestions as $index => $sug) {
         if ($index === 0) {
-            $resultado_final[] = $sug; // La opción de búsqueda global siempre se guarda primero
+            $resultado_final[] = $sug; 
             continue;
         }
         $hash_identificador = $sug['key'] . '|' . strtolower($sug['label']);
@@ -214,18 +202,19 @@ function filtrar_y_paginar_empleos_callback() {
         $per_page = $ofertas_num;
     endif;
     
-
     $offset = ($paged - 1) * $per_page;
-    
     $filtros = isset($_GET['filtros']) ? $_GET['filtros'] : [];
-    
 
     $prefix = 'WordPress34127_wp_';
     $posts_table = $prefix . 'posts';
     $postmeta_table = $prefix . 'postmeta';
+    $terms_table = $prefix . 'terms';
+    $term_taxonomy_table = $prefix . 'term_taxonomy';
+    $term_relationships_table = $prefix . 'term_relationships';
 
     $where_clauses = ["p.post_type = 'empleo'", "p.post_status = 'publish'"];
     $join_clauses = [];
+    $keyword_clauses = [];
     $join_counter = 0;
 
     if (!empty($filtros) && is_array($filtros)) {
@@ -285,13 +274,21 @@ function filtrar_y_paginar_empleos_callback() {
                 endforeach;
                 $cities_result = arrayLikeSearch($ciudades, '%'.$value.'%');
                 $city_key_filter = false;
-                foreach($cities_result as $city_key){ //format ejem: PE@LIM
+                foreach($cities_result as $city_key){ 
                     $city_key_filter = $city_key;
                     break;
                 }
                 $join_clauses[] = "INNER JOIN $postmeta_table m_{$join_counter} ON (p.ID = m_{$join_counter}.post_id AND m_{$join_counter}.meta_key = '$key')";
                 $where_clauses[] = $wpdb->prepare("m_{$join_counter}.meta_value = %s", $city_key_filter);
                 
+            } elseif ($key === 'puesto') {
+                // NUEVO MANEJO PARA LA TAXONOMÍA PUESTO
+                $join_clauses[] = "INNER JOIN $term_relationships_table tr_{$join_counter} ON (p.ID = tr_{$join_counter}.object_id)";
+                $join_clauses[] = "INNER JOIN $term_taxonomy_table tt_{$join_counter} ON (tr_{$join_counter}.term_taxonomy_id = tt_{$join_counter}.term_taxonomy_id AND tt_{$join_counter}.taxonomy = 'puesto')";
+                $join_clauses[] = "INNER JOIN $terms_table t_{$join_counter} ON (tt_{$join_counter}.term_id = t_{$join_counter}.term_id)";
+                
+                $where_clauses[] = $wpdb->prepare("t_{$join_counter}.name = %s", $value);
+
             } else {
                 $join_clauses[] = "INNER JOIN $postmeta_table m_{$join_counter} ON (p.ID = m_{$join_counter}.post_id AND m_{$join_counter}.meta_key = '$key')";
                 $where_clauses[] = $wpdb->prepare("m_{$join_counter}.meta_value = %s", $value);
@@ -317,15 +314,18 @@ function filtrar_y_paginar_empleos_callback() {
         SELECT DISTINCT
             p.ID, p.post_title as titulo_empleo,
             CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado,
-            CAST(COALESCE(m_peso.meta_value, 0) AS SIGNED) as peso_valor
+            CAST(COALESCE(m_peso.meta_value, 0) AS SIGNED) as peso_valor,
+            STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d')
         FROM $posts_table p
         $joins
+        INNER JOIN $postmeta_table m_exp ON (m_exp.post_id = p.ID AND m_exp.meta_key = 'fecha_de_expiracion') AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()
         LEFT JOIN $postmeta_table m_destacado ON (p.ID = m_destacado.post_id AND m_destacado.meta_key = 'destacado')
         LEFT JOIN $postmeta_table m_peso ON (p.ID = m_peso.post_id AND m_peso.meta_key = 'peso')
         WHERE $where
-        ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC
+        ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC
         LIMIT %d OFFSET %d
     ";
+
     $query = $wpdb->prepare($query, $per_page, $offset);
     $results = $wpdb->get_results($query);
 
@@ -337,7 +337,6 @@ function filtrar_y_paginar_empleos_callback() {
             $sf_fecha = get_field('fecha_de_expiracion', $sf_ID);
             $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
             $sf_ubicacion = get_field('distrito', $sf_ID);
-            $sf_permalink = get_permalink($sf_ID);
 
             $empleos[] = [
                 'id'           => $sf_ID,
@@ -345,7 +344,7 @@ function filtrar_y_paginar_empleos_callback() {
                 'fecha'        => $sf_fecha,
                 'empresa'      => $sf_empresa,
                 'ubicacion'    => $sf_ubicacion,
-                'url'          => get_permalink($row->ID),
+                'url'          => get_permalink($sf_ID),
                 'es_destacado' => (bool) $row->es_destacado,
                 'fecha_pub'    => human_time_diff(get_the_time('U', $sf_ID), current_time('timestamp'))
             ];
@@ -356,6 +355,6 @@ function filtrar_y_paginar_empleos_callback() {
         'empleos'      => $empleos,
         'total_pages'  => $total_pages,
         'current_page' => $paged,
-        "query"=>$query
+        "query"        => $query
     ]);
 }

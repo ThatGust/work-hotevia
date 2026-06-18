@@ -92,7 +92,7 @@
                     success: function(response) {
                         $mainSpinner.hide();
                         $listaEmpleos.css('opacity', '1');
-                        
+                        console.log(response);
                         if (response.success) {
                             renderListado(response.data.empleos);
                             renderPaginacion(response.data.total_pages, response.data.current_page);
@@ -101,7 +101,8 @@
                             
                         }
                     },
-                    error: function() {
+                    error: function(e) {
+                        console.log(e);
                         $mainSpinner.hide();
                         $listaEmpleos.css('opacity', '1');
                     }
@@ -121,17 +122,17 @@
                     if (empleo.es_destacado) {
                         itemHtml = `
                             <div class="card-destacado" style="margin-bottom: 20px;">
-                                <div class="card-destacado-header">
-                                    <span class="etiqueta-gold">⭐ Empleo destacado</span>
-                                    <span class="opciones-dots">&#8942;</span>
-                                </div>
-                                <h3 class="card-destacado-title">${empleo.titulo}</h3>
-                                <p class="card-destacado-empresa">${empleo.empresa || ''}</p>
-                                <p class="card-destacado-ubicacion">${empleo.ubicacion || ''}</p>
-                                <div class="card-destacado-footer">
-                                    <span class="card-destacado-tiempo">Hace ${empleo.fecha_pub || ''}</span>
-                                    <a href="${empleo.url}" class="btn-vista">Vista</a>
-                                </div>
+                                <a href="${empleo.url}">
+                                    <div class="card-destacado-header">
+                                        <span class="etiqueta-gold">⭐ Empleo destacado</span>
+                                    </div>
+                                    <h3 class="card-destacado-title">${empleo.titulo}</h3>
+                                    <p class="card-destacado-empresa"><strong>Empresa</strong>: ${empleo.empresa || ''}</p>
+                                    <p class="card-destacado-ubicacion"><strong>Ubicación</strong>: ${empleo.ubicacion || ''}, <strong>Expira</strong>: ${empleo.fecha || ''} </p>
+                                    <div class="card-destacado-footer">
+                                        <span class="card-destacado-tiempo">Hace ${empleo.fecha_pub || ''}</span><span class="btn-vista">Vista</span>
+                                    </div>
+                                </a>
                             </div>
                         `;
                     } else {
