@@ -92,7 +92,7 @@
                     success: function(response) {
                         $mainSpinner.hide();
                         $listaEmpleos.css('opacity', '1');
-                        console.log(response);
+                        //console.log(response);
                         if (response.success) {
                             renderListado(response.data.empleos);
                             renderPaginacion(response.data.total_pages, response.data.current_page);
@@ -242,7 +242,7 @@
                 }
 
                 $searchSpinner.show();
-
+                    //console.log("ajax_url", wp_ajax_obj.ajax_url);
                 debounceTimeout = setTimeout(function() {
                     $.ajax({
                         url: wp_ajax_obj.ajax_url,
