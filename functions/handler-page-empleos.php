@@ -30,21 +30,42 @@ add_action('wp_ajax_nopriv_filtrar_y_paginar_empleos', 'filtrar_y_paginar_empleo
 
 
 
-function arrayLikeSearch(array $cities, string $pattern): array{
+function arrayLikeSearch(array $cities, string $city_label): array{
     $regex = '/^' .
         str_replace(
             ['%', '_'],
             ['.*', '.'],
-            preg_quote($pattern, '/')
+            preg_quote($city_label, '/')
         ) .
         '$/iu';
 
     return array_keys(
         array_filter(
             $cities,
-            fn($cityLabel) => preg_match($regex, $cityLabel)
+            fn($city_code) => preg_match($regex, $city_code)
         )
     );
+}
+
+function codeSearch(array $cities, string $city_label): string{
+    $country_city_code = false;
+    foreach ($cities as $a_country_city_code => $label) {
+        if (
+            mb_strtolower($label, 'UTF-8') ===
+            mb_strtolower($city_label, 'UTF-8')
+        ) {
+            $country_city_code = $a_country_city_code;
+            break;
+        }
+    }
+
+    if ($country_city_code === false) {
+        $array = arrayLikeSearch($cities, '%'.$city_label.'%');
+        if (is_array($array) && count($array) > 0) {
+            return $array[0];
+        }
+    }
+    return $country_city_code;
 }
 
 
@@ -272,12 +293,7 @@ function filtrar_y_paginar_empleos_callback() {
                         endforeach;
                     endif;
                 endforeach;
-                $cities_result = arrayLikeSearch($ciudades, '%'.$value.'%');
-                $city_key_filter = false;
-                foreach($cities_result as $city_key){ 
-                    $city_key_filter = $city_key;
-                    break;
-                }
+                $city_key_filter = codeSearch($ciudades, $value);
                 $join_clauses[] = "INNER JOIN $postmeta_table m_{$join_counter} ON (p.ID = m_{$join_counter}.post_id AND m_{$join_counter}.meta_key = '$key')";
                 $where_clauses[] = $wpdb->prepare("m_{$join_counter}.meta_value = %s", $city_key_filter);
                 
@@ -355,6 +371,6 @@ function filtrar_y_paginar_empleos_callback() {
         'empleos'      => $empleos,
         'total_pages'  => $total_pages,
         'current_page' => $paged,
-        "query"        => $query
+        //"query"        => $query
     ]);
 }
