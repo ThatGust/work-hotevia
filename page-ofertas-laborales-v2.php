@@ -42,12 +42,15 @@
                             ?>
 
                             <div class="google-style-search-container">
-                                <div class="search-input-wrapper" id="searchWrapper">
-                                    <div id="searchTags" class="search-tags-container"></div>
-                                    <input type="text" id="autocompleteSearch" placeholder="Busca por empresa, ciudad, distrito o palabra..." autocomplete="off">                                    
-                                    <div id="searchSpinner" class="search-spinner" style="display: none;"></div>
-                                </div>
-                                <div id="autocompleteResults" class="autocomplete-suggestions-box" style="display:none;"></div>
+                                <form role="search" method="get" action="<?php echo esc_url($permalink_ofertas_laborales); ?>">
+                                    <div class="search-input-wrapper" id="searchWrapper">
+                                        <div id="searchTags" class="search-tags-container"></div>
+                                        <input type="text" name="s" id="autocompleteSearch" placeholder="Busca por empresa, ciudad, distrito o palabra..." autocomplete="off">                                    
+                                        <div id="searchSpinner" class="search-spinner" style="display: none;"></div>
+                                        <button type="submit" style="display:none;"></button>
+                                    </div>
+                                    <div id="autocompleteResults" class="autocomplete-suggestions-box" style="display:none;"></div>
+                                </form>
                             </div>
 
                             <div id="lista-empleos-container">

@@ -97,8 +97,7 @@
                             renderListado(response.data.empleos);
                             renderPaginacion(response.data.total_pages, response.data.current_page);
                             actualizarURL(response.data.current_page, filtrosParaEnviar);
-                            console.log(response.data.query);
-                            
+                            //console.log(response.data.query);
                         }
                     },
                     error: function(e) {
