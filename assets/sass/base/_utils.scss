@@ -96,80 +96,85 @@ img {
    box-shadow: inset 0px 0px 31px 5px rgba(0, 0, 0, 0.2);
 }
 
-.ciudad-destacados {
-   .card-destacado {
-      max-width: 410px;
-      width: 100%;
-      border: 2px solid #cce0f5;
-      border-radius: 8px;
-      padding: 18px 24px;
-      margin-bottom: 15px;
-      background: #ffffff;
-      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+.ciudad-destacados .card-destacado,
+.page-ofertas-laborales #lista-empleos .card-destacado {
+   max-width: 410px;
+   width: 100%;
+   border: 2px solid #cce0f5;
+   border-radius: 8px;
+   padding: 18px 24px;
+   margin-bottom: 15px;
+   background: #ffffff;
+   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 
-      &:hover {
-         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-         border-color: #a3cbf7;
+   a {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+   }
+
+   &:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-color: #a3cbf7;
+   }
+
+   .card-destacado-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+
+      .etiqueta-gold {
+         color: #d89f2a;
+         font-size: 0.85rem;
+         font-weight: 500;
       }
+   }
 
-      .card-destacado-header {
-         display: flex;
-         justify-content: space-between;
-         align-items: center;
-         margin-bottom: 8px;
+   .card-destacado-title {
+      margin: 0 0 6px 0;
+      font-size: 1.25rem;
+      color: #2c3e50;
+      font-weight: 700;
+   }
 
-         .etiqueta-gold {
-            color: #d89f2a;
-            font-size: 0.85rem;
-            font-weight: 500;
-         }
-      }
+   .card-destacado-empresa,
+   .card-destacado-ubicacion {
+      margin: 0 0 6px 0;
+      color: #555;
+      font-size: 0.95rem;
+   }
 
-      .card-destacado-title {
-         margin: 0 0 6px 0;
-         font-size: 1.25rem;
-         color: #2c3e50;
-         font-weight: 700;
-      }
+   .card-destacado-ubicacion {
+      color: #6c757d;
+      margin-bottom: 12px;
+   }
 
-      .card-destacado-empresa,
-      .card-destacado-ubicacion {
-         margin: 0 0 6px 0;
-         color: #555;
-         font-size: 0.95rem;
-      }
+   .card-destacado-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
 
-      .card-destacado-ubicacion {
+      .card-destacado-tiempo {
          color: #6c757d;
-         margin-bottom: 12px;
+         font-size: 0.85rem;
       }
 
-      .card-destacado-footer {
-         display: flex;
-         justify-content: space-between;
-         align-items: center;
-         margin-top: 15px;
+      .btn-vista {
+         color: #6c757d;
+         text-decoration: none;
+         font-weight: 500;
+         font-size: 0.85rem;
+         border: 1px solid #ced4da;
+         padding: 5px 18px;
+         border-radius: 20px;
+         transition: all 0.2s ease;
 
-         .card-destacado-tiempo {
-            color: #6c757d;
-            font-size: 0.85rem;
-         }
-
-         .btn-vista {
-            color: #6c757d;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.85rem;
-            border: 1px solid #ced4da;
-            padding: 5px 18px;
-            border-radius: 20px;
-            transition: all 0.2s ease;
-
-            &:hover {
-               background-color: #f8f9fa;
-               color: #343a40;
-               border-color: #adb5bd;
-            }
+         &:hover {
+            background-color: #f8f9fa;
+            color: #343a40;
+            border-color: #adb5bd;
          }
       }
    }

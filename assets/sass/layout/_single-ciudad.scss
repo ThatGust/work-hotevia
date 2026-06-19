@@ -1,8 +1,6 @@
-// _single-ciudad.scss
 
 $red : #ff0000;
 $size_text_desktop: 16px; 
-// Nota: Asegúrate de tener la variable $resize-min definida globalmente, si no cámbiala por ej. 768px
 
 .page-single-ciudad {
    color: #757575;
@@ -85,10 +83,6 @@ $size_text_desktop: 16px;
       }
    }
 
-   // ---------------------------------------------------------
-   // ESTILOS DEL BUSCADOR
-   // Inspirados en el buscador v2 de ofertas
-   // ---------------------------------------------------------
    .search-bar {
       display: block;
       margin-top: 30px;
@@ -188,15 +182,11 @@ $size_text_desktop: 16px;
       }
    }
 
-   // Ajuste para el texto que va debajo
    .contador-ofertas {
+      padding: 0 25px;
       margin-bottom: 30px;
    }
 
-   // ---------------------------------------------------------
-   // ESTILOS DE LA PAGINACIÓN
-   // Extraídos exactamente igual 
-   // ---------------------------------------------------------
    .paginate-links {
       font-size: 18px;
       color: #757575;
