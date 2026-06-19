@@ -124,7 +124,7 @@
                             <div class="card-destacado" style="margin-bottom: 20px;">
                                 <a href="${empleo.url}">
                                     <div class="card-destacado-header">
-                                        <span class="etiqueta-gold">⭐ Empleo destacado</span>
+                                        <span class="etiqueta-gold">Empleo destacado</span>
                                     </div>
                                     <h3 class="card-destacado-title">${empleo.titulo}</h3>
                                     <p class="card-destacado-empresa"><strong>Empresa</strong>: ${empleo.empresa || ''}</p>
