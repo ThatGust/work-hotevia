@@ -21,12 +21,12 @@ function dinamizar_select_puestos( $field ) {
 }
 
 add_filter('acf/load_field/name=ciudad_prioritaria', 'cargar_ciudades_bd_en_repetidor');
+add_filter('acf/load_field/key=field_6a44_ciudades_prioritarias', 'cargar_ciudades_bd_en_repetidor');
 
 function cargar_ciudades_bd_en_repetidor( $field ) {
     $field['choices'] = array();
     global $wpdb;
     
-    // 1. Consultamos a la BD solo las ciudades que tienen empleos publicados
     $ciudades_guardadas = $wpdb->get_col("
         SELECT DISTINCT meta_value 
         FROM {$wpdb->postmeta} pm
@@ -40,7 +40,6 @@ function cargar_ciudades_bd_en_repetidor( $field ) {
     
     if( empty($ciudades_guardadas) ) return $field;
 
-    // 2. Cargamos el diccionario de traducciones de códigos a nombres reales
     $path_states = get_template_directory() . "/functions/php-countries/states.php";
     $nombres_reales = array();
     
@@ -53,13 +52,10 @@ function cargar_ciudades_bd_en_repetidor( $field ) {
         }
     }
     
-    // 3. Llenamos las opciones del select en ACF
     foreach( $ciudades_guardadas as $codigo_ciudad ) {
         if ( isset($nombres_reales[$codigo_ciudad]) ) {
-            // Muestra el nombre bonito, pero guarda el código (ej: PE@LIM)
             $field['choices'][ $codigo_ciudad ] = $nombres_reales[$codigo_ciudad]; 
         } else {
-            // Fallback en caso de que el código no esté en el diccionario
             $field['choices'][ $codigo_ciudad ] = $codigo_ciudad;
         }
     }
@@ -67,7 +63,16 @@ function cargar_ciudades_bd_en_repetidor( $field ) {
     return $field;
 }
 
-add_filter('acf/prepare_field/name=ciudad_prioritaria', function($field) {
-    $field['allow_custom'] = 1; 
+function preparar_campo_ciudad_prioritaria($field) {
+    $field['conditional_logic'] = 0;
+    $field['allow_custom'] = 1;
+
+    if (empty($field['choices']) || !is_array($field['choices'])) {
+        $field = cargar_ciudades_bd_en_repetidor($field);
+    }
+
     return $field;
-});
+}
+
+add_filter('acf/prepare_field/name=ciudad_prioritaria', 'preparar_campo_ciudad_prioritaria');
+add_filter('acf/prepare_field/key=field_6a44_ciudades_prioritarias', 'preparar_campo_ciudad_prioritaria');
