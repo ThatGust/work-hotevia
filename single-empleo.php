@@ -215,7 +215,24 @@
    
    // SOLUCIÓN: Extraer título si la ciudad es un objeto Post Object de ACF
    $ciudad_obj = get_field("ciudad", $post_id);
-   $nombre_ciudad = is_object($ciudad_obj) ? $ciudad_obj->post_title : (is_string($ciudad_obj) ? $ciudad_obj : '');
+   //$nombre_ciudad = is_object($ciudad_obj) ? $ciudad_obj->post_title : (is_string($ciudad_obj) ? $ciudad_obj : '');
+   $nombre_ciudad = false;
+   $nombre_ciudad_codigo = get_field("ciudad", $post_id);
+   $path_json_countries_states = get_template_directory() . "/functions/php-countries/states.php";
+   $array_countries_states = include $path_json_countries_states;
+   $ciudades = array();
+   foreach ($array_countries_states as $key_country => $array_states):
+      if($key_country == "PE"): //only peru
+         if (strpos($nombre_ciudad_codigo, '@') !== false) {
+            $parts = explode("@", $nombre_ciudad_codigo);
+            if (isset($array_states[$parts[1]])) {
+               $nombre_ciudad = $array_states[$parts[1]];
+               break;
+            }
+         }
+      endif;
+   endforeach;
+
    
    $direccion = get_field("direccion", $post_id);
 
