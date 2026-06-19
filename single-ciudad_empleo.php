@@ -155,6 +155,7 @@ get_header();
                             <?php endif; ?>
 
                             <?php if ($activar_bloque_2_c): ?>
+                                <?php if(false): ?>
                                 <div class="ciudad-bloque search-bar">
                                     <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
                                         <div class="search-bar-inside">
@@ -168,6 +169,44 @@ get_header();
                                         </div>
                                     </form>
                                 </div>
+                                <?php endif; ?>
+                                    <div class="ciudad-bloque search-bar">
+                                        <form role="search" method="get" action="<?php echo esc_url(home_url('/ofertas-empleos/')); ?>" id="form-busqueda-ciudad">
+                                            <div class="search-bar-inside">
+                                                <input 
+                                                    type="text" 
+                                                    class="search-input" 
+                                                    placeholder="Buscar puesto en <?php echo esc_attr($nombre_visual); ?>..."
+                                                    id="termino-busqueda"
+                                                />
+                                                <input type="hidden" name="filtros" id="filtros-json" />
+                                                <button type="submit" class="search-button">
+                                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <script>
+                                        document.getElementById('form-busqueda-ciudad').addEventListener('submit', function(e) {
+                                            e.preventDefault();
+                                            const ciudad  = "<?php echo esc_js($nombre_visual); ?>";
+                                            const termino = document.getElementById('termino-busqueda').value.trim();
+
+                                            const filtros = [
+                                                { key: "ciudad", value: ciudad, tipoLabel: "Ciudad" }
+                                            ];
+
+                                            if (termino !== '') {
+                                                filtros.push({ key: "palabra_clave", value: termino, tipoLabel: "Buscar término" });
+                                            }
+
+                                            document.getElementById('filtros-json').value = JSON.stringify(filtros);
+                                            this.submit();
+                                        });
+                                    </script>
                                 <?php
                                 if (!empty($texto_contador)) {
                                     $texto_mostrar = str_replace('{count}', '<strong>' . $total_rows . '</strong>', $texto_contador);
