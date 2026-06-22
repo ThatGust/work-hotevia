@@ -11,11 +11,14 @@
     $ofertas_num = get_field("ofertas_num", $page_id);
     $banners_de_columna = get_field("banners_de_columna", "option");
     $banners_de_contenido = get_field("banners_de_contenido", "option");
-    $empresas_destacadas = get_field('empresas_seleccionadas', 'option');
-    $ciudades_destacadas = get_field('ciudades_seleccionadas_distritos', 'option');
+    $empresas_destacadas = get_field('empresas_seleccionadas', 'option'); //grilla
+    $ciudades_destacadas = get_field('ciudades_seleccionadas_distritos', 'option'); //grilla
     $mostrar_banner_header = get_field('mostrar_banner_header', 'option');
     $contenido_banner_top = get_field('contenido_banner_top', 'option');
     $contenido_banner_bottom = get_field('contenido_banner_bottom', 'option');
+
+
+
 
     $base_url = get_bloginfo("url");
     $title_negocio = get_the_title($page_id);
@@ -42,6 +45,15 @@
                                 <li><span><?php echo $title_negocio; ?></span></li>
                             </ol>
 
+                             <?php
+                                if (!empty($banners_de_contenido)) {
+                                    $first_banner_html = $banners_de_contenido[0]["html"] ?? '';
+                                    if (!empty($first_banner_html)) {
+                                        echo '<div class="ad-long">' . $first_banner_html . '</div>';
+                                    }
+                                }
+                            ?>
+
                             <h2 class="job-title">
                                 Ofertas de empleo hoteles y restaurantes Peru
                             </h2>
@@ -64,7 +76,9 @@
                                         <div class="logo-grid">
                                             <?php 
                                             if (!empty($empresas_destacadas)) :
-                                                foreach ($empresas_destacadas as $empresa_obj) : 
+                                                foreach ($empresas_destacadas as $row) : 
+                                                    
+                                                    $empresa_obj = $row["empresa"];
                                                     $empresa_id = $empresa_obj->ID;
                                                     
                                                     $permalink = get_permalink($empresa_id);
@@ -105,43 +119,44 @@
                                     <div class="container">
                                         <div class="city-districts-grid">
                                             <?php if (!empty($ciudades_destacadas) && is_array($ciudades_destacadas)): ?>
-                                                <?php foreach ($ciudades_destacadas as $ciudad_obj): ?>
+                                                <?php foreach ($ciudades_destacadas as $row): ?>
                                                     <?php
-                                                    $ciudad_id = is_object($ciudad_obj) ? $ciudad_obj->ID : intval($ciudad_obj);
-                                                    if (!$ciudad_id) {
-                                                        continue;
-                                                    }
-
-                                                    $ciudad_title = get_the_title($ciudad_id);
-                                                    $ciudad_permalink = get_permalink($ciudad_id);
-                                                    $ciudad_raw = get_field('nombre_ciudad', $ciudad_id, false);
-
-                                                    if (empty($ciudad_raw)) {
-                                                        continue;
-                                                    }
-
-                                                    $ciudad_visual = $ciudad_title;
-                                                    if (strpos($ciudad_raw, '@') !== false) {
-                                                        $parts = explode('@', $ciudad_raw);
-                                                        if (isset($array_states[$parts[0]][$parts[1]])) {
-                                                            $ciudad_visual = $array_states[$parts[0]][$parts[1]];
+                                                        $ciudad_obj = $row["ciudad"];
+                                                        $ciudad_id = is_object($ciudad_obj) ? $ciudad_obj->ID : intval($ciudad_obj);
+                                                        if (!$ciudad_id) {
+                                                            continue;
                                                         }
-                                                    }
 
-                                                    $distritos = $wpdb->get_col($wpdb->prepare(
-                                                        "SELECT DISTINCT m_dist.meta_value
-                                                        FROM {$wpdb->posts} p
-                                                        INNER JOIN {$wpdb->postmeta} m_city ON (p.ID = m_city.post_id AND m_city.meta_key = 'ciudad')
-                                                        INNER JOIN {$wpdb->postmeta} m_dist ON (p.ID = m_dist.post_id AND m_dist.meta_key = 'distrito')
-                                                        INNER JOIN {$wpdb->postmeta} m_exp ON (p.ID = m_exp.post_id AND m_exp.meta_key = 'fecha_de_expiracion')
-                                                        WHERE p.post_type = 'empleo'
-                                                        AND p.post_status = 'publish'
-                                                        AND m_city.meta_value = %s
-                                                        AND m_dist.meta_value <> ''
-                                                        AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()
-                                                        ORDER BY m_dist.meta_value ASC",
-                                                        $ciudad_raw
-                                                    ));
+                                                        $ciudad_title = get_the_title($ciudad_id);
+                                                        $ciudad_permalink = get_permalink($ciudad_id);
+                                                        $ciudad_raw = get_field('nombre_ciudad', $ciudad_id, false);
+
+                                                        if (empty($ciudad_raw)) {
+                                                            continue;
+                                                        }
+
+                                                        $ciudad_visual = $ciudad_title;
+                                                        if (strpos($ciudad_raw, '@') !== false) {
+                                                            $parts = explode('@', $ciudad_raw);
+                                                            if (isset($array_states[$parts[0]][$parts[1]])) {
+                                                                $ciudad_visual = $array_states[$parts[0]][$parts[1]];
+                                                            }
+                                                        }
+
+                                                        $distritos = $wpdb->get_col($wpdb->prepare(
+                                                            "SELECT DISTINCT m_dist.meta_value
+                                                            FROM {$wpdb->posts} p
+                                                            INNER JOIN {$wpdb->postmeta} m_city ON (p.ID = m_city.post_id AND m_city.meta_key = 'ciudad')
+                                                            INNER JOIN {$wpdb->postmeta} m_dist ON (p.ID = m_dist.post_id AND m_dist.meta_key = 'distrito')
+                                                            INNER JOIN {$wpdb->postmeta} m_exp ON (p.ID = m_exp.post_id AND m_exp.meta_key = 'fecha_de_expiracion')
+                                                            WHERE p.post_type = 'empleo'
+                                                            AND p.post_status = 'publish'
+                                                            AND m_city.meta_value = %s
+                                                            AND m_dist.meta_value <> ''
+                                                            AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()
+                                                            ORDER BY m_dist.meta_value ASC",
+                                                            $ciudad_raw
+                                                        ));
                                                     ?>
                                                     <div class="city-column">
                                                         <a href="<?php echo esc_url($ciudad_permalink); ?>" class="city-column-title"><?php echo esc_html('Empleos en ' . $ciudad_visual); ?></a>
