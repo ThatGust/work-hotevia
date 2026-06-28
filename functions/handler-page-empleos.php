@@ -282,7 +282,6 @@ function filtrar_y_paginar_empleos_callback() {
                     $value, $value
                 );
             } elseif ($key === 'ciudad') {
-                // LOAD DATABASE CITIES
                 $path_json_countries_states = get_template_directory() . "/functions/php-countries/states.php";
                 $array_countries_states = include $path_json_countries_states;
                 $ciudades = array();
@@ -298,7 +297,6 @@ function filtrar_y_paginar_empleos_callback() {
                 $where_clauses[] = $wpdb->prepare("m_{$join_counter}.meta_value = %s", $city_key_filter);
                 
             } elseif ($key === 'puesto') {
-                // NUEVO MANEJO PARA LA TAXONOMÍA PUESTO
                 $join_clauses[] = "INNER JOIN $term_relationships_table tr_{$join_counter} ON (p.ID = tr_{$join_counter}.object_id)";
                 $join_clauses[] = "INNER JOIN $term_taxonomy_table tt_{$join_counter} ON (tr_{$join_counter}.term_taxonomy_id = tt_{$join_counter}.term_taxonomy_id AND tt_{$join_counter}.taxonomy = 'puesto')";
                 $join_clauses[] = "INNER JOIN $terms_table t_{$join_counter} ON (tt_{$join_counter}.term_id = t_{$join_counter}.term_id)";
@@ -320,28 +318,20 @@ function filtrar_y_paginar_empleos_callback() {
 
     $where = implode(' AND ', $where_clauses);
 
-    // CORRECCIÓN: los destacados solo deben tener tratamiento especial (tarjeta +
-    // orden prioritario) cuando hay una búsqueda/filtro activo. En la carga normal
-    // de la página (sin filtros) deben listarse como cualquier otro empleo, en su
-    // posición normal, sin la tarjeta "Empleo destacado".
     $hay_busqueda = !empty($filtros) && is_array($filtros);
 
-    // Universo total de resultados
     $total_query = "SELECT COUNT(DISTINCT p.ID) FROM $posts_table p $joins WHERE $where";
     $total_posts = $wpdb->get_var($total_query);
     $total_pages = ceil($total_posts / $per_page);
 
     if ($hay_busqueda) {
-        // Con búsqueda activa: destacados primero (por peso), luego el resto.
         $select_destacado = "CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado";
         $order_by = "ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
     } else {
-        // Sin búsqueda (página regular): nunca se marcan ni se priorizan destacados.
         $select_destacado = "0 as es_destacado";
         $order_by = "ORDER BY p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
     }
 
-    // Consulta paginada ordenada por Destacado y Peso valorado
     $query = "
         SELECT DISTINCT
             p.ID, p.post_title as titulo_empleo,
