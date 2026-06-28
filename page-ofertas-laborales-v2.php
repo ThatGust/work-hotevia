@@ -23,11 +23,6 @@
     $base_url = get_bloginfo("url");
     $title_negocio = get_the_title($page_id);
     $permalink_ofertas_laborales = home_url('/ofertas-empleos/');
-
-    $path_states = get_template_directory() . "/functions/php-countries/states.php";
-    $array_states = file_exists($path_states) ? include $path_states : array();
-
-    global $wpdb;
 ?>
 
 <?php get_header(); ?>
@@ -127,55 +122,18 @@
                                                             continue;
                                                         }
 
-                                                        $ciudad_title = get_the_title($ciudad_id);
+                                                        $ciudad_title     = get_the_title($ciudad_id);
                                                         $ciudad_permalink = get_permalink($ciudad_id);
-                                                        $ciudad_raw = get_field('nombre_ciudad', $ciudad_id, false);
 
-                                                        if (empty($ciudad_raw)) {
-                                                            continue;
-                                                        }
-
-                                                        $ciudad_visual = $ciudad_title;
-                                                        if (strpos($ciudad_raw, '@') !== false) {
-                                                            $parts = explode('@', $ciudad_raw);
-                                                            if (isset($array_states[$parts[0]][$parts[1]])) {
-                                                                $ciudad_visual = $array_states[$parts[0]][$parts[1]];
-                                                            }
-                                                        }
-
-                                                        $distritos = $wpdb->get_col($wpdb->prepare(
-                                                            "SELECT DISTINCT m_dist.meta_value
-                                                            FROM {$wpdb->posts} p
-                                                            INNER JOIN {$wpdb->postmeta} m_city ON (p.ID = m_city.post_id AND m_city.meta_key = 'ciudad')
-                                                            INNER JOIN {$wpdb->postmeta} m_dist ON (p.ID = m_dist.post_id AND m_dist.meta_key = 'distrito')
-                                                            INNER JOIN {$wpdb->postmeta} m_exp ON (p.ID = m_exp.post_id AND m_exp.meta_key = 'fecha_de_expiracion')
-                                                            WHERE p.post_type = 'empleo'
-                                                            AND p.post_status = 'publish'
-                                                            AND m_city.meta_value = %s
-                                                            AND m_dist.meta_value <> ''
-                                                            AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()
-                                                            ORDER BY m_dist.meta_value ASC",
-                                                            $ciudad_raw
-                                                        ));
+                                                        $enlaces_manuales = !empty($row['enlaces']) ? $row['enlaces'] : array();
                                                     ?>
                                                     <div class="city-column">
-                                                        <a href="<?php echo esc_url($ciudad_permalink); ?>" class="city-column-title"><?php echo esc_html('Empleos en ' . $ciudad_visual); ?></a>
-                                                        <?php if (!empty($distritos)): ?>
+                                                        <a href="<?php echo esc_url($ciudad_permalink); ?>" class="city-column-title"><?php echo esc_html('Empleos en ' . $ciudad_title); ?></a>
+                                                        <?php if (!empty($enlaces_manuales)): ?>
                                                             <ul class="district-list">
-                                                                <?php foreach ($distritos as $distrito): ?>
-                                                                    <?php
-                                                                    $filtros = array(
-                                                                        array('key' => 'ciudad', 'value' => $ciudad_visual, 'tipoLabel' => 'Ciudad'),
-                                                                        array('key' => 'distrito', 'value' => $distrito, 'tipoLabel' => 'Distrito'),
-                                                                    );
-                                                                    $url_distrito = add_query_arg(
-                                                                        'filtros',
-                                                                        rawurlencode(wp_json_encode($filtros)),
-                                                                        $permalink_ofertas_laborales
-                                                                    );
-                                                                    ?>
+                                                                <?php foreach ($enlaces_manuales as $enlace): ?>
                                                                     <li>
-                                                                        <a href="<?php echo esc_url($url_distrito); ?>"><?php echo esc_html('Empleos en ' . $distrito); ?></a>
+                                                                        <a href="<?php echo esc_url($enlace['url']); ?>"><?php echo esc_html($enlace['nombre']); ?></a>
                                                                     </li>
                                                                 <?php endforeach; ?>
                                                             </ul>
