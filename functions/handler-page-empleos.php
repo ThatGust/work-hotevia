@@ -320,16 +320,32 @@ function filtrar_y_paginar_empleos_callback() {
 
     $where = implode(' AND ', $where_clauses);
 
+    // CORRECCIÓN: los destacados solo deben tener tratamiento especial (tarjeta +
+    // orden prioritario) cuando hay una búsqueda/filtro activo. En la carga normal
+    // de la página (sin filtros) deben listarse como cualquier otro empleo, en su
+    // posición normal, sin la tarjeta "Empleo destacado".
+    $hay_busqueda = !empty($filtros) && is_array($filtros);
+
     // Universo total de resultados
     $total_query = "SELECT COUNT(DISTINCT p.ID) FROM $posts_table p $joins WHERE $where";
     $total_posts = $wpdb->get_var($total_query);
     $total_pages = ceil($total_posts / $per_page);
 
+    if ($hay_busqueda) {
+        // Con búsqueda activa: destacados primero (por peso), luego el resto.
+        $select_destacado = "CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado";
+        $order_by = "ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
+    } else {
+        // Sin búsqueda (página regular): nunca se marcan ni se priorizan destacados.
+        $select_destacado = "0 as es_destacado";
+        $order_by = "ORDER BY p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
+    }
+
     // Consulta paginada ordenada por Destacado y Peso valorado
     $query = "
         SELECT DISTINCT
             p.ID, p.post_title as titulo_empleo,
-            CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado,
+            {$select_destacado},
             CAST(COALESCE(m_peso.meta_value, 0) AS SIGNED) as peso_valor,
             STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d')
         FROM $posts_table p
@@ -338,7 +354,7 @@ function filtrar_y_paginar_empleos_callback() {
         LEFT JOIN $postmeta_table m_destacado ON (p.ID = m_destacado.post_id AND m_destacado.meta_key = 'destacado')
         LEFT JOIN $postmeta_table m_peso ON (p.ID = m_peso.post_id AND m_peso.meta_key = 'peso')
         WHERE $where
-        ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC
+        {$order_by}
         LIMIT %d OFFSET %d
     ";
 
