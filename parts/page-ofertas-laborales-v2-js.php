@@ -23,10 +23,10 @@
             let debounceTimeout = null;
 
             function hideSections(){
-                $(".page-ofertas-laborales .section-3").hide(); // slider logos
-                $(".page-ofertas-laborales .section-4").hide(); // banner top
-                $(".page-ofertas-laborales .section-5").hide(); // links buttons
-                $(".page-ofertas-laborales .section-6").hide(); // banner bottom
+                //$(".page-ofertas-laborales .section-3").hide(); // slider logos
+                //$(".page-ofertas-laborales .section-4").hide(); // banner top
+                //$(".page-ofertas-laborales .section-5").hide(); // links buttons
+                //$(".page-ofertas-laborales .section-6").hide(); // banner bottom
                 //$(".page-ofertas-laborales .section-7").hide(); // container empleos 
             }
 
