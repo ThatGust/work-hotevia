@@ -1,9 +1,11 @@
 <?php
    // 7devlab
-   wp_enqueue_style( 'custom-style', get_template_directory_uri() . '/css/styles.css', 10 );
-   wp_enqueue_script( 'custom-scripts', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.0.0', true );
+   //wp_enqueue_style('custom-style', get_template_directory_uri().'/css/styles.css', 10 );
+   wp_enqueue_style('custom-style', get_template_directory_uri().'/css/styles.css', array(), filemtime(get_template_directory().'/css/styles.css'));
+   wp_enqueue_script('custom-scripts', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.0.0', true );
 
    
+
    function get_user_role() {
       global $current_user;  
       $user_roles = $current_user->roles;
