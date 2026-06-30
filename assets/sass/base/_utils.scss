@@ -177,15 +177,12 @@ img {
          }
       }
    }
-}
-
-.page-single-empresa.page-single-ciudad .ciudad-destacados.job-offers .card-destacado {
-   width: 100% !important;
-   max-width: 390px !important;
-}
-
-@media only screen and (max-width: $resize-min) {
-   .page-single-empresa.page-single-ciudad .ciudad-destacados.job-offers .card-destacado {
-      max-width: 100% !important;
+   .ciudad-destacados.job-offers .card-destacado {
+      width: 100% !important;
+      // max-width: 390px !important;
+      @media only screen and (max-width: $resize-min) {
+         max-width: 100% !important;
+      }
    }
 }
+

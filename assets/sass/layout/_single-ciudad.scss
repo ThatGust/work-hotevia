@@ -86,7 +86,7 @@ $size_text_desktop: 16px;
    .search-bar {
       display: block;
       margin-top: 30px;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
       max-width: 757px;
       width: 100%;
       box-sizing: border-box;
@@ -103,7 +103,8 @@ $size_text_desktop: 16px;
          min-height: 50px;
          padding: 6px 14px 6px 15px;
          background: #fff;
-         border: 1px solid #dfe1e5;
+         //border: 1px solid #dfe1e5;
+         border: 2px solid #cce0f5;
          border-radius: 24px;
          position: relative;
          box-sizing: border-box;

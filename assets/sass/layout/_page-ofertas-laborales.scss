@@ -800,4 +800,161 @@ $red : #ff0000;
    }
  }
 
+
+   /* New */
+
+   .google-style-search-container {
+      width: 100%;
+      position: relative;
+   }
+   .search-input-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      border: 2px solid #cce0f5;
+      border-radius: 24px;
+      padding: 6px 45px 6px 15px;
+      background: #fff;
+      position: relative;
+      
+   }
+   .search-input-wrapper:focus-within {
+      //box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+      //border-color: transparent;
+      box-shadow: 0 1px 6px rgba(102, 153, 204, 0.45);
+   }
+   .search-tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+   }
+   .search-tag {
+      background-color: #f1f3f4;
+      border: 1px solid #dadce0;
+      border-radius: 16px;
+      padding: 4px 12px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+   }
+   .search-tag .tag-category {
+      color: #5f6368;
+      font-weight: bold;
+   }
+   .search-tag .tag-value {
+      color: #1a73e8;
+      font-weight: 500;
+   }
+   .search-tag .remove-tag {
+      cursor: pointer;
+      color: #70757a;
+      font-weight: bold;
+      margin-left: 4px;
+   }
+   .search-tag .remove-tag:hover { color: #d93025; }
+
+   #autocompleteSearch {
+      border: none;
+      outline: none;
+      flex-grow: 1;
+      padding: 8px 5px;
+      font-size: 16px;
+      min-width: 120px;
+      margin: 0;
+   }
+
+   /* CARGADORES (SPINNERS CSS) */
+   .search-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #1a73e8;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      position: absolute;
+      right: 15px;
+   }
+   .main-spinner-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 30px 0;
+   }
+   .loader-wheel {
+      width: 35px;
+      height: 35px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #1a73e8;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+   }
+   @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+   }
+
+   /* DROPDOWN DE SUGERENCIAS COINCIDENTES */
+   .autocomplete-suggestions-box {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #dfe1e5;
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 6px rgba(32,33,36,0.28);
+      z-index: 999;
+      max-height: 320px;
+      overflow-y: auto;
+   }
+   .suggestion-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f3f4;
+   }
+   .suggestion-item:hover { background-color: #f8f9fa; }
+   .suggestion-label { font-size: 15px; color: #202124; font-weight: 500; }
+
+   .suggestion-category-badge {
+      font-size: 11px;
+      background-color: #e8f0fe;
+      color: #1a73e8;
+      padding: 3px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+   }
+
+   /* ESTILO OPCIÓN GLOBAL DE PALABRA CLAVE */
+   .suggestion-item.global-keyword-sug {
+      background-color: #fbfdff;
+      border-bottom: 2px solid #e8f0fe;
+   }
+   .suggestion-item.global-keyword-sug .suggestion-label {
+      color: #1a73e8;
+      font-weight: bold;
+   }
+   .suggestion-item.global-keyword-sug .suggestion-category-badge {
+      background-color: #1a73e8;
+      color: #fff;
+   }
+
+   /* MAQUETACIÓN RESULTADOS PRINCIPALES */
+   #lista-empleos-container {  }
+   .empleo-item-lista { padding: 15px 0; border-bottom: 1px solid #e0e0e0; }
+   .empleo-item-lista h3 { margin: 0; font-size: 18px; }
+   .empleo-item-lista h3 a { color: #1a0dab; text-decoration: none; }
+   .empleo-item-lista h3 a:hover { text-decoration: underline; }
+
+   /* CONTROLES DE CAMBIO DE PÁGINA */
+   .page-btn { background: #fff; border: 1px solid #dadce0; border-radius: 4px; padding: 6px 12px; cursor: pointer; }
+   .page-btn:hover { background: #f8f9fa; }
+   .page-btn.active { background: #1a73e8; color: #fff; border-color: #1a73e8; font-weight: bold; cursor: default; }
+   .no-results { text-align: center; color: #70757a; padding-top: 15px; }
+
 }

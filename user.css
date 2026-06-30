@@ -1,14 +1,3 @@
-/* Ciudad empleo featured cards override */
-.page-single-empresa .ciudad-destacados .card-destacado {
-	width: 100% !important;
-	max-width: 650px !important;
-	border: 2px solid #cce0f5 !important;
-	box-sizing: border-box !important;
-}
-
-.page-single-empresa .ciudad-destacados .card-destacado:hover {
-	border-color: #a3cbf7 !important;
-}
 /**
  * user.css
  *
