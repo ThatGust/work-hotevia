@@ -246,7 +246,7 @@ get_header();
                                                 $sf_permalink = get_permalink($sf_ID);
                                                 ?>
                                                 
-                                                <div class="wrap-item">
+                                                <div class="wrap-item post-<?php echo $sf_ID; ?>">
                                                     <a href="<?php echo esc_url($sf_permalink); ?>" class="job-item">
                                                         <span class="icon"><?php echo $svg_icon; ?></span>
 

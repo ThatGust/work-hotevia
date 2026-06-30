@@ -237,7 +237,7 @@ get_header();
                                             $sf_data = obtener_datos_item_empleo_ciudad($o_row->ID);
                                             ?>
                                             
-                                            <div class="wrap-item">
+                                            <div class="wrap-item post-<?php echo $o_row->ID; ?>">
                                                 <a href="<?php echo esc_url($sf_data['permalink']); ?>" class="job-item">
                                                     <span class="icon"><?php echo $svg_icon; ?></span>
 

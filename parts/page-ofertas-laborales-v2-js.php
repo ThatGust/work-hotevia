@@ -105,7 +105,7 @@
                             renderPaginacion(response.data.total_pages, response.data.current_page);
                             actualizarURL(response.data.current_page, filtrosParaEnviar);
                             hideSections();
-                            //console.log(response.data.query);
+                            //console.log(response.data.query);//222
                         }
                     },
                     error: function(e) {
@@ -128,7 +128,7 @@
 
                     if (empleo.es_destacado) {
                         itemHtml = `
-                            <div class="card-destacado" style="margin-bottom: 20px;">
+                            <div class="card-destacado post-${empleo.id}" style="margin-bottom: 20px;">
                                 <a href="${empleo.url}">
                                     <div class="card-destacado-header">
                                         <span class="etiqueta-gold">Empleo destacado</span>
@@ -144,7 +144,7 @@
                         `;
                     } else {
                         itemHtml = `
-                            <div class="wrap-item">
+                            <div class="wrap-item post-${empleo.id}">
                                 <a href="${empleo.url}" class="job-item">
                                     <span class="icon"><?php echo $svg_icon; ?></span>
 

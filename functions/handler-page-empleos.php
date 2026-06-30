@@ -328,7 +328,8 @@ function filtrar_y_paginar_empleos_callback() {
         $select_destacado = "CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado";
         $order_by = "ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
     } else {
-        $select_destacado = "0 as es_destacado";
+        //$select_destacado = "0 as es_destacado";
+        $select_destacado = "CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado";
         $order_by = "ORDER BY p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
     }
 
@@ -377,6 +378,6 @@ function filtrar_y_paginar_empleos_callback() {
         'empleos'      => $empleos,
         'total_pages'  => $total_pages,
         'current_page' => $paged,
-        //"query"        => $query
+        //"query"        => $query //222
     ]);
 }
