@@ -1,8 +1,8 @@
 <?php
    if(function_exists('acf_add_options_page')) {
       acf_add_options_page(array(
-         'page_title' 	=> 'Opciones de empleos',
-         'menu_title'	=> 'Opciones de empleos',
+         'page_title' 	=> 'Opciones Globales',
+         'menu_title'	=> 'Opciones Globales',
          'menu_slug' 	=> 'opciones-ofertas',
          'redirect'		=> false,
          //'capability'=>'edit_posts',
