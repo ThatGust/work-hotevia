@@ -714,7 +714,7 @@ $red : #ff0000;
             min-height: 90px;
             background: #ffffff;
             
-            border: 1px solid #e2e8f0; 
+            border: 2px solid #e2e8f0; 
             border-radius: 6px;
             
             padding: 15px;
@@ -722,8 +722,9 @@ $red : #ff0000;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
             &:hover {
-               border-color: #c83239; 
-               box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+               //border-color: #c83239; 
+               //box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+               border: 2px solid #cce0f5;
             }
 
             img {

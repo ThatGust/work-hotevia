@@ -4,6 +4,34 @@
     $banners_de_contenido = get_field("banners_de_contenido", "option");
 ?>
 <script>
+    jQuery(document).ready(function($) {
+        
+        if (typeof Swiper !== 'undefined') {
+            const logoSlider = new Swiper('.logo-grid.swiper', {
+                sliceVisibility: true,
+                loop: true,     
+                grabCursor: true,
+                spaceBetween: 20,
+                breakpoints: {
+                    0: {
+                        slidesPerView: 1, 
+                        spaceBetween: 10
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 15
+                    },
+                    1024: {
+                        slidesPerView: 3
+                    }
+                }
+            });
+        } else {
+            console.warn('SwiperJS script is not loaded yet. Check your WordPress enqueues.');
+        }
+    });
+</script>
+<script>
     const banners = <?php echo json_encode($banners_de_contenido); ?>;
     /**
      * LÓGICA DE CONTROL DE INTERFAZ: script.js (COMPLETO)

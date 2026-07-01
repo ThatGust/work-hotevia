@@ -1,11 +1,51 @@
 <?php
    // 7devlab
-   //wp_enqueue_style('custom-style', get_template_directory_uri().'/css/styles.css', 10 );
-   wp_enqueue_style('custom-style', get_template_directory_uri().'/css/styles.css', array(), filemtime(get_template_directory().'/css/styles.css'));
-   wp_enqueue_script('custom-scripts', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.0.0', true );
-
+   //wp_enqueue_style('custom-style', get_template_directory_uri().'/css/styles.css', array(), filemtime(get_template_directory().'/css/styles.css'));
+   function enqueue_theme_styles() {
+      $swiper_path = get_template_directory() . '/css/swiper-bundle.min.css';
+      $swiper_version = file_exists($swiper_path) ? filemtime($swiper_path) : '1.0.0';
+      wp_enqueue_style(
+         'swiper-bundle', 
+         get_template_directory_uri() . '/css/swiper-bundle.min.css', 
+         array(), 
+         $swiper_version
+      );
+      $style_path = get_template_directory() . '/css/styles.css';
+      $style_version = file_exists($style_path) ? filemtime($style_path) : '1.0.0';
+      wp_enqueue_style(
+         'custom-style', 
+         get_template_directory_uri() . '/css/styles.css', 
+         array('swiper-bundle'), // Forces Swiper to load first
+         $style_version
+      );
+   }
+   add_action('wp_enqueue_scripts', 'enqueue_theme_styles');
+   wp_enqueue_script('custom-scripts', get_template_directory_uri().'/js/main.min.js', array('jquery'), filemtime(get_template_directory().'/js/main.min.js'));
    
+   function mis_estilos_tema() {
+      // 1. Encolar Swiper CSS (con control de versión por fecha de modificación)
+      $swiper_path = get_template_directory() . '/css/swiper-bundle.min.css';
+      $swiper_version = file_exists($swiper_path) ? filemtime($swiper_path) : '1.0.0';
 
+      wp_enqueue_style(
+         'swiper-bundle', 
+         get_template_directory_uri() . '/css/swiper-bundle.min.css', 
+         array(), 
+         $swiper_version
+      );
+
+      // 2. Tu estilo personalizado (que ahora depende de 'swiper-bundle')
+      $style_path = get_template_directory() . '/css/styles.css';
+      $style_version = file_exists($style_path) ? filemtime($style_path) : '1.0.0';
+
+      wp_enqueue_style(
+         'custom-style', 
+         get_template_directory_uri() . '/css/styles.css', 
+         array('swiper-bundle'), // <--- Esto fuerza a que Swiper cargue antes
+         $style_version
+      );
+   }
+   add_action('wp_enqueue_scripts', 'mis_estilos_tema');
    function get_user_role() {
       global $current_user;  
       $user_roles = $current_user->roles;

@@ -28,6 +28,7 @@ exports.getConfigValues = function() {
 
 exports.getMainJsJQuery = function() {
 	return [
+		'./node_modules/swiper/swiper-bundle.min.js',
 		'./assets/js/main.js',
 	]
 };

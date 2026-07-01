@@ -27,7 +27,8 @@
     "router_js": "^8.0.3",
     "rsvp": "^4.8.5",
     "sass": "^1.63.3",
-    "scroll-out": "^2.2.12"
+    "scroll-out": "^2.2.12",
+    "swiper": "^14.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
@@ -51,7 +52,6 @@
     "gulp-if": "^3.0.0",
     "gulp-imagemin": "^7.1.0",
     "gulp-load-plugins": "^2.0.8",
-    "gulp-minify": "^3.1.0",
     "gulp-plumber": "^1.2.1",
     "gulp-postcss": "^9.0.1",
     "gulp-rename": "2.0.0",

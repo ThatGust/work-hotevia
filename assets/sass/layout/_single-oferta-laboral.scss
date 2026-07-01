@@ -185,7 +185,7 @@
    .wrap-buttons{
       display: flex;
       flex-wrap: wrap;
-      justify-content: end;
+      justify-content: flex-end;
       align-items: end;
       @media (max-width: $resize-min) {
          //justify-content: start;
