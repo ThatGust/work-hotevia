@@ -324,14 +324,17 @@ function filtrar_y_paginar_empleos_callback() {
     $total_posts = $wpdb->get_var($total_query);
     $total_pages = ceil($total_posts / $per_page);
 
-    if ($hay_busqueda) {
+    /*if ($hay_busqueda) {
         $select_destacado = "CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado";
         $order_by = "ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
     } else {
         //$select_destacado = "0 as es_destacado";
         $select_destacado = "CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado";
         $order_by = "ORDER BY p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
-    }
+    }*/
+
+    $select_destacado = "CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado";
+    $order_by = "ORDER BY es_destacado DESC, peso_valor DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d' ) ASC";
 
     $query = "
         SELECT DISTINCT
