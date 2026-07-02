@@ -12,17 +12,29 @@
                 loop: true,     
                 grabCursor: true,
                 spaceBetween: 20,
+                autoplay: {
+                    delay: 2000,
+                    disableOnInteraction: false
+                },
                 breakpoints: {
                     0: {
-                        slidesPerView: 1, 
+                        slidesPerView: 2, 
+                        slidesPerGroup: 2,
                         spaceBetween: 10
                     },
+                    576: {
+                        slidesPerView: 3,
+                        slidesPerGroup: 3,
+                        spaceBetween: 12
+                    },
                     768: {
-                        slidesPerView: 2,
+                        slidesPerView: 4,
+                        slidesPerGroup: 4,
                         spaceBetween: 15
                     },
                     1024: {
-                        slidesPerView: 3
+                        slidesPerView: 6,
+                        slidesPerGroup: 6
                     }
                 }
             });

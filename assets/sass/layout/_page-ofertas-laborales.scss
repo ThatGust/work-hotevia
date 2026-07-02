@@ -698,13 +698,23 @@ $red : #ff0000;
          padding-right: 26px;
       }
       .logo-grid {
-         display: grid;
-         grid-template-columns: repeat(3, 1fr);
-         gap: 20px;
-         align-items: stretch;
+         &.swiper {
+            display: block;
+         }
 
-         @media (max-width: 600px) {
-            grid-template-columns: repeat(2, 1fr);
+         &:not(.swiper-initialized) {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            align-items: stretch;
+
+            @media (max-width: 1024px) {
+               grid-template-columns: repeat(4, 1fr);
+            }
+
+            @media (max-width: 600px) {
+               grid-template-columns: repeat(2, 1fr);
+            }
          }
 
          .logo-item {
@@ -712,19 +722,16 @@ $red : #ff0000;
             justify-content: center;
             align-items: center;
             min-height: 90px;
-            background: #ffffff;
-            
-            border: 2px solid #e2e8f0; 
-            border-radius: 6px;
-            
-            padding: 15px;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 10px;
             text-decoration: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: opacity 0.2s ease;
 
             &:hover {
-               //border-color: #c83239; 
-               //box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-               border: 2px solid #cce0f5;
+               opacity: 0.9;
             }
 
             img {
@@ -746,7 +753,7 @@ $red : #ff0000;
    }
 
  .city-districts-grid-container {
-      margin: 20px 0 25px;
+    margin: 16px 0 25px;
       padding: 0 !important;
 
       .wrap,
@@ -760,69 +767,55 @@ $red : #ff0000;
          box-sizing: border-box;
          width: 100%;
          max-width: unset;
-         padding-left: 26px;
-         padding-right: 26px;
+         padding-left: 0;
+         padding-right: 0;
       }
 
-      .city-districts-grid {
-         display: grid !important;
-         grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-         gap: 28px !important;
+      .city-buttons-grid {
+         display: grid;
+         grid-template-columns: repeat(4, minmax(0, 1fr));
+         gap: 8px;
 
          @media (max-width: 992px) {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
          }
 
          @media (max-width: 600px) {
-            grid-template-columns: 1fr !important;
-            gap: 18px !important;
+            grid-template-columns: 1fr;
          }
       }
 
-      .city-column {
-         min-width: 0;
+      .city-buttons-grid-featured {
+         margin-bottom: 14px;
       }
 
-      .city-column-title {
-         display: inline-block;
-         margin-bottom: 6px;
-         color: #70757a;
+      .city-link-btn {
+         display: inline-flex;
+         align-items: center;
+         justify-content: center;
+         min-height: 38px;
+         border-radius: 4px;
          font-size: 13px;
-         font-weight: 600;
+         font-weight: 700;
          text-decoration: none;
-
-         &:hover {
-            text-decoration: underline;
-         }
+         text-align: center;
+         padding: 8px 10px;
+         border: 1px solid #bc2235;
+         transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
       }
 
-      .district-list {
-         margin: 0 !important;
-         padding: 0 !important;
-         list-style: none !important;
+      .city-link-btn-featured {
+         background-color: #bc2235;
+         color: #ffffff;
+      }
 
-         li {
-            margin: 3px 0 !important;
-            list-style: none !important;
-         }
+      .city-link-btn-regular {
+         background-color: #ffffff;
+         color: #bc2235;
+      }
 
-         li::marker {
-            content: "";
-         }
-
-         a {
-            color: #70757a;
-            font-size: 12px;
-            text-decoration: none;
-
-            &:before {
-               content: "- ";
-            }
-
-            &:hover {
-               text-decoration: underline;
-            }
-         }
+      .city-link-btn:hover {
+         opacity: 0.9;
       }
    }
 

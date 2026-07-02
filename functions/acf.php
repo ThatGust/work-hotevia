@@ -10,8 +10,6 @@
       ));
    }
 
-
-
    add_filter('acf/fields/post_object/query/name=empresa', 'populateEmpresa', 10, 3);
    function populateEmpresa( $args, $field, $post_id){	
       $current_user = wp_get_current_user();

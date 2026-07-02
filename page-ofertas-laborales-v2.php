@@ -11,8 +11,14 @@
     $ofertas_num = get_field("ofertas_num", $page_id);
     $banners_de_columna = get_field("banners_de_columna", "option");
     $banners_de_contenido = get_field("banners_de_contenido", "option");
-    $empresas_destacadas = get_field('empresas_seleccionadas', 'option'); //grilla
-    $ciudades_destacadas = get_field('ciudades_seleccionadas_distritos', 'option'); //grilla
+    $empresas_destacadas = get_field('empresas_seleccionadas', $page_id); //grilla
+    if (empty($empresas_destacadas)) {
+        $empresas_destacadas = get_field('empresas_seleccionadas', 'option');
+    }
+    $listado_enlaces = get_field('listado_enlaces', $page_id);
+    if (empty($listado_enlaces)) {
+        $listado_enlaces = get_field('listado_enlaces', 'option');
+    }
     $mostrar_banner_header = get_field('mostrar_banner_header', 'option');
     $contenido_banner_top = get_field('contenido_banner_top', 'option');
     $contenido_banner_bottom = get_field('contenido_banner_bottom', 'option');
@@ -69,6 +75,58 @@
                                 </div>
                             </section>
 
+                            <section class="section-5">
+                                <div class="city-districts-grid-container">
+                                    <div class="wrap">
+                                        <div class="container">
+                                            <?php
+                                                $botones = array();
+
+                                                if (!empty($listado_enlaces) && is_array($listado_enlaces)) {
+                                                    foreach ($listado_enlaces as $row) {
+                                                        $destacar_fila = !empty($row['destacar_ciudad']);
+                                                        $enlaces_manuales = !empty($row['enlaces']) ? $row['enlaces'] : array();
+                                                        if (empty($enlaces_manuales) || !is_array($enlaces_manuales)) {
+                                                            continue;
+                                                        }
+
+                                                        foreach ($enlaces_manuales as $enlace) {
+                                                            $nombre = isset($enlace['nombre']) ? trim($enlace['nombre']) : '';
+                                                            $url = isset($enlace['url']) ? trim($enlace['url']) : '';
+                                                            if ($nombre === '' || $url === '') {
+                                                                continue;
+                                                            }
+
+                                                            $botones[] = array(
+                                                                'label' => $nombre,
+                                                                'url' => $url,
+                                                                'featured' => !empty($enlace['destacar_rojo']) || $destacar_fila,
+                                                            );
+                                                        }
+                                                    }
+                                                }
+                                            ?>
+
+                                            <?php if (!empty($botones)): ?>
+                                                <div class="city-buttons-grid city-buttons-grid-regular">
+                                                    <?php foreach ($botones as $boton): ?>
+                                                        <a href="<?php echo esc_url($boton['url']); ?>" class="city-link-btn <?php echo !empty($boton['featured']) ? 'city-link-btn-featured' : 'city-link-btn-regular'; ?>"><?php echo esc_html($boton['label']); ?></a>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="section-4">
+                                <?php if ($mostrar_banner_header && !empty($contenido_banner_top)): ?>
+                                    <div class="ad-long ad-long-top">
+                                        <?php echo wp_kses_post($contenido_banner_top); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </section>
+
                             <section class="section-3">
                                 <div class="logo-grid-container">
                                     <div class="wrap">
@@ -79,9 +137,11 @@
                                                     <?php 
                                                     if (!empty($empresas_destacadas)) :
                                                         foreach ($empresas_destacadas as $row) : 
-                                                            
-                                                            $empresa_obj = $row["empresa"];
-                                                            $empresa_id = $empresa_obj->ID;
+                                                            $empresa_ref = (is_array($row) && array_key_exists('empresa', $row)) ? $row['empresa'] : $row;
+                                                            $empresa_id = is_object($empresa_ref) ? $empresa_ref->ID : intval($empresa_ref);
+                                                            if (!$empresa_id) {
+                                                                continue;
+                                                            }
                                                             
                                                             $permalink = get_permalink($empresa_id);
                                                             $title = get_the_title($empresa_id);
@@ -106,53 +166,6 @@
                                                     endif;
                                                     ?>
                                                 </div> </div> </div>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <section class="section-4">
-                                <?php if ($mostrar_banner_header && !empty($contenido_banner_top)): ?>
-                                    <div class="ad-long ad-long-top">
-                                        <?php echo wp_kses_post($contenido_banner_top); ?>
-                                    </div>
-                                <?php endif; ?>
-                            </section>
-
-                            <section class="section-5">
-                                <div class="city-districts-grid-container">
-                                    <div class="wrap">
-                                        <div class="container">
-                                            <div class="city-districts-grid">
-                                                <?php if (!empty($ciudades_destacadas) && is_array($ciudades_destacadas)): ?>
-                                                    <?php foreach ($ciudades_destacadas as $row): ?>
-                                                        <?php
-                                                            $ciudad_obj = $row["ciudad"];
-                                                            $ciudad_id = is_object($ciudad_obj) ? $ciudad_obj->ID : intval($ciudad_obj);
-                                                            if (!$ciudad_id) {
-                                                                continue;
-                                                            }
-
-                                                            $ciudad_title     = get_the_title($ciudad_id);
-                                                            $ciudad_permalink = get_permalink($ciudad_id);
-
-                                                            $enlaces_manuales = !empty($row['enlaces']) ? $row['enlaces'] : array();
-                                                        ?>
-                                                        <div class="city-column">
-                                                            <a href="<?php echo esc_url($ciudad_permalink); ?>" class="city-column-title"><?php echo esc_html('Empleos en ' . $ciudad_title); ?></a>
-                                                            <?php if (!empty($enlaces_manuales)): ?>
-                                                                <ul class="district-list">
-                                                                    <?php foreach ($enlaces_manuales as $enlace): ?>
-                                                                        <li>
-                                                                            <a href="<?php echo esc_url($enlace['url']); ?>"><?php echo esc_html($enlace['nombre']); ?></a>
-                                                                        </li>
-                                                                    <?php endforeach; ?>
-                                                                </ul>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </section>

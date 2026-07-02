@@ -1,0 +1,275 @@
+[
+    {
+        "key": "group_6a4355e7b4d7b",
+        "title": "Ofertas Laborales (v2)",
+        "fields": [
+            {
+                "key": "field_6a4355e7e6c9c",
+                "label": "Numero de Ofertas por Pagina",
+                "name": "ofertas_num",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6a275a7bddcf1",
+                "label": "Listado de Logos",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "left",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_6a38d185a6e6d",
+                "label": "Seleccionar Empresas",
+                "name": "empresas_seleccionadas",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Agregar Fila",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_6a38d191a6e6e",
+                        "label": "Empresa",
+                        "name": "empresa",
+                        "aria-label": "",
+                        "type": "post_object",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "post_type": [
+                            "empresa"
+                        ],
+                        "post_status": "",
+                        "taxonomy": "",
+                        "return_format": "object",
+                        "multiple": 0,
+                        "allow_null": 0,
+                        "allow_in_bindings": 0,
+                        "bidirectional": 0,
+                        "ui": 1,
+                        "bidirectional_target": [],
+                        "parent_repeater": "field_6a38d185a6e6d"
+                    }
+                ]
+            },
+            {
+                "key": "field_6a275a7bddcf2",
+                "label": "Listado de enlaces",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_6a275a7b32cc5",
+                "label": "Seleccionar Ciudades",
+                "name": "ciudades_seleccionadas_distritos",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Selecciona las ciudades a mostrar en el bloque de ciudades y distritos.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "row",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Agregar Fila",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_6a38d163a6e6c",
+                        "label": "Ciudad",
+                        "name": "ciudad",
+                        "aria-label": "",
+                        "type": "post_object",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "post_type": [
+                            "ciudad_empleo"
+                        ],
+                        "post_status": "",
+                        "taxonomy": "",
+                        "return_format": "object",
+                        "multiple": 0,
+                        "allow_null": 0,
+                        "allow_in_bindings": 0,
+                        "bidirectional": 0,
+                        "ui": 1,
+                        "bidirectional_target": [],
+                        "choices": [],
+                        "parent_repeater": "field_6a275a7b32cc5"
+                    },
+                    {
+                        "key": "field_6a38_destacar_ciudad",
+                        "label": "Destacar ciudad (rojo)",
+                        "name": "destacar_ciudad",
+                        "aria-label": "",
+                        "type": "true_false",
+                        "instructions": "Activa este check para mostrar la ciudad en rojo.",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "message": "",
+                        "default_value": 0,
+                        "ui": 1,
+                        "ui_on_text": "Si",
+                        "ui_off_text": "No",
+                        "parent_repeater": "field_6a275a7b32cc5"
+                    },
+                    {
+                        "key": "field_6a38_enlaces",
+                        "label": "Enlaces",
+                        "name": "enlaces",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "Agrega cada enlace manualmente con su nombre visible y su URL destino.",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "layout": "table",
+                        "pagination": 0,
+                        "min": 0,
+                        "max": 0,
+                        "collapsed": "",
+                        "button_label": "Agregar enlace",
+                        "rows_per_page": 20,
+                        "parent_repeater": "field_6a275a7b32cc5",
+                        "sub_fields": [
+                            {
+                                "key": "field_6a38_enlace_nombre",
+                                "label": "Nombre visible",
+                                "name": "nombre",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "Ej: Empleos en Miraflores",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_6a38_enlaces"
+                            },
+                            {
+                                "key": "field_6a38_enlace_url",
+                                "label": "URL",
+                                "name": "url",
+                                "aria-label": "",
+                                "type": "url",
+                                "instructions": "URL destino del enlace",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "placeholder": "https:\/\/",
+                                "parent_repeater": "field_6a38_enlaces"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_template",
+                    "operator": "==",
+                    "value": "page-ofertas-laborales-v2.php"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    }
+]
