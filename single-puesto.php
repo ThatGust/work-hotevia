@@ -61,6 +61,12 @@ $activar_bloque_2   = get_field("activar_bloque_2_a", $post_id);
 $texto_contador     = get_field("texto_contador_bloque_2_a", $post_id);
 
 $activar_bloque_3   = get_field("activar_bloque_3_a", $post_id);
+$activar_listado_az = get_field('activar_listado_az', $post_id);
+$ciudades_priorizadas = get_field('ciudades_priorizadas', $post_id);
+
+if ($activar_listado_az === null) {
+    $activar_listado_az = 1;
+}
 
 $banners_de_contenido = get_field("banners_de_contenido", "option");
 $numero_de_empleos_raw = get_field('numero_de_empleos', 'option');
@@ -92,18 +98,68 @@ if ($puesto_term_id > 0) {
 }
 
 if ($taxonomies_array) {
-    $rows = get_custom_posts(
-        $post_type = "empleo",
-        $search_text = false,
-        $taxonomies_array,
-        $custom_fields_array = array(
-            array("meta_key" => "fecha_de_expiracion", "condition" => "AND STR_TO_DATE(%meta_value%, '%Y%m%d') >= CURDATE()")
-        ),
-        $order = array(0 => 'ORDER BY wp.post_title ASC'),
-        $page = $paged,
-        $posts_per_page,
-        $total_rows
+    $offset = ($paged - 1) * $posts_per_page;
+    $ciudades_priorizadas_codigos = array();
+
+    if (!empty($ciudades_priorizadas) && is_array($ciudades_priorizadas)) {
+        foreach ($ciudades_priorizadas as $fila_ciudad) {
+            $ciudad_id = isset($fila_ciudad['ciudad']) ? intval($fila_ciudad['ciudad']) : 0;
+            if ($ciudad_id < 1) {
+                continue;
+            }
+
+            $codigo_ciudad = get_field('nombre_ciudad', $ciudad_id, false);
+            if (!empty($codigo_ciudad) && !in_array($codigo_ciudad, $ciudades_priorizadas_codigos, true)) {
+                $ciudades_priorizadas_codigos[] = $codigo_ciudad;
+            }
+        }
+    }
+
+    $prioridad_ciudades_order_sql = '';
+    if (!empty($ciudades_priorizadas_codigos)) {
+        $case_parts = array();
+        foreach ($ciudades_priorizadas_codigos as $indice_ciudad => $codigo_ciudad) {
+            $case_parts[] = $wpdb->prepare('WHEN %s THEN %d', $codigo_ciudad, $indice_ciudad + 1);
+        }
+        $prioridad_ciudades_order_sql = 'CASE m_city.meta_value ' . implode(' ', $case_parts) . ' ELSE 999 END ASC, ';
+    }
+
+    $orden_secundario_sql = $activar_listado_az ? 'p.post_title ASC' : 'p.ID DESC';
+
+    $total_rows = (int) $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(DISTINCT p.ID)
+        FROM {$wpdb->posts} p
+        INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+        INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+        INNER JOIN {$wpdb->postmeta} m_exp ON (p.ID = m_exp.post_id AND m_exp.meta_key = 'fecha_de_expiracion')
+        WHERE p.post_type = 'empleo'
+        AND p.post_status = 'publish'
+        AND tt.taxonomy = 'puesto'
+        AND tt.term_id = %d
+        AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()",
+        $puesto_term_id
+    ));
+
+    $rows_query_sql = $wpdb->prepare(
+        "SELECT DISTINCT p.ID, p.post_title
+        FROM {$wpdb->posts} p
+        INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+        INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+        INNER JOIN {$wpdb->postmeta} m_exp ON (p.ID = m_exp.post_id AND m_exp.meta_key = 'fecha_de_expiracion')
+        LEFT JOIN {$wpdb->postmeta} m_city ON (p.ID = m_city.post_id AND m_city.meta_key = 'ciudad')
+        WHERE p.post_type = 'empleo'
+        AND p.post_status = 'publish'
+        AND tt.taxonomy = 'puesto'
+        AND tt.term_id = %d
+        AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()
+        ORDER BY {$prioridad_ciudades_order_sql}{$orden_secundario_sql}
+        LIMIT %d, %d",
+        $puesto_term_id,
+        $offset,
+        $posts_per_page
     );
+
+    $rows = $wpdb->get_results($rows_query_sql);
 
     $rows_destacados = $wpdb->get_results($wpdb->prepare(
         "SELECT DISTINCT p.ID, p.post_title
@@ -236,7 +292,7 @@ get_header();
                             <?php endif; ?>
 
                                 <div class="ciudad-bloque ciudad-listado job-offers">
-                                    <h4>TODOS LOS PUESTOS EN <?php echo strtoupper(esc_html($nombre_visual)); ?> (A-Z)</h4>
+                                    <h4>TODOS LOS PUESTOS EN <?php echo strtoupper(esc_html($nombre_visual)); ?> <?php echo $activar_listado_az ? '(A-Z)' : '(POR ID)'; ?></h4>
                                     
                                     <?php 
                                         if (!empty($rows)):
