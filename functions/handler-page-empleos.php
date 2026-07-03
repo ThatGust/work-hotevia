@@ -364,12 +364,41 @@ function filtrar_y_paginar_empleos_callback() {
             $sf_empresa = get_field('nombre_de_la_empresa', $sf_ID);
             $sf_ubicacion = get_field('distrito', $sf_ID);
 
+            $empresa_logo = '';
+            $empresa_ref = get_field('empresa', $sf_ID);
+            $empresa_id = 0;
+
+            if (is_object($empresa_ref) && !empty($empresa_ref->ID)) {
+                $empresa_id = (int) $empresa_ref->ID;
+            } elseif (is_array($empresa_ref)) {
+                $first_empresa = reset($empresa_ref);
+                if (is_object($first_empresa) && !empty($first_empresa->ID)) {
+                    $empresa_id = (int) $first_empresa->ID;
+                } else {
+                    $empresa_id = (int) $first_empresa;
+                }
+            } else {
+                $empresa_id = (int) $empresa_ref;
+            }
+
+            if ($empresa_id > 0) {
+                $logotipo_array = get_field('logotipo', $empresa_id);
+                if (is_array($logotipo_array)) {
+                    if (!empty($logotipo_array['sizes']['medium'])) {
+                        $empresa_logo = $logotipo_array['sizes']['medium'];
+                    } elseif (!empty($logotipo_array['url'])) {
+                        $empresa_logo = $logotipo_array['url'];
+                    }
+                }
+            }
+
             $empleos[] = [
                 'id'           => $sf_ID,
                 'titulo'       => $sf_titulo,
                 'fecha'        => $sf_fecha,
                 'empresa'      => $sf_empresa,
                 'ubicacion'    => $sf_ubicacion,
+                'empresa_logo' => $empresa_logo,
                 'url'          => get_permalink($sf_ID),
                 'es_destacado' => (bool) $row->es_destacado,
                 'fecha_pub'    => human_time_diff(get_the_time('U', $sf_ID), current_time('timestamp'))

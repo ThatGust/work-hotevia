@@ -19,6 +19,14 @@
     if (empty($listado_enlaces)) {
         $listado_enlaces = get_field('listado_enlaces', 'option');
     }
+    $numero_de_destacados = intval(get_field('numero_de_destacados', $page_id));
+    if ($numero_de_destacados < 1) {
+        $numero_de_destacados = 4;
+    }
+    $numero_de_regulares = intval(get_field('numero_de_regulares', $page_id));
+    if ($numero_de_regulares < 1) {
+        $numero_de_regulares = 4;
+    }
     $mostrar_banner_header = get_field('mostrar_banner_header', 'option');
     $contenido_banner_top = get_field('contenido_banner_top', 'option');
     $contenido_banner_bottom = get_field('contenido_banner_bottom', 'option');
@@ -80,7 +88,8 @@
                                     <div class="wrap">
                                         <div class="container">
                                             <?php
-                                                $botones = array();
+                                                $botones_destacados = array();
+                                                $botones_regulares = array();
 
                                                 if (!empty($listado_enlaces) && is_array($listado_enlaces)) {
                                                     foreach ($listado_enlaces as $row) {
@@ -97,20 +106,34 @@
                                                                 continue;
                                                             }
 
-                                                            $botones[] = array(
+                                                            $boton = array(
                                                                 'label' => $nombre,
                                                                 'url' => $url,
-                                                                'featured' => !empty($enlace['destacar_rojo']) || $destacar_fila,
                                                             );
+
+                                                            if (!empty($enlace['destacar_rojo']) || $destacar_fila) {
+                                                                $botones_destacados[] = $boton;
+                                                            } else {
+                                                                $botones_regulares[] = $boton;
+                                                            }
                                                         }
                                                     }
                                                 }
+
                                             ?>
 
-                                            <?php if (!empty($botones)): ?>
-                                                <div class="city-buttons-grid city-buttons-grid-regular">
-                                                    <?php foreach ($botones as $boton): ?>
-                                                        <a href="<?php echo esc_url($boton['url']); ?>" class="city-link-btn <?php echo !empty($boton['featured']) ? 'city-link-btn-featured' : 'city-link-btn-regular'; ?>"><?php echo esc_html($boton['label']); ?></a>
+                                            <?php if (!empty($botones_destacados)): ?>
+                                                <div class="city-buttons-grid city-buttons-grid-featured" style="--items-per-row: <?php echo (int) $numero_de_destacados; ?>;">
+                                                    <?php foreach ($botones_destacados as $boton): ?>
+                                                        <a href="<?php echo esc_url($boton['url']); ?>" class="city-link-btn city-link-btn-featured"><?php echo esc_html($boton['label']); ?></a>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($botones_regulares)): ?>
+                                                <div class="city-buttons-grid city-buttons-grid-regular" style="--items-per-row: <?php echo (int) $numero_de_regulares; ?>;">
+                                                    <?php foreach ($botones_regulares as $boton): ?>
+                                                        <a href="<?php echo esc_url($boton['url']); ?>" class="city-link-btn city-link-btn-regular"><?php echo esc_html($boton['label']); ?></a>
                                                     <?php endforeach; ?>
                                                 </div>
                                             <?php endif; ?>

@@ -118,35 +118,77 @@ img {
    }
 
    .card-destacado-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
 
       .etiqueta-gold {
-         color: #d89f2a;
-         font-size: 0.85rem;
-         font-weight: 500;
+         color: #d83c3c;
+         font-size: 0.9rem;
+         font-weight: 700;
+         text-transform: uppercase;
       }
    }
 
+   .card-destacado-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+
+      @media (max-width: $resize-min) {
+         flex-direction: column;
+         align-items: flex-start;
+      }
+   }
+
+   .card-destacado-main {
+      flex: 1 1 auto;
+      min-width: 0;
+   }
+
    .card-destacado-title {
-      margin: 0 0 6px 0;
-      font-size: 1.25rem;
-      color: #2c3e50;
-      font-weight: 700;
+      margin: 0 0 12px 0;
+      font-size: 2.7rem;
+      line-height: 1.1;
+      color: #111;
+      font-weight: 400;
+
+      @media (max-width: $resize-min) {
+         font-size: 2.1rem;
+      }
    }
 
    .card-destacado-empresa,
-   .card-destacado-ubicacion {
-      margin: 0 0 6px 0;
-      color: #555;
-      font-size: 0.95rem;
+   .card-destacado-ubicacion,
+   .card-destacado-expira {
+      margin: 0 0 10px 0;
+      color: #6a6a6a;
+      font-size: 1rem;
+      font-weight: 700;
    }
 
-   .card-destacado-ubicacion {
-      color: #6c757d;
-      margin-bottom: 12px;
+   .card-destacado-expira {
+      margin-bottom: 0;
+   }
+
+   .card-destacado-logo {
+      flex: 0 0 160px;
+      width: 160px;
+      height: 120px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+         max-width: 88%;
+         max-height: 88%;
+         object-fit: contain;
+      }
+
+      @media (max-width: $resize-min) {
+         width: 140px;
+         height: 105px;
+      }
    }
 
    .card-destacado-footer {
