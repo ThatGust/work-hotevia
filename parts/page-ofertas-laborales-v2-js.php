@@ -14,11 +14,16 @@
     if ($slider_move_seconds < 1) {
         $slider_move_seconds = 2;
     }
+    $numero_de_logos = intval(get_field('numero_de_logos', $post_id));
+    if ($numero_de_logos < 1) {
+        $numero_de_logos = 6;
+    }
     $slider_move_delay = $slider_move_seconds * 1000;
 ?>
 <script>
     jQuery(document).ready(function($) {
         const sliderMoveDelay = <?php echo (int) $slider_move_delay; ?>;
+        const numeroDeLogos = <?php echo (int) $numero_de_logos; ?>;
         
         if (typeof Swiper !== 'undefined') {
             const logoSlider = new Swiper('.logo-grid.swiper', {
@@ -47,7 +52,7 @@
                         spaceBetween: 15
                     },
                     1024: {
-                        slidesPerView: 6,
+                        slidesPerView: numeroDeLogos,
                         slidesPerGroup: 1
                     }
                 }
