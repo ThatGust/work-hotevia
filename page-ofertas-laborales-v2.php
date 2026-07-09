@@ -27,9 +27,28 @@
     if ($numero_de_regulares < 1) {
         $numero_de_regulares = 4;
     }
-    $mostrar_banner_header = get_field('mostrar_banner_header', 'option');
-    $contenido_banner_top = get_field('contenido_banner_top', 'option');
-    $contenido_banner_bottom = get_field('contenido_banner_bottom', 'option');
+    $banner_superior_1_html = '';
+    $banner_superior_2_html = '';
+    $banner_superior_3_html = '';
+
+    if (!empty($banners_de_contenido) && is_array($banners_de_contenido)) {
+        $banners_validos = array();
+        foreach ($banners_de_contenido as $banner_item) {
+            if (isset($banner_item['html']) && !empty($banner_item['html'])) {
+                $banners_validos[] = $banner_item['html'];
+            }
+        }
+
+        if (!empty($banners_validos)) {
+            $banner_superior_1_html = $banners_validos[0];
+        }
+
+        $banners_repetibles_superior = array_slice($banners_validos, 1);
+        if (!empty($banners_repetibles_superior)) {
+            $banner_superior_2_html = $banners_repetibles_superior[0];
+            $banner_superior_3_html = $banners_repetibles_superior[1 % count($banners_repetibles_superior)];
+        }
+    }
 
     $base_url = get_bloginfo("url");
     $title_negocio = get_the_title($page_id);
@@ -55,14 +74,11 @@
 
 
                             <?php
-                                if (!empty($banners_de_contenido)):
-                                    $first_banner_html = $banners_de_contenido[0]["html"] ?? '';
-                                    if (!empty($first_banner_html)):
+                                if (!empty($banner_superior_1_html)):
                             ?>
-                                <section class="section-1"><div class="ad-long"><?php echo $first_banner_html; ?></div></section> 
+                                <section class="section-1"><div class="ad-long"><?php echo wp_kses_post($banner_superior_1_html); ?></div></section> 
                             <?php            
                                     endif;
-                                endif;
                             ?>
 
                             <h1 class="job-title">
@@ -143,9 +159,9 @@
                             </section>
 
                             <section class="section-4">
-                                <?php if ($mostrar_banner_header && !empty($contenido_banner_top)): ?>
+                                <?php if (!empty($banner_superior_2_html)): ?>
                                     <div class="ad-long ad-long-top">
-                                        <?php echo wp_kses_post($contenido_banner_top); ?>
+                                        <?php echo wp_kses_post($banner_superior_2_html); ?>
                                     </div>
                                 <?php endif; ?>
                             </section>
@@ -194,9 +210,9 @@
                             </section>
 
                             <section class="section-6">
-                                <?php if ($mostrar_banner_header && !empty($contenido_banner_bottom)): ?>
+                                <?php if (!empty($banner_superior_3_html)): ?>
                                     <div class="ad-long ad-long-bottom">
-                                        <?php echo wp_kses_post($contenido_banner_bottom); ?>
+                                        <?php echo wp_kses_post($banner_superior_3_html); ?>
                                     </div>
                                 <?php endif; ?>
                             </section>

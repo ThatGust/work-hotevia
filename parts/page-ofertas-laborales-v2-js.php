@@ -5,10 +5,10 @@
         $post_id = get_the_ID();
     }
     $banners_de_contenido = get_field("banners_de_contenido", "option");
-    $numero_de_empleos_raw = get_field('numero_de_empleos', 'option');
-    $numero_de_empleos = intval($numero_de_empleos_raw);
-    if ($numero_de_empleos < 1) {
-        $numero_de_empleos = 10;
+    $intervalo_banners_raw = get_field('num_banners_ol', $post_id);
+    $intervalo_banners = intval($intervalo_banners_raw);
+    if ($intervalo_banners < 1) {
+        $intervalo_banners = 10;
     }
     $slider_move_seconds = intval(get_field('sec_move', $post_id));
     if ($slider_move_seconds < 1) {
@@ -63,8 +63,12 @@
     });
 </script>
 <script>
-    const banners = <?php echo json_encode($banners_de_contenido); ?>;
-    const numeroDeEmpleosEntreBanners = <?php echo (int) $numero_de_empleos; ?>;
+    const bannersData = <?php echo json_encode($banners_de_contenido); ?>;
+    const banners = Array.isArray(bannersData)
+        ? bannersData.slice(1).filter(item => item && item.html)
+        : [];
+    const offsetBannersListado = banners.length > 2 ? 2 : 0;
+    const intervaloBanners = <?php echo (int) $intervalo_banners; ?>;
     /**
      * LÓGICA DE CONTROL DE INTERFAZ: script.js (COMPLETO)
      */
@@ -248,13 +252,14 @@
 
                     $listaEmpleos.append(itemHtml);
 
-                    if ((index + 1) % numeroDeEmpleosEntreBanners === 0) {
-                        const bannerIndex = Math.floor((index + 1) / numeroDeEmpleosEntreBanners) - 1;
+                    if ((index + 1) % intervaloBanners === 0 && banners.length > 0) {
+                        const bannerIndex = Math.floor((index + 1) / intervaloBanners) - 1;
+                        const bannerRotado = banners[(bannerIndex + offsetBannersListado) % banners.length];
 
-                        if (banners[bannerIndex] && banners[bannerIndex].html) {
+                        if (bannerRotado && bannerRotado.html) {
                             $listaEmpleos.append(`
                                 <div class="banner-contenido" style="margin-top:20px; margin-bottom:20px;">
-                                    ${banners[bannerIndex].html}
+                                    ${bannerRotado.html}
                                 </div>
                             `);
                         }
