@@ -218,6 +218,15 @@ function filtrar_y_paginar_empleos_callback() {
     $paged = isset($_GET['paged']) ? absint($_GET['paged']) : 1;    
 
     $ofertas_num = get_field("ofertas_num", $post_id);
+    if (!is_numeric($ofertas_num) || intval($ofertas_num) < 1) {
+        $ofertas_num = get_field("ofertas_num", "option");
+    }
+    if (!is_numeric($ofertas_num) || intval($ofertas_num) < 1) {
+        $ofertas_num = get_field("num_ofertas_ol", $post_id);
+    }
+    if (!is_numeric($ofertas_num) || intval($ofertas_num) < 1) {
+        $ofertas_num = get_field("num_ofertas_ol", "option");
+    }
     $per_page = 35;
     if( is_numeric($ofertas_num) ):
         $per_page = $ofertas_num;

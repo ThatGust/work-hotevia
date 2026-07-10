@@ -6,6 +6,15 @@
     }
     $banners_de_contenido = get_field("banners_de_contenido", "option");
     $intervalo_banners_raw = get_field('num_banners_ol', $post_id);
+    if (!is_numeric($intervalo_banners_raw) || intval($intervalo_banners_raw) < 1) {
+        $intervalo_banners_raw = get_field('num_banners_ol', 'option');
+    }
+    if (!is_numeric($intervalo_banners_raw) || intval($intervalo_banners_raw) < 1) {
+        $intervalo_banners_raw = get_field('num_ofertas_ol', $post_id);
+    }
+    if (!is_numeric($intervalo_banners_raw) || intval($intervalo_banners_raw) < 1) {
+        $intervalo_banners_raw = get_field('num_ofertas_ol', 'option');
+    }
     $intervalo_banners = intval($intervalo_banners_raw);
     if ($intervalo_banners < 1) {
         $intervalo_banners = 10;

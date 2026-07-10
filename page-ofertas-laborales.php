@@ -279,6 +279,15 @@
 
                             <div class="job-listings">
                                 <?php
+                                $intervalo_banners_raw = get_field('num_banners_ol', 'option');
+                                if (!is_numeric($intervalo_banners_raw) || intval($intervalo_banners_raw) < 1) {
+                                    $intervalo_banners_raw = get_field('num_ofertas_ol', 'option');
+                                }
+                                $intervalo_banners = intval($intervalo_banners_raw);
+                                if ($intervalo_banners < 1) {
+                                    $intervalo_banners = 10;
+                                }
+
                                 $contador = 0;
                                 $total_banners = !empty($banners_de_contenido) ? count($banners_de_contenido) : 0;
                                 $indice_banner = 1;
@@ -319,7 +328,7 @@
                                     <?php
                                     $contador++;
 
-                                    if ($contador > 0 && $contador % 10 === 0 && $total_banners > 0) {
+                                    if ($contador > 0 && $contador % $intervalo_banners === 0 && $total_banners > 0) {
                                         $sf_html = $banners_de_contenido[$indice_banner]["html"] ?? '';
                                         if (!empty($sf_html)) {
                                             ?>
