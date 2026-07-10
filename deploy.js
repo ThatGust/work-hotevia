@@ -27,11 +27,12 @@ const CONFIG = {
         remotePath: '/domains/7devlab.com/public_html/demos/hotevia.info/wp-content/themes/newsplus'
     },
     produccion: {
-        host: '',
+        //host: '177.11.51.5',
+        host: '217.76.142.221',
         port: 21,
-        username: '',
-        password: '',
-        remotePath: ''
+        username: 'sen4445',
+        password: 'TnpnNVEyOXVkSE1@',
+        remotePath: '/wp-content/themes/newsplus'
     }
 };
 
