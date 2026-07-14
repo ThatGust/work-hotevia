@@ -26,6 +26,7 @@ if (!function_exists('formatear_empresa_destacada_puesto')) {
     }
 }
 
+$incluir_empleos_subcategorias = get_field("incluir_empleos_subcategorias", $post_id);
 $nombre_area_raw = get_field("nombre_area", $post_id, false);
 $nombre_visual = get_the_title($post_id);
 $puesto_term_id = 0;
@@ -63,6 +64,8 @@ $texto_contador     = get_field("texto_contador_bloque_2_a", $post_id);
 $activar_bloque_3   = get_field("activar_bloque_3_a", $post_id);
 $activar_listado_az = get_field('activar_listado_az', $post_id);
 $ciudades_priorizadas = get_field('ciudades_priorizadas', $post_id);
+
+
 
 if ($activar_listado_az === null) {
     $activar_listado_az = 1;
@@ -176,8 +179,6 @@ if ($taxonomies_array) {
         $posts_per_page
     );
 
-    $rows = $wpdb->get_results($rows_query_sql);
-
     $rows_destacados = $wpdb->get_results($wpdb->prepare(
         "SELECT DISTINCT p.ID, p.post_title
         FROM {$wpdb->posts} p
@@ -196,7 +197,61 @@ if ($taxonomies_array) {
         $puesto_term_id
     ));
 
+    if($incluir_empleos_subcategorias):
+        $term_ids = get_term_children($puesto_term_id, 'puesto');
+        if (is_wp_error($term_ids) || empty($term_ids)) {
+            $term_ids = array($puesto_term_id);
+        } else {
+            $term_ids[] = $puesto_term_id;
+        }
+        $term_ids_clean = array_map('intval', $term_ids);
+        $term_ids_placeholder = implode(',', array_fill(0, count($term_ids_clean), '%d'));
+        $query_args_principal = array_merge(
+            $term_ids_clean,
+            array($offset, $posts_per_page)
+        );
+        $rows_query_sql = $wpdb->prepare(
+            "SELECT DISTINCT p.ID, p.post_title
+            FROM {$wpdb->posts} p
+            INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+            INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+            INNER JOIN {$wpdb->postmeta} m_exp ON (p.ID = m_exp.post_id AND m_exp.meta_key = 'fecha_de_expiracion')
+            LEFT JOIN {$wpdb->postmeta} m_city ON (p.ID = m_city.post_id AND m_city.meta_key = 'ciudad')
+            WHERE p.post_type = 'empleo'
+            AND p.post_status = 'publish'
+            AND tt.taxonomy = 'puesto'
+            AND tt.term_id IN ($term_ids_placeholder)
+            AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()
+            ORDER BY {$prioridad_ciudades_order_sql}{$orden_secundario_sql}
+            LIMIT %d, %d",
+            $query_args_principal
+        );
+
+        $rows_destacados = $wpdb->get_results($wpdb->prepare(
+            "SELECT DISTINCT p.ID, p.post_title
+            FROM {$wpdb->posts} p
+            INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+            INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+            INNER JOIN {$wpdb->postmeta} m_exp ON (p.ID = m_exp.post_id AND m_exp.meta_key = 'fecha_de_expiracion')
+            INNER JOIN {$wpdb->postmeta} m_destacado ON (p.ID = m_destacado.post_id AND m_destacado.meta_key = 'destacado')
+            LEFT JOIN {$wpdb->postmeta} m_peso ON (p.ID = m_peso.post_id AND m_peso.meta_key = 'peso')
+            WHERE p.post_type = 'empleo'
+            AND p.post_status = 'publish'
+            AND tt.taxonomy = 'puesto'
+            AND tt.term_id IN ($term_ids_placeholder)
+            AND STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') >= CURDATE()
+            AND m_destacado.meta_value = '1'
+            ORDER BY CAST(COALESCE(NULLIF(m_peso.meta_value, ''), 0) AS SIGNED) DESC, p.post_date DESC, STR_TO_DATE(m_exp.meta_value, '%%Y%%m%%d') ASC",
+            $term_ids_clean
+        ));
+    endif;
+
+    $rows = $wpdb->get_results($rows_query_sql);
     $total_rows_destacados = count($rows_destacados);
+    /*
+    echo "<pre>";
+    var_dump( array("incluir_empleos_subcategorias"=>$incluir_empleos_subcategorias, "rows_query_sql"=>$rows_query_sql, "rows_destacados"=>$rows_destacados));
+    echo "</pre>";*/
 }
 
 $max_num_pages = ceil($total_rows / $posts_per_page);

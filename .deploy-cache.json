@@ -138,5 +138,7 @@
   "produccion:single-pregunta.php": "62a1e40571c7de4aa24dd81a61877054",
   "produccion:single-puesto.php": "8c353d99222823756539814853e32c2b",
   "produccion:single.php": "168f36bd4ce0dcbc9865218fbb19c55b",
-  "produccion:style.css": "a8d3deb286efe93623e9fb24e56568c7"
+  "produccion:style.css": "a8d3deb286efe93623e9fb24e56568c7",
+  "staging:single-area.php": "e64bfa72280beaac62d2082e83f1033f",
+  "produccion:single-area.php": "e64bfa72280beaac62d2082e83f1033f"
 }
