@@ -4,7 +4,7 @@
         $title = get_the_title($empleo_id);
         $permalink = get_permalink($empleo_id);
         $destacado = get_field("destacado", $empleo_id); 
-        $empresa = get_field("empresa", $empleo_id);
+        $empresa = get_field("empresa", $empleo_id, false, false);
         $nombre_de_la_empresa = get_field("nombre_de_la_empresa", $empleo_id);
         $fecha_de_expiracion = get_field("fecha_de_expiracion", $empleo_id);
         $empr_trabaj = get_field("empr_trabaj", $empleo_id);
@@ -24,6 +24,29 @@
                 }
             }
         }
+
+        
+        $empresa_id = false;
+        $empresa_logo = false;
+        if( is_object($empresa)):
+            $empresa_id = $empresa->ID;
+        else:
+            $empresa_id = (int)$empresa;     
+        endif;
+
+        $empresa_nombre = get_the_title($empresa_id);
+        /*
+        echo "<pre>";
+        var_dump(array("empleo_id"=>$empleo_id, "empresa_id"=>$empresa_id, "empresa"=>$empresa));
+        echo "</pre>";
+        */
+
+        if($empresa_id):
+            $logotipo = get_field('logotipo', $empresa_id);
+            if($logotipo):
+               $empresa_logo = $logotipo['url'];
+            endif;
+        endif;
 
         $title = esc_html($title);
         $empresa = esc_html($empresa);
@@ -45,17 +68,23 @@
         $html = '';
         if( $destacado ):
             $html = '
-                <div class="card-destacado">
-                    <div class="card-destacado-header">
-                        <span class="etiqueta-gold">Empleo destacado</span>
-                    </div>
-                    <h3 class="card-destacado-title">'.$title.'</h3>
-                    <p class="card-destacado-empresa">'.$empresa.'</p>
-                    <p class="card-destacado-ubicacion">'.$ubicacion.'</p>
-                    <div class="card-destacado-footer">
-                        <span class="card-destacado-tiempo">'.$fecha_publicacion.'</span>
-                        <a href="'.$permalink.'" class="btn-vista">Vista</a>
-                    </div>
+                <div class="card-destacado post-'.$empleo_id.'">
+                    <a href="'.$permalink.'">
+                        <div class="card-destacado-content">
+                            <div class="card-destacado-main">
+                                <div class="card-destacado-header">
+                                    <span class="etiqueta-gold">Empleo destacado</span>
+                                </div>
+                                <h3 class="card-destacado-title">'.$title.'</h3>
+                                <p class="card-destacado-empresa">'.$empresa_nombre.'</p>
+                                <p class="card-destacado-ubicacion">'.$ubicacion.'</p>
+                                <p class="card-destacado-expira">Expira el '.$fecha_de_expiracion.'</p>
+                            </div>
+                            <div class="card-destacado-logo">
+                                <img src="'.$empresa_logo.'" alt="Logo de '.$empresa_nombre.'">
+                            </div>
+                        </div>
+                    </a>
                 </div>';
         else:
             $html = '
