@@ -215,7 +215,7 @@ function filtrar_y_paginar_empleos_callback() {
     global $wpdb;
 
     $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;
-    $paged = isset($_GET['paged']) ? absint($_GET['paged']) : 1;    
+    $paged = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
 
     $ofertas_num = get_field("ofertas_num", $post_id);
     if (!is_numeric($ofertas_num) || intval($ofertas_num) < 1) {
@@ -329,9 +329,17 @@ function filtrar_y_paginar_empleos_callback() {
 
     $hay_busqueda = !empty($filtros) && is_array($filtros);
 
-    $total_query = "SELECT COUNT(DISTINCT p.ID) FROM $posts_table p $joins WHERE $where";
+    $total_query = "
+        SELECT COUNT(DISTINCT p.ID)
+        FROM $posts_table p
+        $joins
+        INNER JOIN $postmeta_table m_exp_total
+            ON (m_exp_total.post_id = p.ID AND m_exp_total.meta_key = 'fecha_de_expiracion')
+        WHERE $where
+          AND STR_TO_DATE(m_exp_total.meta_value, '%Y%m%d') >= CURDATE()
+    ";
     $total_posts = $wpdb->get_var($total_query);
-    $total_pages = ceil($total_posts / $per_page);
+    $total_pages = ($per_page > 0) ? (int) ceil(((int) $total_posts) / (int) $per_page) : 0;
 
     /*if ($hay_busqueda) {
         $select_destacado = "CASE WHEN m_destacado.meta_value = '1' THEN 1 ELSE 0 END as es_destacado";
